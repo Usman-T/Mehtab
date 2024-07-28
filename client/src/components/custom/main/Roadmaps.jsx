@@ -1,14 +1,25 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { BookIcon } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { useQuery } from "@apollo/client";
+import { BookOpenIcon } from "lucide-react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
+import { ALL_ROADMAPS } from "@/queries";
 
 const Roadmaps = () => {
+  const result = useQuery(ALL_ROADMAPS);
+
+  const navigate = useNavigate();
+
+  if (result.loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <ClipLoader size={64} className="" />
+      </div>
+    );
+  }
+
   return (
     <div className="p-4">
       <div className="mb-4 flex flex-wrap gap-2">
@@ -29,82 +40,43 @@ const Roadmaps = () => {
         ))}
       </div>
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {[
-          {
-            year: "2024",
-            title: "Full Stack Canva Clone",
-            description: "Build a Canva clone",
-            chapters: "52 Chapters",
-            imageUrl: "/placeholder.svg?height=150&width=300",
-          },
-          {
-            year: "2024",
-            title: "Build a Finance Platform",
-            description: "Build a Finance Platform",
-            chapters: "31 Chapters",
-            imageUrl: "/placeholder.svg?height=150&width=300",
-          },
-          {
-            year: "2024",
-            title: "Full Stack Duolingo Clone",
-            description: "Duolingo Clone",
-            chapters: "29 Chapters",
-            imageUrl: "/placeholder.svg?height=150&width=300",
-          },
-          {
-            year: "2024",
-            title: "Prisma & Databases",
-            description: "Prisma & Free Databases (MySQL)",
-            chapters: "4 Chapters",
-            imageUrl: "/placeholder.svg?height=150&width=300",
-          },
-          {
-            year: "2024",
-            title: "Full Stack Miro Clone",
-            description: "Build a Real-Time Miro Clone",
-            chapters: "40 Chapters",
-            imageUrl: "/placeholder.svg?height=150&width=300",
-          },
-          {
-            year: "2024",
-            title: "Next Auth V5",
-            description: "Next Auth v5 - Advanced Guide",
-            chapters: "23 Chapters",
-            imageUrl: "/placeholder.svg?height=150&width=300",
-          },
-          {
-            year: "2023",
-            title: "Full Stack Twitch Clone",
-            description: "Twitch Clone",
-            chapters: "40 Chapters",
-            imageUrl: "/placeholder.svg?height=150&width=300",
-          },
-          {
-            year: "2023",
-            title: "Full Stack Trello Clone",
-            description: "Trello Clone",
-            chapters: "25 Chapters",
-            imageUrl: "/placeholder.svg?height=150&width=300",
-          },
-        ].map((course, index) => (
-          <Card key={index} className="w-full">
-            <CardHeader className="relative">
-              <img
-                src="/placeholder.svg"
-                alt={course.title}
-                className="h-40 w-full rounded-t-md object-cover"
-              />
-            </CardHeader>
-            <CardContent className="p-4">
-              <CardTitle className="text-lg font-bold">
-                {course.title}
-              </CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">
-                {course.description}
-              </CardDescription>
-              <div className="mt-2 flex items-center">
-                <BookIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="ml-2 text-sm">{course.chapters}</span>
+        {result.data.allRoadmaps.map((roadmap, index) => (
+          <Card
+            key={index}
+            onClick={() => navigate(`/roadmaps/${roadmap.id}`)}
+            className="hover:cursor-pointer"
+          >
+            <CardContent className="p-0">
+              <div>
+                <div className="relative aspect-video w-full overflow-hidden rounded-t-md border-b">
+                  <LazyLoadImage
+                    src={roadmap.image}
+                    alt={roadmap.title}
+                    className="scale-100 grayscale-0 duration-500 ease-in-out"
+                    style={{
+                      aspectRatio: "1920/1080",
+                      objectFit: "cover",
+                      filter: "blur(20px)",
+                      transition: "filter 0.5s ease",
+                    }}
+                    loading="lazy"
+                    onLoad={(e) => (e.target.style.filter = "blur(0px)")}
+                  />
+                </div>
+                <div className="flex flex-col px-3 pt-2">
+                  <h1 className="line-clamp-1 text-sm font-medium transition group-hover:text-sky-700 md:text-base">
+                    {roadmap.title}
+                  </h1>
+                  <div className="my-3 flex items-center gap-x-2 text-xs">
+                    <div className="mt-2 flex items-start text-slate-500">
+                      <div className="inline-flex items-center justify-center space-x-1 rounded-md border border-transparent bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-800 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                        <BookOpenIcon className="h-4 w-4" />
+                        <span>{roadmap.sections.length} Sections</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="px-3 pb-3"></div>
               </div>
             </CardContent>
           </Card>

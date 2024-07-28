@@ -6,16 +6,26 @@ import {
   HomeIcon,
   EllipsisVertical,
   LogOutIcon,
+  CrownIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useApolloClient } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { Separator } from "@/components/ui/separator";
 import toast from "react-hot-toast";
+
+const ME = gql`
+  query {
+    me {
+      isAdmin
+    }
+  }
+`;
 
 const Sidebar = ({ className }) => {
   const client = useApolloClient();
   const navigate = useNavigate();
+  const { data } = useQuery(ME);
 
   const sidebarItems = [
     { name: "Home", path: "/", icon: <HomeIcon /> },
@@ -39,7 +49,7 @@ const Sidebar = ({ className }) => {
 
   const { pathname } = useLocation();
   const activeTab = sidebarItems.find((item) => item.path === pathname);
-  const [active, setActive] = useState(activeTab.name);
+  const [active, setActive] = useState(activeTab ? activeTab.name : "");
 
   return (
     <div className={`${className} flex-between flex h-screen flex-col p-4`}>
@@ -66,6 +76,21 @@ const Sidebar = ({ className }) => {
             </Button>
           </>
         )}
+
+        {localStorage.getItem("vertex-user-token") &&
+          data &&
+          data?.me?.isAdmin === true && (
+            <>
+              <Button
+                className={`flex items-center justify-start space-x-2 px-6 `}
+                onClick={() => navigate("/admin")}
+                variant={'ghost'}
+              >
+                <CrownIcon className="h-4 w-4" />
+                <p>Admin</p>
+              </Button>
+            </>
+          )}
       </div>
       <footer className="mb-12 mt-auto flex w-full items-center justify-between border-t py-4">
         <div className="px-4 py-2 text-xs text-muted-foreground lg:flex-1">

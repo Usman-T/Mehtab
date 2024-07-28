@@ -7,7 +7,9 @@ const bcrypt = require("bcryptjs");
 const resolvers = {
   Query: {
     me: (root, args, context) => {
-      return context.currentUser;
+      const currentUser = context.currentUser;
+      console.log(currentUser);
+      return currentUser;
     },
     allUsers: async () => {
       return User.find({});
@@ -64,18 +66,23 @@ const resolvers = {
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
     },
     createRoadmap: async (root, args, context) => {
-      const { title, description, sections } = args;
+      const { title, description, image, sections } = args;
       const currentUser = context.currentUser;
 
       if (!currentUser || !currentUser.isAdmin) {
         throw new GraphQLError("Only admins can create roadmaps");
       }
 
-      if (!title || !description || !sections) {
+      if (!title || !description || !image || !sections) {
         throw new GraphQLError("Malformed arguments");
       }
 
-      const roadmapToSave = new Roadmap({ title, description, sections });
+      const roadmapToSave = new Roadmap({
+        title,
+        description,
+        image,
+        sections,
+      });
       return roadmapToSave.save();
     },
     enrollUser: async (root, args, context) => {
@@ -140,13 +147,12 @@ const resolvers = {
       progress.completedSections.push(sectionId);
       await user.save();
 
-      // Populate section details
       const sections = await Promise.all(
         progress.completedSections
           .map((sectionId) =>
             Roadmap.findOne({ "sections._id": sectionId }, { "sections.$": 1 })
           )
-          .map((res) => res?.sections[0]) // Extract the section from the response
+          .map((res) => res?.sections[0])
       );
 
       return {

@@ -30,14 +30,14 @@ const Login = ({ setToken }) => {
     e.preventDefault();
 
     setLoading(true);
+
     try {
       if (!username || !password) {
         return toast.error("Please fill the entire form");
       }
 
-      await login({
+      const { data } = await login({
         variables: { username, password },
-        onError: (error) => console.log(error),
       });
 
       toast.success("Logged in, redirecting...");
@@ -46,28 +46,26 @@ const Login = ({ setToken }) => {
       }, 2000);
     } catch (error) {
       console.log(error);
-      return toast.error("An error occured");
+      toast.error("Wrong credentials");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen md:flex-row">
-      <div className="flex items-center space-x-2 absolute top-8 left-8">
-        <LightbulbIcon className="w-6 h-6  text-black" />
-        <span className="text-xl text-black  font-semibold">
-          Vertex
-        </span>
+    <div className="flex min-h-screen flex-col md:flex-row">
+      <div className="absolute left-8 top-8 flex items-center space-x-2">
+        <LightbulbIcon className="h-6 w-6 text-black" />
+        <span className="text-xl font-semibold text-black">Vertex</span>
       </div>
 
-      <div className="flex mx-auto flex-col  justify-center h-screen bg-white w-full">
+      <div className="mx-auto flex h-screen w-full flex-col justify-center bg-white">
         <div className="flex justify-end">
           <Link to="/register">
             <Button
               variant={"ghost"}
               href="#"
-              className="text-sm absolute top-8 right-8 font-medium text-gray-600"
+              className="absolute right-8 top-8 text-sm font-medium text-gray-600"
             >
               Register
             </Button>
@@ -75,7 +73,7 @@ const Login = ({ setToken }) => {
         </div>
         <form
           onSubmit={(e) => handleLogin(e)}
-          className="flex flex-col items-center space-y-6 p-4 "
+          className="flex flex-col items-center space-y-6 p-4"
         >
           <div className="space-y-2 text-center">
             <h2 className="text-2xl font-bold">Welcome back</h2>

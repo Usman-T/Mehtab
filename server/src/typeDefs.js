@@ -8,8 +8,8 @@ type User {
 }
 
 type Progress {
-  roadmap: Roadmap!
-  completedSections: [Section]!
+  roadmap: Roadmap
+  completedSections: [Section]
 }
 
 type Section {
@@ -22,6 +22,7 @@ type Section {
 type Roadmap {
   title: String!
   description: String!
+  image: String!
   sections: [Section]!
   id: ID!
 }
@@ -49,6 +50,7 @@ type Mutation {
   createRoadmap(
     title: String!
     description: String!
+    image: String!
     sections: [SectionInput!]!
   ): Roadmap
   enrollUser(roadmapId: ID!): User

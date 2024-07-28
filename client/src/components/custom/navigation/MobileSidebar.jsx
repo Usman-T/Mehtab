@@ -35,7 +35,7 @@ const MobileSidebar = () => {
 
   const { pathname } = useLocation();
   const activeTab = sidebarItems.find((item) => item.path === pathname);
-  const [active, setActive] = useState(activeTab.name);
+  const [active, setActive] = useState(activeTab ? activeTab.name : "");
   const [isSheetOpen, setSheetOpen] = useState(false);
 
   const handleSidebarItemClick = (itemName) => {
@@ -72,25 +72,21 @@ const MobileSidebar = () => {
               />
             ))}
 
-            <Separator className='my-4' />
+            <Separator className="my-4" />
             {localStorage.getItem("vertex-user-token") ? (
               <Button
                 className="flex items-center justify-start space-x-2"
                 variant={"ghost"}
               >
-                <Avatar className='w-6 h-6'>
+                <Avatar className="h-6 w-6">
                   <AvatarImage
                     src="https://github.com/shadcn.png"
                     alt="@shadcn"
-
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <p>
-                User Profile
-                </p>
+                <p>User Profile</p>
               </Button>
-
             ) : (
               <Button
                 onClick={() => navigate("/login")}
@@ -113,7 +109,8 @@ const MobileSidebar = () => {
               >
                 <EllipsisVertical />
               </Button>
-            </div>1
+            </div>
+            1
           </SheetFooter>
         </SheetContent>
       </Sheet>
