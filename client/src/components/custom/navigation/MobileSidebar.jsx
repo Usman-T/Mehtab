@@ -8,6 +8,7 @@ import {
   MenuIcon,
   LightbulbIcon,
   LogOutIcon,
+  SearchIcon,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -19,8 +20,11 @@ import {
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { useApolloClient } from "@apollo/client";
 
 const MobileSidebar = () => {
+  const client = useApolloClient();
   const sidebarItems = [
     { name: "Home", path: "/", icon: <HomeIcon /> },
     { name: "Roadmaps", path: "/roadmaps", icon: <CompassIcon /> },
@@ -43,8 +47,18 @@ const MobileSidebar = () => {
     setSheetOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    client.resetStore();
+    toast.success("Logged out successfully");
+
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
+  };
+
   return (
-    <div className="block h-6 w-6 items-center hover:cursor-pointer md:hidden">
+    <div className="block h-6 w-6 items-center hover:cursor-pointer lg:hidden">
       <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger asChild>
           <MenuIcon
@@ -74,19 +88,26 @@ const MobileSidebar = () => {
 
             <Separator className="my-4" />
             {localStorage.getItem("vertex-user-token") ? (
-              <Button
-                className="flex items-center justify-start space-x-2"
-                variant={"ghost"}
-              >
-                <Avatar className="h-6 w-6">
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
+              <>
+                <Button
+                  onClick={() => handleLogout()}
+                  className="flex items-center justify-start space-x-2 px-6"
+                  variant={"ghost"}
+                >
+                  <LogOutIcon className="h-4 w-4" />
+                  <p>Logout</p>
+                </Button>
+                <div className="ml-4 flex items-center rounded-md border">
+                  <Input
+                    type="text"
+                    placeholder="Search for a course"
+                    className="border-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                   />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <p>User Profile</p>
-              </Button>
+                  <Button type="submit" className="rounded-l-none">
+                    <SearchIcon className="h-5 w-5" />
+                  </Button>
+                </div>
+              </>
             ) : (
               <Button
                 onClick={() => navigate("/login")}
@@ -110,7 +131,6 @@ const MobileSidebar = () => {
                 <EllipsisVertical />
               </Button>
             </div>
-            1
           </SheetFooter>
         </SheetContent>
       </Sheet>

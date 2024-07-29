@@ -3,7 +3,7 @@ type User {
   username: String!
   isAdmin: Boolean!
   points: Int!
-  progress: [Progress]!
+  progress: [Progress]
   id: ID!
 }
 

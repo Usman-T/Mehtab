@@ -40,13 +40,13 @@ const Login = ({ setToken }) => {
         variables: { username, password },
       });
 
-      toast.success("Logged in, redirecting...");
+      toast.success("Log in successful");
       setTimeout(() => {
         navigate("/");
       }, 2000);
     } catch (error) {
       console.log(error);
-      toast.error("Wrong credentials");
+      toast.error("Invalid username or password");
     } finally {
       setLoading(false);
     }

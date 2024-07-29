@@ -56,7 +56,7 @@ const Register = ({ setToken }) => {
         onError: (error) => console.log(error),
       });
 
-      toast.success("User registered, redirecting...");
+      toast.success("Registration successful");
       setTimeout(() => {
         navigate("/");
       }, 2000);
@@ -70,13 +70,13 @@ const Register = ({ setToken }) => {
 
   return (
     <div className="flex flex-col min-h-screen md:flex-row">
-      <div className="flex items-center space-x-2 absolute top-8 left-8">
-        <LightbulbIcon className="w-6 h-6 md:text-white text-black" />
-        <span className="text-xl text-black md:text-white font-semibold">
+      <div className="absolute top-4 left-4 flex items-center space-x-2  md:top-8 md:left-8">
+        <LightbulbIcon className="w-6 h-6 text-black md:text-white" />
+        <span className="text-xl font-semibold text-black md:text-white">
           Vertex
         </span>
       </div>
-      <div className="sm:flex hidden flex-col justify-between md:w-1/2 h-screen p-8 bg-black text-white">
+      <div className="hidden sm:flex flex-col justify-between md:w-1/2 h-screen p-8 bg-black text-white">
         <div className="mt-auto">
           <p className="text-lg font-medium">
             “This is the best platform to learn and develop skills and it also
@@ -85,21 +85,20 @@ const Register = ({ setToken }) => {
           <p className="mt-4">Sofia Davis</p>
         </div>
       </div>
-      <div className="flex flex-col md:w-1/2 justify-center h-screen bg-white w-full">
+      <div className="flex flex-col justify-center w-full h-screen bg-white md:w-1/2">
         <div className="flex justify-end">
           <Link to="/login">
             <Button
               variant={"ghost"}
-              href="#"
-              className="text-sm absolute top-8 right-8 font-medium text-gray-600"
+              className="absolute top-4 right-4 text-sm font-medium text-gray-600  md:top-8 md:right-8"
             >
               Login
             </Button>
           </Link>
         </div>
         <form
-          onSubmit={(e) => handleRegister(e)}
-          className="flex flex-col items-center space-y-6 p-4 "
+          onSubmit={handleRegister}
+          className="flex flex-col items-center p-4 space-y-6"
         >
           <div className="space-y-2 text-center">
             <h2 className="text-2xl font-bold">Register an account</h2>
@@ -136,12 +135,12 @@ const Register = ({ setToken }) => {
           >
             Sign Up
           </Button>
-          <p className="text-xs text-gray-500 text-center">
-            By clicking continue, you agree to our <span />
+          <p className="text-xs text-center text-gray-500">
+            By clicking continue, you agree to our{" "}
             <a href="#" className="underline">
               Terms of Service
-            </a>
-            <span /> and <span />
+            </a>{" "}
+            and{" "}
             <a href="#" className="underline">
               Privacy Policy
             </a>

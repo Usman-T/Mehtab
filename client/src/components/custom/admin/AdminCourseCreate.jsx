@@ -18,12 +18,11 @@ const AdminRoadmapCreate = () => {
   const [roadmapTitle, setRoadmapTitle] = useState("");
   const [roadmapDescription, setRoadmapDescription] = useState("");
   const [roadmapImage, setRoadmapImage] = useState("");
-  const [resources, setResources] = useState([""]);
   const [sections, setSections] = useState([
     {
       title: "Introduction",
       content: "",
-      resources: resources,
+      resources: [""],
     },
   ]);
 
@@ -35,7 +34,7 @@ const AdminRoadmapCreate = () => {
       {
         title: "",
         content: "",
-        resources: [],
+        resources: [""],
       },
     ]);
   };
@@ -52,37 +51,34 @@ const AdminRoadmapCreate = () => {
     setSections(updatedSections);
   };
 
-  const addResource = () => {
-    setResources([...resources, ""]);
+  const addResource = (sectionIndex) => {
+    const updatedSections = [...sections];
+    updatedSections[sectionIndex].resources.push("");
+    setSections(updatedSections);
   };
 
-  const updateResource = (index, value) => {
-    const updatedResources = [...resources];
-    console.log(updatedResources);
-    updatedResources[index] = value;
-    setResources(updatedResources);
+  const updateResource = (sectionIndex, resourceIndex, value) => {
+    const updatedSections = [...sections];
+    updatedSections[sectionIndex].resources[resourceIndex] = value;
+    setSections(updatedSections);
   };
 
-  const removeResource = (index) => {
-    const updatedResources = [...resources];
-    updatedResources.splice(index, 1);
-    setResources(updatedResources);
+  const removeResource = (sectionIndex, resourceIndex) => {
+    const updatedSections = [...sections];
+    updatedSections[sectionIndex].resources.splice(resourceIndex, 1);
+    setSections(updatedSections);
   };
 
   const saveRoadmap = () => {
     const completedSections = sections.filter(
       (section) => section.title !== "" && section.content !== "",
     );
-    const completedResources = resources.filter((resource) => resource !== "");
-
-    console.log({ completedSections, sections });
 
     if (
       !roadmapTitle ||
       !roadmapDescription ||
       !roadmapImage ||
-      completedSections.length !== sections.length ||
-      completedResources.length !== resources.length
+      completedSections.length !== sections.length
     ) {
       return toast.error("Incomplete roadmap data");
     }
@@ -107,7 +103,7 @@ const AdminRoadmapCreate = () => {
     setRoadmapTitle("");
     setRoadmapImage("");
     setRoadmapDescription("");
-    setSections([{ title: "", content: "", resources: [] }]);
+    setSections([{ title: "", content: "", resources: [""] }]);
     navigate("/roadmaps");
   };
 
@@ -155,11 +151,11 @@ const AdminRoadmapCreate = () => {
                 <Button onClick={addSection}>Add Section</Button>
               </div>
               <div className="grid gap-6">
-                {sections.map((section, index) => (
-                  <Card key={index}>
+                {sections.map((section, sectionIndex) => (
+                  <Card key={sectionIndex}>
                     <CardHeader>
                       <div className="flex flex-col space-y-4">
-                        <Label htmlFor={`section-${index}-title`}>
+                        <Label htmlFor={`section-${sectionIndex}-title`}>
                           Section Title
                         </Label>
                         <div className="flex items-center justify-between">
@@ -168,12 +164,16 @@ const AdminRoadmapCreate = () => {
                             placeholder="Section Title"
                             value={section.title}
                             onChange={(e) =>
-                              updateSection(index, "title", e.target.value)
+                              updateSection(
+                                sectionIndex,
+                                "title",
+                                e.target.value
+                              )
                             }
                           />
                           <Button
                             variant="ghost"
-                            onClick={() => removeSection(index)}
+                            onClick={() => removeSection(sectionIndex)}
                             className="text-red-500 hover:bg-red-500 hover:text-red-50"
                           >
                             <TrashIcon className="h-5 w-5" />
@@ -184,34 +184,41 @@ const AdminRoadmapCreate = () => {
                     <CardContent>
                       <div className="grid gap-4">
                         <div className="grid gap-2">
-                          <Label htmlFor={`section-${index}-content`}>
+                          <Label htmlFor={`section-${sectionIndex}-content`}>
                             Section Content
                           </Label>
                           <Textarea
                             placeholder="Context in markdown"
-                            id={`section-${index}-content`}
+                            id={`section-${sectionIndex}-content`}
+                            value={section.content}
                             onChange={(e) =>
-                              updateSection(index, "content", e.target.value)
+                              updateSection(
+                                sectionIndex,
+                                "content",
+                                e.target.value
+                              )
                             }
                           />
                           <div />
                         </div>
                         <div className="flex flex-col space-y-4">
                           <div className="flex items-center justify-between">
-                            <Label htmlFor={`section-${index}-resources`}>
+                            <Label
+                              htmlFor={`section-${sectionIndex}-resources`}
+                            >
                               Section Resources
                             </Label>
                             <Button
                               variant="ghost"
                               className="text-green-500 hover:bg-green-500 hover:text-green-50"
-                              onClick={() => addResource()}
+                              onClick={() => addResource(sectionIndex)}
                             >
                               <PlusIcon className="h-6 w-6" />
                             </Button>
                           </div>
-                          {resources.map((resource, id) => (
+                          {section.resources.map((resource, resourceIndex) => (
                             <div
-                              key={id}
+                              key={resourceIndex}
                               className="flex items-center justify-between space-x-4"
                             >
                               <Input
@@ -219,12 +226,18 @@ const AdminRoadmapCreate = () => {
                                 placeholder="Resource"
                                 value={resource}
                                 onChange={(e) =>
-                                  updateResource(id, e.target.value)
+                                  updateResource(
+                                    sectionIndex,
+                                    resourceIndex,
+                                    e.target.value
+                                  )
                                 }
                               />
                               <Button
                                 variant="ghost"
-                                onClick={() => removeResource(id)}
+                                onClick={() =>
+                                  removeResource(sectionIndex, resourceIndex)
+                                }
                                 className="text-red-500 hover:bg-red-500 hover:text-red-50"
                               >
                                 <TrashIcon className="h-5 w-5" />

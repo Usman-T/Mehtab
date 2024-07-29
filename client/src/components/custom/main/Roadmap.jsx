@@ -1,6 +1,6 @@
-import { useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ALL_ROADMAPS } from "@/queries";
 import { ClipLoader } from "react-spinners";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -9,18 +9,34 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { CircleCheck } from "lucide-react";
+import toast from "react-hot-toast";
+
+const ENROLL_USER = gql`
+  mutation ($roadmapId: ID!) {
+    enrollUser(roadmapId: $roadmapId) {
+      progress {
+        roadmap {
+          title
+        }
+        completedSections {
+          title
+        }
+      }
+    }
+  }
+`;
 
 const Roadmap = () => {
+  const [enrollUser] = useMutation(ENROLL_USER);
+
+  const navigate = useNavigate();
+
   const { loading, data } = useQuery(ALL_ROADMAPS);
   const [roadmap, setRoadmap] = useState(null);
   const [yearly, setYearly] = useState(true);
@@ -43,11 +59,36 @@ const Roadmap = () => {
     );
   }
 
+  const handleEnrollment = async () => {
+    if (!localStorage.getItem("vertex-user-token")) {
+      return toast.error("Must be logged in to enroll in a course");
+    }
+
+    try {
+      await enrollUser({ variables: { roadmapId: id } });
+
+      toast.success("Enrolled in course");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      if (error.message === "User already enrolled in this roadmap") {
+        return toast.error("You are already enrolled in the course");
+      } else if (
+        error.message === "User not found" ||
+        error.message === "Invalid Token"
+      ) {
+        return toast.error("Login to enroll the course");
+      }
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-4 md:w-3/4">
+      <div className="p-4 md:w-3/4 mt-8">
         <div className="mb-4">
-          <div className="relative aspect-video h-[50vh] w-full overflow-clip rounded-md border-b">
+          <div className="relative aspect-video  w-full overflow-clip rounded-md border-b">
             <LazyLoadImage
               src={roadmap.image}
               alt={roadmap.title}
@@ -136,7 +177,9 @@ const Roadmap = () => {
                   Intuitive interface
                 </li>
               </ul>
-              <Button className="w-full">Enroll</Button>
+              <Button onClick={() => handleEnrollment()} className="w-full">
+                Enroll
+              </Button>
             </DialogContent>
           </Dialog>
         </Card>

@@ -83,6 +83,7 @@ const resolvers = {
         image,
         sections,
       });
+
       return roadmapToSave.save();
     },
     enrollUser: async (root, args, context) => {
@@ -106,6 +107,7 @@ const resolvers = {
       const isEnrolled = user.progress.some(
         (progress) => progress.roadmap.toString() === roadmapId
       );
+
       if (isEnrolled) {
         throw new GraphQLError("User already enrolled in this roadmap");
       }
@@ -113,7 +115,12 @@ const resolvers = {
       user.progress.push({ roadmap: roadmap._id, completedSections: [] });
       await user.save();
 
-      return user;
+      return user
+        .populate({
+          path: "progress.roadmap",
+          populate: { path: "sections" },
+        })
+        ;
     },
     completeSection: async (root, args, context) => {
       const { roadmapId, sectionId } = args;
@@ -124,6 +131,7 @@ const resolvers = {
       }
 
       const roadmap = await Roadmap.findById(roadmapId);
+
       if (!roadmap) {
         throw new GraphQLError("Roadmap not found");
       }
@@ -136,6 +144,7 @@ const resolvers = {
       const progress = user.progress.find(
         (p) => p.roadmap.toString() === roadmapId
       );
+
       if (!progress) {
         throw new GraphQLError("User is not enrolled in this roadmap");
       }

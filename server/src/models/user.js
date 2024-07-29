@@ -1,5 +1,4 @@
-
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
   username: {
     type: String,
@@ -23,10 +22,18 @@ const schema = new mongoose.Schema({
     type: [
       {
         roadmap: { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
-        completedSections: [{ type: mongoose.Schema.Types.ObjectId }],
+        completedSections: [
+          {
+            sectionId: { type: mongoose.Schema.Types.ObjectId },
+          },
+        ],
       },
     ],
     default: [],
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
