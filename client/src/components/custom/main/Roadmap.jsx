@@ -47,7 +47,12 @@ const Roadmap = () => {
       const currentRoadmap = data.allRoadmaps.find((r) => r.id === id);
       if (currentRoadmap) {
         setRoadmap(currentRoadmap);
+      } else {
+        if (!currentRoadmap) {
+          toast.error('No roadmap found')
+        }
       }
+      
     }
   }, [loading, data, id, roadmap]);
 
@@ -80,7 +85,7 @@ const Roadmap = () => {
       ) {
         return toast.error("Login to enroll the course");
       }
-      console.log(error.message);
+      console.log(error);
     }
   };
 

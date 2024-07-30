@@ -10,6 +10,8 @@ import Leaderboards from "./components/custom/main/Leaderboards";
 import AdminPanel from "./components/custom/admin/AdminPanel";
 import AdminCourseCreate from "./components/custom/admin/AdminCourseCreate";
 import Roadmap from "./components/custom/main/Roadmap";
+import Study from "./components/custom/main/Study";
+import Section from "./components/custom/main/Section";
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -24,6 +26,16 @@ const App = () => {
             path="/roadmaps/:id"
             element={<Main component={<Roadmap />} />}
           />
+  
+          <Route
+            path="/study/:id"
+            element={<Main component={<Study />} />}
+          />
+          <Route
+            path="/study/:roadmapId/:sectionId"
+            element={<Main component={<Section />} />}
+          />
+
           <Route
             path="/leaderboards"
             element={<Main component={<Leaderboards />} />}

@@ -1,15 +1,10 @@
 import {
-  BookmarkIcon,
   MedalIcon,
   RocketIcon,
   SparkleIcon,
-  BookOpenIcon,
-  PlusIcon,
   PercentIcon,
   TrophyIcon,
   BadgeIcon,
-  HeartIcon,
-  CoinsIcon,
   ArrowRightIcon,
   BookIcon,
 } from "lucide-react";
@@ -39,6 +34,7 @@ const ME = gql`
           id
         }
         roadmap {
+          id
           description
           image
           title
@@ -75,75 +71,75 @@ const Home = () => {
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Card className="col-span-1 flex flex-col gap-4 bg-card p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-semibold">Active Courses</h3>
-                </div>
+          <Card className="col-span-1 flex flex-col gap-4 bg-card p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold">Active Courses</h3>
               </div>
-              {hasActiveCourses ? (
-                <Carousel
-                  opts={{ loop: true, autoplay: true, autoplayTimeout: 5000 }}
-                  className="w-full"
-                >
-                  <CarouselContent>
-                    {meData.me.progress.map((p) => (
-                      <CarouselItem key={p.roadmap.id}>
-                        <div className="flex flex-col gap-4">
-                          <LazyLoadImage
-                            src={p.roadmap.image}
-                            alt={p.roadmap.title}
-                            className="aspect-video scale-100 rounded-lg grayscale-0 duration-500 ease-in-out"
-                            style={{
-                              aspectRatio: "1920/1080",
-                              objectFit: "cover",
-                              filter: "blur(20px)",
-                              transition: "filter 0.5s ease",
-                            }}
-                            loading="lazy"
-                            onLoad={(e) =>
-                              (e.target.style.filter = "blur(0px)")
-                            }
-                          />
-                          <div>
-                            <h4 className="text-lg font-semibold">
-                              {p.roadmap.title}
-                            </h4>
-                            <p className="text-sm text-muted-foreground">
-                              {p.roadmap.description.substring(0, 140)}...
-                            </p>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <PercentIcon className="h-5 w-5 text-primary" />
-                              <span className="text-sm font-medium">75%</span>
-                            </div>
-                            <Link
-                              href="#"
-                              className="text-primary hover:underline"
-                            >
-                              Continue
-                            </Link>
-                          </div>
+            </div>
+            {hasActiveCourses ? (
+              <Carousel
+                opts={{ loop: true, autoplay: true, autoplayTimeout: 5000 }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {meData.me.progress.map((p) => (
+                    <CarouselItem key={p.roadmap.id}>
+                      <div className="flex flex-col gap-4">
+                        <LazyLoadImage
+                          src={p.roadmap.image}
+                          alt={p.roadmap.title}
+                          className="aspect-video scale-100 rounded-lg grayscale-0 duration-500 ease-in-out"
+                          style={{
+                            aspectRatio: "1920/1080",
+                            objectFit: "cover",
+                            filter: "blur(20px)",
+                            transition: "filter 0.5s ease",
+                          }}
+                          loading="lazy"
+                          onLoad={(e) => (e.target.style.filter = "blur(0px)")}
+                        />
+                        <div>
+                          <h4 className="text-lg font-semibold">
+                            {p.roadmap.title}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {p.roadmap.description.substring(0, 140)}...
+                          </p>
                         </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
-              ) : (
-                <div className="text-center text-muted-foreground">
-                  <p>You haven't enrolled in any courses yet.</p>
-                  <Link
-                    to="/roadmaps"
-                    className="mt-4 inline-block rounded bg-primary px-4 py-2 text-white"
-                  >
-                    Explore Courses
-                  </Link>
-                </div>
-              )}
-            </Card>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <PercentIcon className="h-5 w-5 text-primary" />
+                            <span className="text-sm font-medium">
+                              {p.roadmap.sections.length}
+                            </span>
+                          </div>
+                          <Link
+                            to={`/study/${p.roadmap.id}`}
+                            className="text-primary hover:underline"
+                          >
+                            Continue
+                          </Link>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            ) : (
+              <div className="text-center text-muted-foreground">
+                <p>You haven't enrolled in any courses yet.</p>
+                <Link
+                  to="/roadmaps"
+                  className="mt-4 inline-block rounded bg-primary px-4 py-2 text-white"
+                >
+                  Explore Courses
+                </Link>
+              </div>
+            )}
+          </Card>
           <Card className="flex flex-col gap-4 bg-card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -178,7 +174,7 @@ const Home = () => {
               ))}
             </div>
           </Card>
-          <Card className="md:col-span-2 flex flex-col gap-4 bg-card p-6">
+          <Card className="flex flex-col gap-4 bg-card p-6 md:col-span-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <TrophyIcon className="h-6 w-6 text-primary" />

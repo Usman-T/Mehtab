@@ -20,7 +20,7 @@ const Main = ({ component }) => {
       <Header />
       <div className="flex h-full w-full grid-cols-8">
         <Sidebar className="hidden h-full w-72 flex-col overflow-auto border-r bg-white lg:flex" />
-        <ScrollArea className="flex-1 overflow-y-auto max-h-full">
+        <ScrollArea className="flex-1 overflow-y-hidden max-h-full">
           <div className="h-full mb-14">{component}</div>
         </ScrollArea>
       </div>

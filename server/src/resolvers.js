@@ -8,7 +8,6 @@ const resolvers = {
   Query: {
     me: (root, args, context) => {
       const currentUser = context.currentUser;
-      console.log(currentUser);
       return currentUser;
     },
     allUsers: async () => {
