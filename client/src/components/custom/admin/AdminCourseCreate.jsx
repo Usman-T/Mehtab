@@ -4,14 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import toast from "react-hot-toast";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { ALL_ROADMAPS, CREATE_ROADMAP } from "@/queries";
 
 const AdminRoadmapCreate = () => {
-  const [createRoadmap, result] = useMutation(CREATE_ROADMAP, {
+  const [createRoadmap] = useMutation(CREATE_ROADMAP, {
     refetchQueries: [ALL_ROADMAPS],
   });
 
@@ -22,7 +22,8 @@ const AdminRoadmapCreate = () => {
     {
       title: "Introduction",
       content: "",
-      resources: [""],
+      description: "",
+      images: [""],
     },
   ]);
 
@@ -34,7 +35,8 @@ const AdminRoadmapCreate = () => {
       {
         title: "",
         content: "",
-        resources: [""],
+        description: "",
+        images: [""],
       },
     ]);
   };
@@ -51,27 +53,27 @@ const AdminRoadmapCreate = () => {
     setSections(updatedSections);
   };
 
-  const addResource = (sectionIndex) => {
+  const addImage = (sectionIndex) => {
     const updatedSections = [...sections];
-    updatedSections[sectionIndex].resources.push("");
+    updatedSections[sectionIndex].images.push("");
     setSections(updatedSections);
   };
 
-  const updateResource = (sectionIndex, resourceIndex, value) => {
+  const updateImage = (sectionIndex, imageIndex, value) => {
     const updatedSections = [...sections];
-    updatedSections[sectionIndex].resources[resourceIndex] = value;
+    updatedSections[sectionIndex].images[imageIndex] = value;
     setSections(updatedSections);
   };
 
-  const removeResource = (sectionIndex, resourceIndex) => {
+  const removeImage = (sectionIndex, imageIndex) => {
     const updatedSections = [...sections];
-    updatedSections[sectionIndex].resources.splice(resourceIndex, 1);
+    updatedSections[sectionIndex].images.splice(imageIndex, 1);
     setSections(updatedSections);
   };
 
   const saveRoadmap = () => {
     const completedSections = sections.filter(
-      (section) => section.title !== "" && section.content !== "",
+      (section) => section.title && section.content && section.description
     );
 
     if (
@@ -82,7 +84,6 @@ const AdminRoadmapCreate = () => {
     ) {
       return toast.error("Incomplete roadmap data");
     }
-
 
     createRoadmap({
       variables: {
@@ -97,12 +98,12 @@ const AdminRoadmapCreate = () => {
     setRoadmapTitle("");
     setRoadmapImage("");
     setRoadmapDescription("");
-    setSections([{ title: "", content: "", resources: [""] }]);
+    setSections([{ title: "", content: "", description: "", images: [""] }]);
     navigate("/roadmaps");
   };
 
   return (
-    <div className="bg- container mx-auto px-4 py-8 md:px-6">
+    <div className="container mx-auto px-4 py-8 md:px-6">
       <Card className="py-8">
         <div className="grid gap-8">
           <CardContent>
@@ -129,7 +130,7 @@ const AdminRoadmapCreate = () => {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="image">Roadmap Title</Label>
+                <Label htmlFor="image">Roadmap Image</Label>
                 <Input
                   id="image"
                   type="text"
@@ -193,36 +194,50 @@ const AdminRoadmapCreate = () => {
                               )
                             }
                           />
-                          <div />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor={`section-${sectionIndex}-description`}>
+                            Section Description
+                          </Label>
+                          <Textarea
+                            placeholder="Enter section description"
+                            id={`section-${sectionIndex}-description`}
+                            value={section.description}
+                            onChange={(e) =>
+                              updateSection(
+                                sectionIndex,
+                                "description",
+                                e.target.value
+                              )
+                            }
+                          />
                         </div>
                         <div className="flex flex-col space-y-4">
                           <div className="flex items-center justify-between">
-                            <Label
-                              htmlFor={`section-${sectionIndex}-resources`}
-                            >
-                              Section Resources
+                            <Label htmlFor={`section-${sectionIndex}-images`}>
+                              Section Images
                             </Label>
                             <Button
                               variant="ghost"
                               className="text-green-500 hover:bg-green-500 hover:text-green-50"
-                              onClick={() => addResource(sectionIndex)}
+                              onClick={() => addImage(sectionIndex)}
                             >
                               <PlusIcon className="h-6 w-6" />
                             </Button>
                           </div>
-                          {section.resources.map((resource, resourceIndex) => (
+                          {section.images.map((image, imageIndex) => (
                             <div
-                              key={resourceIndex}
+                              key={imageIndex}
                               className="flex items-center justify-between space-x-4"
                             >
                               <Input
                                 type="text"
-                                placeholder="Resource"
-                                value={resource}
+                                placeholder="Image URL"
+                                value={image}
                                 onChange={(e) =>
-                                  updateResource(
+                                  updateImage(
                                     sectionIndex,
-                                    resourceIndex,
+                                    imageIndex,
                                     e.target.value
                                   )
                                 }
@@ -230,7 +245,7 @@ const AdminRoadmapCreate = () => {
                               <Button
                                 variant="ghost"
                                 onClick={() =>
-                                  removeResource(sectionIndex, resourceIndex)
+                                  removeImage(sectionIndex, imageIndex)
                                 }
                                 className="text-red-500 hover:bg-red-500 hover:text-red-50"
                               >

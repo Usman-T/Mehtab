@@ -46,20 +46,28 @@ export const ALL_USERS = gql`
 `;
 
 export const CREATE_ROADMAP = gql`
-  mutation (
-    $title: String!
-    $description: String!
-    $image: String!
-    $sections: [SectionInput!]!
+mutation CreateRoadmap(
+  $title: String!
+  $description: String!
+  $image: String!
+  $sections: [SectionInput!]!
+) {
+  createRoadmap(
+    title: $title
+    description: $description
+    image: $image
+    sections: $sections
   ) {
-    createRoadmap(
-      title: $title
-      description: $description
-      image: $image
-      sections: $sections
-    ) {
+    id
+    title
+    description
+    image
+    sections {
       title
-      image
+      content
+      description
+      images
     }
   }
+}
 `;

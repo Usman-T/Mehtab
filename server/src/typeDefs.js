@@ -15,7 +15,8 @@ type Progress {
 type Section {
   title: String!
   content: String!
-  resources: [String]!
+  images: [String]!
+  description: String!
   id: ID!
 }
 
