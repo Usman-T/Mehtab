@@ -1,7 +1,7 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ALL_ROADMAPS } from "@/queries";
+import { ALL_ROADMAPS, ENROLL_USER } from "@/queries";
 import { ClipLoader } from "react-spinners";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
@@ -16,21 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { CircleCheck } from "lucide-react";
 import toast from "react-hot-toast";
-
-const ENROLL_USER = gql`
-  mutation ($roadmapId: ID!) {
-    enrollUser(roadmapId: $roadmapId) {
-      progress {
-        roadmap {
-          title
-        }
-        completedSections {
-          title
-        }
-      }
-    }
-  }
-`;
 
 const Roadmap = () => {
   const [enrollUser] = useMutation(ENROLL_USER);
@@ -49,10 +34,9 @@ const Roadmap = () => {
         setRoadmap(currentRoadmap);
       } else {
         if (!currentRoadmap) {
-          toast.error('No roadmap found')
+          toast.error("No roadmap found");
         }
       }
-      
     }
   }, [loading, data, id, roadmap]);
 
@@ -91,9 +75,9 @@ const Roadmap = () => {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-4 md:w-3/4 mt-8">
+      <div className="mt-8 p-4 md:w-3/4">
         <div className="mb-4">
-          <div className="relative aspect-video  w-full overflow-clip rounded-md border-b">
+          <div className="relative aspect-video w-full overflow-clip rounded-md border-b">
             <LazyLoadImage
               src={roadmap.image}
               alt={roadmap.title}
@@ -126,67 +110,11 @@ const Roadmap = () => {
             Track your progress, watch with subtitles, change quality & speed,
             and more.
           </p>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="w-full">Start Learning</Button>
-            </DialogTrigger>
-            <DialogContent className="flex flex-col items-center justify-center sm:max-w-md">
-              <h2 className="mb-4 text-2xl font-bold">
-                <DialogHeader>
-                  <DialogTitle> {yearly ? "Yearly" : "Monthly"}</DialogTitle>
-                </DialogHeader>
-              </h2>
-              <div className="mb-4 flex w-full px-2">
-                <Button
-                  className={`w-full rounded-r-none ${yearly ? "bg-primary/80 text-secondary hover:bg-primary hover:text-primary-foreground" : ""}`}
-                  variant="outline"
-                  onClick={() => setYearly(true)}
-                >
-                  Yearly
-                </Button>
-                <Button
-                  className={`w-full rounded-l-none ${!yearly ? "bg-primary/80 text-secondary hover:bg-primary hover:text-primary-foreground" : ""}`}
-                  variant="outline"
-                  onClick={() => setYearly(false)}
-                >
-                  Monthly
-                </Button>
-              </div>
-              <div className="mb-4 text-4xl font-bold">
-                ${yearly ? "0" : "0"}/mo
-              </div>
-
-              <ul className="mb-4 list-none">
-                <li className="mb-2 flex items-center">
-                  <span className="mr-2 text-primary">
-                    <CircleCheck />
-                  </span>{" "}
-                  Full access to course
-                </li>
-                <li className="mb-2 flex items-center">
-                  <span className="mr-2 text-primary">
-                    <CircleCheck />
-                  </span>{" "}
-                  Unlock All sections
-                </li>
-                <li className="mb-2 flex items-center">
-                  <span className="mr-2 text-primary">
-                    <CircleCheck />
-                  </span>{" "}
-                  Regular new content
-                </li>
-                <li className="mb-2 flex items-center">
-                  <span className="mr-2 text-primary">
-                    <CircleCheck />
-                  </span>{" "}
-                  Intuitive interface
-                </li>
-              </ul>
-              <Button onClick={() => handleEnrollment()} className="w-full">
-                Enroll
-              </Button>
-            </DialogContent>
-          </Dialog>
+          <EnrollmentDialog
+            handleEnrollment={handleEnrollment}
+            yearly={yearly}
+            setYearly={setYearly}
+          />
         </Card>
       </div>
     </div>
@@ -194,3 +122,65 @@ const Roadmap = () => {
 };
 
 export default Roadmap;
+
+const EnrollmentDialog = ({ handleEnrollment, yearly, setYearly }) => (
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button className="w-full">Start Learning</Button>
+    </DialogTrigger>
+    <DialogContent className="flex flex-col items-center justify-center sm:max-w-md">
+      <h2 className="mb-4 text-2xl font-bold">
+        <DialogHeader>
+          <DialogTitle> {yearly ? "Yearly" : "Monthly"}</DialogTitle>
+        </DialogHeader>
+      </h2>
+      <div className="mb-4 flex w-full px-2">
+        <Button
+          className={`w-full rounded-r-none ${yearly ? "bg-primary/80 text-secondary hover:bg-primary hover:text-primary-foreground" : ""}`}
+          variant="outline"
+          onClick={() => setYearly(true)}
+        >
+          Yearly
+        </Button>
+        <Button
+          className={`w-full rounded-l-none ${!yearly ? "bg-primary/80 text-secondary hover:bg-primary hover:text-primary-foreground" : ""}`}
+          variant="outline"
+          onClick={() => setYearly(false)}
+        >
+          Monthly
+        </Button>
+      </div>
+      <div className="mb-4 text-4xl font-bold">${yearly ? "0" : "0"}/mo</div>
+
+      <ul className="mb-4 list-none">
+        <li className="mb-2 flex items-center">
+          <span className="mr-2 text-primary">
+            <CircleCheck />
+          </span>{" "}
+          Full access to course
+        </li>
+        <li className="mb-2 flex items-center">
+          <span className="mr-2 text-primary">
+            <CircleCheck />
+          </span>{" "}
+          Unlock All sections
+        </li>
+        <li className="mb-2 flex items-center">
+          <span className="mr-2 text-primary">
+            <CircleCheck />
+          </span>{" "}
+          Regular new content
+        </li>
+        <li className="mb-2 flex items-center">
+          <span className="mr-2 text-primary">
+            <CircleCheck />
+          </span>{" "}
+          Intuitive interface
+        </li>
+      </ul>
+      <Button onClick={() => handleEnrollment()} className="w-full">
+        Enroll
+      </Button>
+    </DialogContent>
+  </Dialog>
+);

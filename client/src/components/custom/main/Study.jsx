@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
@@ -9,17 +9,9 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import {
-  BadgeIcon,
-  BookIcon,
-  MedalIcon,
-  RocketIcon,
-  SparkleIcon,
-} from "lucide-react";
+import { BookIcon, ArrowRightIcon, TrendingUp } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "lucide-react";
-import { TrendingUp } from "lucide-react";
 import {
   Label,
   PolarGrid,
@@ -37,31 +29,7 @@ import {
 } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
 import toast from "react-hot-toast";
-
-const ME = gql`
-  query {
-    me {
-      progress {
-        completedSections {
-          title
-          id
-        }
-        roadmap {
-          id
-          description
-          image
-          title
-          sections {
-            title
-            content
-            id
-            resources
-          }
-        }
-      }
-    }
-  }
-`;
+import { ME } from "@/queries";
 
 const Study = () => {
   const chartConfig = {
@@ -102,7 +70,6 @@ const Study = () => {
       }
     }
   }, [loading, data, id, roadmap]);
-
 
   if (loading || !roadmap || !chartData) {
     return (
@@ -192,7 +159,7 @@ const Study = () => {
                 <TrendingUp className="h-4 w-4" />
               </div>
               <div className="leading-none text-muted-foreground">
-                Showing total visitors for the last 6 months
+                Showing progress made in the roadmap's completion
               </div>
             </CardFooter>
           </Card>
@@ -290,9 +257,7 @@ const Study = () => {
                       {section.content.substring(0, 50)}...
                     </div>
                   </div>
-                  <Link
-                    to={`/study/${roadmap.roadmap.id}/${section.id}`}
-                  >
+                  <Link to={`/study/${roadmap.roadmap.id}/${section.id}`}>
                     <Button variant="outline" size="icon">
                       <ArrowRightIcon className="h-4 w-4" />
                       <span className="sr-only">View course</span>

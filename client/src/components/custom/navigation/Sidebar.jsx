@@ -10,17 +10,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { Separator } from "@/components/ui/separator";
 import toast from "react-hot-toast";
-
-const ME = gql`
-  query {
-    me {
-      isAdmin
-    }
-  }
-`;
+import { ME } from "@/queries";
 
 const Sidebar = ({ className }) => {
   const client = useApolloClient();
@@ -82,9 +75,9 @@ const Sidebar = ({ className }) => {
           data?.me?.isAdmin === true && (
             <>
               <Button
-                className={`flex items-center justify-start space-x-2 px-6 `}
+                className={`flex items-center justify-start space-x-2 px-6`}
                 onClick={() => navigate("/admin")}
-                variant={'ghost'}
+                variant={"ghost"}
               >
                 <CrownIcon className="h-4 w-4" />
                 <p>Admin</p>

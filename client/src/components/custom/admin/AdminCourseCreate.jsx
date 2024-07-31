@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import toast from "react-hot-toast";
-import { gql, useMutation } from "@apollo/client";
+import {  useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { ALL_ROADMAPS, CREATE_ROADMAP } from "@/queries";
 

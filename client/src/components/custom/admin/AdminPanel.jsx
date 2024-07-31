@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery } from "@apollo/client";
-import { gql } from "@apollo/client";
 import {
   ActivityIcon,
   BookIcon,

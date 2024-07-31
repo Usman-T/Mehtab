@@ -18,36 +18,10 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { ClipLoader } from "react-spinners";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { ALL_ROADMAPS } from "@/queries";
-
-const ME = gql`
-  query {
-    me {
-      username
-      isAdmin
-      progress {
-        completedSections {
-          title
-          id
-        }
-        roadmap {
-          id
-          description
-          image
-          title
-          sections {
-            title
-            id
-          }
-        }
-      }
-      points
-    }
-  }
-`;
+import { ALL_ROADMAPS, ME } from "@/queries";
 
 const Home = () => {
   const { data: meData, loading: meLoading } = useQuery(ME);

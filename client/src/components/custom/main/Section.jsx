@@ -1,35 +1,12 @@
-import { gql, useQuery } from "@apollo/client";
+import {  useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import Markdown from "react-markdown";
 import { toast } from "react-hot-toast";
+import { ME } from "@/queries";
 
-const ME = gql`
-  query {
-    me {
-      progress {
-        completedSections {
-          title
-          id
-        }
-        roadmap {
-          id
-          description
-          image
-          title
-          sections {
-            title
-            content
-            images
-            description
-            id
-          }
-        }
-      }
-    }
-  }
-`;
+
 
 const Section = () => {
   const { roadmapId, sectionId } = useParams();
