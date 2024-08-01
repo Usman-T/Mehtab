@@ -66,34 +66,41 @@ const RecentUsersTable = ({ users }) => (
   </Card>
 );
 
-const CoursesTable = ({ courses }) => (
-  <Card className="flex flex-col space-y-2 py-2">
-    <CardHeader className="flex flex-row items-center justify-between pb-2">
-      <CardTitle className="font-medium">Courses</CardTitle>
-      <ClipboardIcon className="h-4 w-4 text-muted-foreground" />
-    </CardHeader>
-    <CardContent>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Sections</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {courses.map((course, index) => (
-            <TableRow key={index}>
-              <TableCell className="font-medium">{course.title}</TableCell>
-              <TableCell>{course.description}</TableCell>
-              <TableCell>{course.sections.length} sections</TableCell>
+const CoursesTable = ({ courses }) => {
+  const navigate = useNavigate();
+  return (
+    <Card className="flex flex-col space-y-2 py-2">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="font-medium">Courses</CardTitle>
+        <ClipboardIcon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead>Sections</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </CardContent>
-  </Card>
-);
+          </TableHeader>
+          <TableBody>
+            {courses.map((course, index) => (
+              <TableRow
+                key={index}
+                className="hover:cursor-pointer"
+                onClick={() => navigate(`/roadmaps/${course.id}`)}
+              >
+                <TableCell className="font-medium">{course.title}</TableCell>
+                <TableCell>{course.description.substring(0, 60)}...</TableCell>
+                <TableCell>{course.sections.length} sections</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
+};
 
 const CreateCourseForm = () => {
   const navigate = useNavigate();

@@ -81,7 +81,7 @@ const Roadmap = () => {
             <LazyLoadImage
               src={roadmap.image}
               alt={roadmap.title}
-              className="scale-100 grayscale-0 duration-500 ease-in-out"
+              className="scale-100 grayscale-0 w-full  duration-500 ease-in-out"
               style={{
                 aspectRatio: "1920/1080",
                 objectFit: "cover",

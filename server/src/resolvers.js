@@ -14,7 +14,7 @@ const resolvers = {
       return User.find({});
     },
     allRoadmaps: async () => {
-      return Roadmap.find({});
+      return Roadmap.find({}).populate('sections');
     },
   },
   Mutation: {

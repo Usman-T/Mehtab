@@ -104,6 +104,9 @@ export const ME = gql`
           title
           sections {
             title
+            description
+            content
+            images
             id
           }
         }

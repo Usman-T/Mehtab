@@ -47,6 +47,8 @@ const Study = () => {
   const [roadmap, setRoadmap] = useState(null);
   const [chartData, setChartData] = useState(null);
 
+  console.log(roadmap);
+
   useEffect(() => {
     if (!loading && data && !roadmap) {
       const currentRoadmap = data.me.progress.find((p) => p.roadmap.id === id);
@@ -63,10 +65,8 @@ const Study = () => {
             fill: "var(--color-safari)",
           },
         ]);
-      }
-
-      if (!currentRoadmap) {
-        return toast.error("Roadmap not found");
+      } else {
+        toast.error("Roadmap not found");
       }
     }
   }, [loading, data, id, roadmap]);
@@ -93,26 +93,27 @@ const Study = () => {
             <CardContent className="flex-1 pb-0">
               <ChartContainer
                 config={chartConfig}
-                className="mx-auto aspect-square max-h-[250px]"
+                className="mx-auto"
               >
                 <RadialBarChart
                   data={chartData}
                   startAngle={90}
                   endAngle={(360 * chartData[0].completion) / 100 + 90}
-                  innerRadius={80}
-                  outerRadius={110}
+                  innerRadius={260}
+                  outerRadius={260}
                 >
                   <PolarGrid
                     gridType="circle"
                     radialLines={false}
                     stroke="none"
                     className="first:fill-muted last:fill-background"
-                    polarRadius={[86, 74]}
+                    polarRadius={[112, 98]}
+
                   />
                   <RadialBar
                     dataKey="completion"
                     background
-                    cornerRadius={10}
+                    cornerRadius={20}
                   />
                   <PolarRadiusAxis
                     tick={false}
@@ -124,8 +125,8 @@ const Study = () => {
                         if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                           return (
                             <text
-                              x={viewBox.cx}
-                              y={viewBox.cy}
+                              x={viewBox.cx }
+                              y={viewBox.cy }
                               textAnchor="middle"
                               dominantBaseline="middle"
                             >
@@ -153,7 +154,7 @@ const Study = () => {
               </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
-              <div className="flex items-center gap-2 font-medium leading-none">
+              <div className="gap flex items-center font-medium leading-none">
                 Completed {roadmap.completedSections.length} out of{" "}
                 {roadmap.roadmap.sections.length}{" "}
                 <TrendingUp className="h-4 w-4" />
@@ -181,7 +182,7 @@ const Study = () => {
                     <CarouselItem key={section.id}>
                       <div className="flex flex-col gap-4">
                         <LazyLoadImage
-                          src={section.resource}
+                          src={section.images[0]}
                           alt={section.title}
                           className="aspect-video scale-100 rounded-lg grayscale-0 duration-500 ease-in-out"
                           style={{
@@ -198,7 +199,7 @@ const Study = () => {
                             {section.title}
                           </h4>
                           <p className="text-sm text-muted-foreground">
-                            {section.content.substring(0, 140)}...
+                            {section.description.substring(0, 150)}...
                           </p>
                         </div>
                         <div className="flex items-center justify-between">
@@ -254,7 +255,7 @@ const Study = () => {
                   <div>
                     <div className="font-medium">{section.title}</div>
                     <div className="text-sm text-muted-foreground">
-                      {section.content.substring(0, 50)}...
+                      {section.description.substring(0, 80)}...
                     </div>
                   </div>
                   <Link to={`/study/${roadmap.roadmap.id}/${section.id}`}>

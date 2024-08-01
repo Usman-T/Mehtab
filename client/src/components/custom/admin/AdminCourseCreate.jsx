@@ -85,6 +85,16 @@ const AdminRoadmapCreate = () => {
       return toast.error("Incomplete roadmap data");
     }
 
+    console.log({
+      variables: {
+        title: roadmapTitle,
+        description: roadmapDescription,
+        image: roadmapImage,
+        sections,
+      },
+    })
+
+
     createRoadmap({
       variables: {
         title: roadmapTitle,

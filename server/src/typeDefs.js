@@ -64,7 +64,8 @@ type Mutation {
 input SectionInput {
   title: String!
   content: String!
-  resources: [String]!
+  description: String!
+  images: [String]!
 }
 `;
 
