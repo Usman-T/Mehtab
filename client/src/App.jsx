@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  Routes,
+  Route,
+  BrowserRouter as Router,
+  useLocation,
+} from "react-router-dom";
 import Main from "./components/custom/Main";
 import Register from "./components/custom/authentication/Register";
 import Login from "./components/custom/authentication/Login";
@@ -18,7 +23,6 @@ const App = () => {
 
   return (
     <div className="h-screen">
-      <Router>
         <Routes>
           <Route path="/" element={<Main component={<Home />} />} />
           <Route path="/roadmaps" element={<Main component={<Roadmaps />} />} />
@@ -26,11 +30,8 @@ const App = () => {
             path="/roadmaps/:id"
             element={<Main component={<Roadmap />} />}
           />
-  
-          <Route
-            path="/study/:id"
-            element={<Main component={<Study />} />}
-          />
+
+          <Route path="/study/:id" element={<Main component={<Study />} />} />
           <Route
             path="/study/:roadmapId/:sectionId"
             element={<Main component={<Section />} />}
@@ -48,7 +49,6 @@ const App = () => {
             element={<Main component={<AdminCourseCreate />} />}
           />
         </Routes>
-      </Router>
       <Toaster />
     </div>
   );

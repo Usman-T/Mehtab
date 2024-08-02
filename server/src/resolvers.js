@@ -14,7 +14,7 @@ const resolvers = {
       return User.find({});
     },
     allRoadmaps: async () => {
-      return Roadmap.find({}).populate('sections');
+      return Roadmap.find({}).populate("sections");
     },
   },
   Mutation: {
@@ -114,12 +114,10 @@ const resolvers = {
       user.progress.push({ roadmap: roadmap._id, completedSections: [] });
       await user.save();
 
-      return user
-        .populate({
-          path: "progress.roadmap",
-          populate: { path: "sections" },
-        })
-        ;
+      return user.populate({
+        path: "progress.roadmap",
+        populate: { path: "sections" },
+      });
     },
     completeSection: async (root, args, context) => {
       const { roadmapId, sectionId } = args;
@@ -144,34 +142,41 @@ const resolvers = {
         (p) => p.roadmap.toString() === roadmapId
       );
 
+      console.log({progress})
+
       if (!progress) {
         throw new GraphQLError("User is not enrolled in this roadmap");
       }
+      const sectionsWithIds = progress.completedSections.map(s => s.id.toString ())
+      const sectionToWorkOn = sectionsWithIds.find(s => s === sectionId ) 
 
-      if (progress.completedSections.includes(sectionId)) {
+      console.log({section: sectionToWorkOn})
+
+      if (
+        progress.completedSections.find(
+          (s) => s.id.toString() === sectionId
+        )
+      ) {
         throw new GraphQLError("Section already completed");
       }
 
-      progress.completedSections.push(sectionId);
+      progress.completedSections.push({ sectionId });
       await user.save();
 
-      const sections = await Promise.all(
-        progress.completedSections
-          .map((sectionId) =>
-            Roadmap.findOne({ "sections._id": sectionId }, { "sections.$": 1 })
-          )
-          .map((res) => res?.sections[0])
+      const populatedCompletedSections = await Promise.all(
+        progress.completedSections.map(async (section) => {
+          const sectionData = await Roadmap.findOne(
+            { "sections._id": section.sectionId },
+            { "sections.$": 1 }
+          );
+          return sectionData ? sectionData.sections[0] : null;
+        })
       );
 
-      return {
-        ...user._doc,
-        progress: [
-          {
-            roadmap: await Roadmap.findById(roadmapId),
-            completedSections: sections.filter(Boolean),
-          },
-        ],
-      };
+      progress.completedSections = populatedCompletedSections.filter(
+        (section) => section !== null
+      );
+      return user;
     },
   },
   User: {

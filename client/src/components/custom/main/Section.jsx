@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import Markdown from "react-markdown";
 import { toast } from "react-hot-toast";
@@ -19,6 +19,7 @@ const Section = () => {
   const { data, loading } = useQuery(ME);
   const [section, setSection] = useState(null);
   const [headings, setHeadings] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (loading || !data) return;
@@ -57,6 +58,29 @@ const Section = () => {
     setHeadings(extractedHeadings);
   };
 
+  const handleNextSection = () => {
+    navigateToSection(1);
+  };
+
+  const handlePrevSection = () => {
+    navigateToSection(-1);
+  };
+
+  const navigateToSection = (direction) => {
+    const currentRoadmap = data.me.progress.find(
+      (p) => p.roadmap.id === roadmapId,
+    );
+    const sections = currentRoadmap.roadmap.sections;
+    const currentSectionIndex = sections.findIndex((s) => s.id === sectionId);
+    const newIndex =
+      (currentSectionIndex + direction + sections.length) % sections.length;
+    navigate(`/study/${currentRoadmap.roadmap.id}/${sections[newIndex].id}`);
+  };
+
+  const handleCompleteSection = () => {
+    
+  }
+
   if (loading || !data) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -87,6 +111,15 @@ const Section = () => {
           </div>
         </div>
       </div>
+      <div className="flex w-full justify-between px-2">
+        <Button variant={"primary"} onClick={handlePrevSection}>
+          <CircleArrowLeftIcon size={32} />
+        </Button>
+        <Button disabled>Complete Section</Button>
+        <Button variant={"primary"} onClick={handleNextSection}>
+          <CircleArrowRightIcon size={32} />
+        </Button>
+      </div>
       <div className="container mx-auto flex flex-col-reverse gap-8 px-4 py-12 lg:flex-row">
         <Card className="w-full overflow-hidden p-8 lg:w-3/4">
           <Markdown className="prose w-full break-words">
@@ -94,15 +127,7 @@ const Section = () => {
           </Markdown>
         </Card>
 
-        <div className="h-1/4">
-          <div className="flex w-full justify-between px-2 pb-4">
-            <Button variant={"primary"} className="w">
-              <CircleArrowLeftIcon size={32} />
-            </Button>
-            <Button variant={"primary"} className="w">
-              <CircleArrowRightIcon size={32} />
-            </Button>
-          </div>
+        <div className="h-1/4 md:w-1/2">
           <Card className="w-full overflow-hidden p-8">
             <h2 className="mb-4 text-xl font-bold">Table of Contents</h2>
             <ul className="">
@@ -120,6 +145,15 @@ const Section = () => {
             </ul>
           </Card>
         </div>
+      </div>
+      <div className="mb-12 flex w-full justify-between px-2">
+        <Button variant={"primary"} onClick={handlePrevSection}>
+          <CircleArrowLeftIcon size={32} />
+        </Button>
+        <Button onClick={() => handleCompleteSection()}>Complete Section</Button>
+        <Button variant={"primary"} onClick={handleNextSection}>
+          <CircleArrowRightIcon size={32} />
+        </Button>
       </div>
     </div>
   );

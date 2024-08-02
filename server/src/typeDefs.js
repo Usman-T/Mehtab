@@ -13,11 +13,11 @@ type Progress {
 }
 
 type Section {
-  title: String!
-  content: String!
-  images: [String]!
-  description: String!
-  id: ID!
+  title: String
+  content: String
+  images: [String]
+  description: String
+  id: ID
 }
 
 type Roadmap {

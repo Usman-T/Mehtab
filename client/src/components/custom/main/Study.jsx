@@ -84,31 +84,30 @@ const Study = () => {
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="flex flex-col">
-            <CardHeader className="items-center pb-0">
-              <CardTitle>Progress</CardTitle>
-              <CardDescription>
+            <CardHeader className="mb-4 items-center pb-0">
+              <CardTitle className="text-lg md:text-xl lg:text-2xl">
+                Progress
+              </CardTitle>
+              <CardDescription className="text-center text-sm md:text-base lg:text-lg">
                 Keep focused and continue learning!
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 pb-0">
+            <CardContent className="z-50 flex-1 pb-0">
               <ChartContainer
                 config={chartConfig}
-                className="mx-auto"
+                className="mx-auto aspect-square max-h-[250px]"
               >
                 <RadialBarChart
                   data={chartData}
                   startAngle={90}
                   endAngle={(360 * chartData[0].completion) / 100 + 90}
-                  innerRadius={260}
-                  outerRadius={260}
                 >
                   <PolarGrid
                     gridType="circle"
                     radialLines={false}
                     stroke="none"
-                    className="first:fill-muted last:fill-background"
-                    polarRadius={[112, 98]}
-
+                    className="relative first:fill-muted last:fill-background"
+                    polarRadius={[82, 70]}
                   />
                   <RadialBar
                     dataKey="completion"
@@ -125,22 +124,22 @@ const Study = () => {
                         if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                           return (
                             <text
-                              x={viewBox.cx }
-                              y={viewBox.cy }
+                              x={viewBox.cx}
+                              y={viewBox.cy}
                               textAnchor="middle"
                               dominantBaseline="middle"
                             >
                               <tspan
                                 x={viewBox.cx}
                                 y={viewBox.cy}
-                                className="fill-foreground text-4xl font-bold"
+                                className="fill-foreground text-3xl font-bold"
                               >
                                 {chartData[0].completion.toLocaleString()}%
                               </tspan>
                               <tspan
                                 x={viewBox.cx}
                                 y={(viewBox.cy || 0) + 24}
-                                className="fill-muted-foreground"
+                                className="fill-muted-foreground text-sm"
                               >
                                 Completed
                               </tspan>
@@ -153,13 +152,13 @@ const Study = () => {
                 </RadialBarChart>
               </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm">
-              <div className="gap flex items-center font-medium leading-none">
+            <CardFooter className="mt-4 flex flex-col gap-2 text-sm">
+              <div className="flex items-center justify-center text-center font-medium leading-none">
                 Completed {roadmap.completedSections.length} out of{" "}
                 {roadmap.roadmap.sections.length}{" "}
-                <TrendingUp className="h-4 w-4" />
+                <TrendingUp className="ml-1 h-4 w-4" />
               </div>
-              <div className="leading-none text-muted-foreground">
+              <div className="text-center text-xs leading-none text-muted-foreground md:text-sm lg:text-base">
                 Showing progress made in the roadmap's completion
               </div>
             </CardFooter>
