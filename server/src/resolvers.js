@@ -1,17 +1,26 @@
 const { GraphQLError } = require("graphql");
 const User = require("./models/user");
 const Roadmap = require("./models/roadmap");
+const Section = require("./models/section");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const resolvers = {
   Query: {
     me: (root, args, context) => {
-      const currentUser = context.currentUser;
-      return currentUser;
+      if (!context.currentUser) {
+        throw new GraphQLError("Authentication required");
+      }
+      return context.currentUser;
     },
+
     allUsers: async () => {
-      return User.find({});
+      return User.find({}).populate({
+        path: "progress.roadmap",
+        populate: {
+          path: "sections",
+        },
+      });
     },
     allRoadmaps: async () => {
       return Roadmap.find({}).populate("sections");
@@ -21,13 +30,23 @@ const resolvers = {
     createUser: async (root, args) => {
       const { username, password, isAdmin } = args;
 
+      if (!username || !password) {
+        throw new GraphQLError("Username and password are required");
+      }
+
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+        throw new GraphQLError("Username already exists");
+      }
+
       const saltRounds = 10;
       const passwordHash = await bcrypt.hash(password, saltRounds);
 
       const user = new User({
         username,
         passwordHash,
-        isAdmin,
+        isAdmin: isAdmin || false,
+        progress: [],
       });
 
       return user.save().catch((error) => {
@@ -44,22 +63,20 @@ const resolvers = {
       const { username, password } = args;
       const user = await User.findOne({ username });
 
-      const passwordCorrect =
-        user === null
-          ? false
-          : await bcrypt.compare(password, user.passwordHash);
+      if (!user) {
+        throw new GraphQLError("User not found");
+      }
 
-      if (!(user && passwordCorrect)) {
-        throw new GraphQLError("Wrong credentials", {
-          extensions: {
-            code: "BAD_USER_INPUT",
-          },
-        });
+      const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
+
+      if (!passwordCorrect) {
+        throw new GraphQLError("Invalid password");
       }
 
       const userForToken = {
         username: user.username,
         id: user._id,
+        isAdmin: user.isAdmin,
       };
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
@@ -72,15 +89,17 @@ const resolvers = {
         throw new GraphQLError("Only admins can create roadmaps");
       }
 
-      if (!title || !description || !image || !sections) {
-        throw new GraphQLError("Malformed arguments");
+      if (!title || !description || !image || !sections || sections.length === 0) {
+        throw new GraphQLError("All fields are required and sections cannot be empty");
       }
+
+      const sectionsToCreate = await Section.insertMany(sections);
 
       const roadmapToSave = new Roadmap({
         title,
         description,
         image,
-        sections,
+        sections: sectionsToCreate.map(section => section._id),
       });
 
       return roadmapToSave.save();
@@ -90,7 +109,7 @@ const resolvers = {
       const currentUser = context.currentUser;
 
       if (!currentUser) {
-        throw new GraphQLError("Invalid Token");
+        throw new GraphQLError("Authentication required");
       }
 
       const roadmap = await Roadmap.findById(roadmapId);
@@ -104,33 +123,25 @@ const resolvers = {
       }
 
       const isEnrolled = user.progress.some(
-        (progress) => progress.roadmap.toString() === roadmapId
+        (enrolledRoadmap) => enrolledRoadmap.roadmap.toString() === roadmapId
       );
 
       if (isEnrolled) {
         throw new GraphQLError("User already enrolled in this roadmap");
       }
 
-      user.progress.push({ roadmap: roadmap._id, completedSections: [] });
-      await user.save();
-
-      return user.populate({
-        path: "progress.roadmap",
-        populate: { path: "sections" },
+      user.progress.push({
+        roadmap: roadmap._id,
+        completedSections: [],
       });
+      return user.save();
     },
     completeSection: async (root, args, context) => {
       const { roadmapId, sectionId } = args;
       const currentUser = context.currentUser;
 
       if (!currentUser) {
-        throw new GraphQLError("Invalid Token");
-      }
-
-      const roadmap = await Roadmap.findById(roadmapId);
-
-      if (!roadmap) {
-        throw new GraphQLError("Roadmap not found");
+        throw new GraphQLError("Authentication required");
       }
 
       const user = await User.findById(currentUser.id);
@@ -138,61 +149,47 @@ const resolvers = {
         throw new GraphQLError("User not found");
       }
 
-      const progress = user.progress.find(
-        (p) => p.roadmap.toString() === roadmapId
+      const enrolledRoadmap = user.progress.find(
+        (er) => er.roadmap.toString() === roadmapId
       );
 
-      console.log({progress})
-
-      if (!progress) {
+      if (!enrolledRoadmap) {
         throw new GraphQLError("User is not enrolled in this roadmap");
       }
-      const sectionsWithIds = progress.completedSections.map(s => s.id.toString ())
-      const sectionToWorkOn = sectionsWithIds.find(s => s === sectionId ) 
 
-      console.log({section: sectionToWorkOn})
+      const roadmap = await Roadmap.findById(roadmapId);
+      if (!roadmap) {
+        throw new GraphQLError("Roadmap not found");
+      }
 
-      if (
-        progress.completedSections.find(
-          (s) => s.id.toString() === sectionId
-        )
-      ) {
+      const sectionExists = roadmap.sections.includes(sectionId);
+      if (!sectionExists) {
+        throw new GraphQLError("Section not found in the roadmap");
+      }
+
+      if (enrolledRoadmap.completedSections.includes(sectionId)) {
         throw new GraphQLError("Section already completed");
       }
 
-      progress.completedSections.push({ sectionId });
-      await user.save();
+      enrolledRoadmap.completedSections.push(sectionId);
 
-      const populatedCompletedSections = await Promise.all(
-        progress.completedSections.map(async (section) => {
-          const sectionData = await Roadmap.findOne(
-            { "sections._id": section.sectionId },
-            { "sections.$": 1 }
-          );
-          return sectionData ? sectionData.sections[0] : null;
-        })
-      );
-
-      progress.completedSections = populatedCompletedSections.filter(
-        (section) => section !== null
-      );
-      return user;
+      return user.save();
     },
   },
   User: {
     id: (root) => root._id.toString(),
+    progress: async (root) => {
+      const populatedUser = await User.findById(root._id).populate({
+        path: "progress.roadmap",
+        populate: {
+          path: "sections",
+        },
+      }).populate('progress.completedSections')
+      return populatedUser.progress;
+    },
   },
   Roadmap: {
     id: (root) => root._id.toString(),
-  },
-  Progress: {
-    roadmap: async (root) => {
-      const roadmap = await Roadmap.findById(root.roadmap);
-      return roadmap;
-    },
-    completedSections: async (root) => {
-      return root.completedSections;
-    },
   },
 };
 

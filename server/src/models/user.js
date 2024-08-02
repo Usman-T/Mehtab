@@ -24,7 +24,8 @@ const schema = new mongoose.Schema({
         roadmap: { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
         completedSections: [
           {
-            sectionId: { type: mongoose.Schema.Types.ObjectId },
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Section",
           },
         ],
       },
