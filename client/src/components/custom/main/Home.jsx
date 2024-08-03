@@ -9,7 +9,7 @@ import {
   BookIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import {
   Carousel,
@@ -22,8 +22,18 @@ import { useQuery } from "@apollo/client";
 import { ClipLoader } from "react-spinners";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ALL_ROADMAPS, ME } from "@/queries";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem("vertex-user-token")) {
+      return navigate("/onboarding");
+    }
+  }, []);
+
   const { data: meData, loading: meLoading } = useQuery(ME);
   const { data: roadmapData, loading: roadmapLoading } = useQuery(ALL_ROADMAPS);
 
@@ -33,10 +43,6 @@ const Home = () => {
         <ClipLoader size={64} />
       </div>
     );
-  }
-
-  if (!localStorage.getItem("vertex-user-token")) {
-    return "Home";
   }
 
   const hasActiveCourses = meData?.me?.progress?.length > 0;

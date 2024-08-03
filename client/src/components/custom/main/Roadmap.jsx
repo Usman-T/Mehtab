@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ALL_ROADMAPS, ENROLL_USER } from "@/queries";
+import { ALL_ROADMAPS, ENROLL_USER, ME } from "@/queries";
 import { ClipLoader } from "react-spinners";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
@@ -18,7 +18,9 @@ import { CircleCheck } from "lucide-react";
 import toast from "react-hot-toast";
 
 const Roadmap = () => {
-  const [enrollUser] = useMutation(ENROLL_USER);
+  const [enrollUser] = useMutation(ENROLL_USER, {
+    refetchQueries: [{ query:  ME  }],
+  });
 
   const navigate = useNavigate();
 
@@ -81,7 +83,7 @@ const Roadmap = () => {
             <LazyLoadImage
               src={roadmap.image}
               alt={roadmap.title}
-              className="scale-100 grayscale-0 w-full  duration-500 ease-in-out"
+              className="w-full scale-100 grayscale-0 duration-500 ease-in-out"
               style={{
                 aspectRatio: "1920/1080",
                 objectFit: "cover",

@@ -70,7 +70,7 @@ const Register = ({ setToken }) => {
 
   return (
     <div className="flex flex-col min-h-screen md:flex-row">
-      <div className="absolute top-4 left-4 flex items-center space-x-2  md:top-8 md:left-8">
+      <div className="absolute top-4 left-4 flex items-center space-x-2 hover:cursor-pointer  md:top-8 md:left-8" onClick={() => navigate('/')}>
         <LightbulbIcon className="w-6 h-6 text-black md:text-white" />
         <span className="text-xl font-semibold text-black md:text-white">
           Vertex

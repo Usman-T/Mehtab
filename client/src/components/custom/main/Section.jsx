@@ -1,10 +1,10 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import Markdown from "react-markdown";
 import { toast } from "react-hot-toast";
-import { ME } from "@/queries";
+import { COMPLETE_SECTION, ME } from "@/queries";
 import { Card } from "@/components/ui/card";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
@@ -14,12 +14,15 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+
 const Section = () => {
   const { roadmapId, sectionId } = useParams();
   const { data, loading } = useQuery(ME);
+
   const [section, setSection] = useState(null);
   const [headings, setHeadings] = useState([]);
   const navigate = useNavigate();
+  const [completeSection] = useMutation(COMPLETE_SECTION);
 
   useEffect(() => {
     if (loading || !data) return;
@@ -77,9 +80,22 @@ const Section = () => {
     navigate(`/study/${currentRoadmap.roadmap.id}/${sections[newIndex].id}`);
   };
 
-  const handleCompleteSection = () => {
-    
-  }
+  const handleCompleteSection = async () => {
+    console.log({roadmapId, sectionId})
+    try {
+      await completeSection({ variable: { roadmapId: roadmapId,sectionId: sectionId } });
+
+      toast.success("Section completed.");
+      navigateToSection(1);
+    } catch (error) {
+      console.log(error);
+      if (error.message === "Section already completed") {
+        return toast.error(error.message);
+      } else {
+        return toast.error("An error occured");
+      }
+    }
+  };
 
   if (loading || !data) {
     return (
@@ -150,7 +166,9 @@ const Section = () => {
         <Button variant={"primary"} onClick={handlePrevSection}>
           <CircleArrowLeftIcon size={32} />
         </Button>
-        <Button onClick={() => handleCompleteSection()}>Complete Section</Button>
+        <Button onClick={() => handleCompleteSection()}>
+          Complete Section
+        </Button>
         <Button variant={"primary"} onClick={handleNextSection}>
           <CircleArrowRightIcon size={32} />
         </Button>

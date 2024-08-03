@@ -31,6 +31,7 @@ export const ALL_ROADMAPS = gql`
     }
   }
 `;
+
 export const ENROLL_USER = gql`
   mutation ($roadmapId: ID!) {
     enrollUser(roadmapId: $roadmapId) {
@@ -114,4 +115,19 @@ export const ME = gql`
       points
     }
   }
+`;
+
+export const COMPLETE_SECTION = gql`
+mutation ($roadmapId: ID!, $sectionId: ID!) {
+  completeSection(roadmapId: $roadmapId, sectionId: $sectionId) {
+    progress {
+      roadmap {
+        title
+      }
+      completedSections {
+        title
+      }
+    }
+  }
+}
 `;

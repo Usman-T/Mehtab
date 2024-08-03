@@ -54,7 +54,7 @@ const Login = ({ setToken }) => {
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <div className="absolute left-8 top-8 flex items-center space-x-2">
+      <div className="absolute left-8 top-8 flex items-center space-x-2 hover:cursor-pointer" onClick={() => navigate('/')}>
         <LightbulbIcon className="h-6 w-6 text-black" />
         <span className="text-xl font-semibold text-black">Vertex</span>
       </div>
