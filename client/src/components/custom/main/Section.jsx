@@ -8,12 +8,12 @@ import { COMPLETE_SECTION, ME } from "@/queries";
 import { Card } from "@/components/ui/card";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
+  ArrowLeftIcon,
   ChevronDownIcon,
   CircleArrowLeftIcon,
   CircleArrowRightIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 
 const Section = () => {
   const { roadmapId, sectionId } = useParams();
@@ -22,7 +22,9 @@ const Section = () => {
   const [section, setSection] = useState(null);
   const [headings, setHeadings] = useState([]);
   const navigate = useNavigate();
-  const [completeSection] = useMutation(COMPLETE_SECTION);
+  const [completeSection] = useMutation(COMPLETE_SECTION, {
+    refetchQueries: [{ query: ME }],
+  });
 
   useEffect(() => {
     if (loading || !data) return;
@@ -81,12 +83,15 @@ const Section = () => {
   };
 
   const handleCompleteSection = async () => {
-    console.log({roadmapId, sectionId})
+    console.log({ roadmapId, sectionId });
     try {
-      await completeSection({ variable: { roadmapId: roadmapId,sectionId: sectionId } });
+      const completed = await completeSection({
+        variables: { roadmapId: roadmapId, sectionId: sectionId },
+      });
+      console.log(completed);
 
       toast.success("Section completed.");
-      navigateToSection(1);
+      await handleNextSection();
     } catch (error) {
       console.log(error);
       if (error.message === "Section already completed") {
@@ -107,6 +112,16 @@ const Section = () => {
 
   return (
     <div className="relative flex min-h-screen w-screen flex-col md:w-full">
+      <div className="mx-8 my-4">
+        <Button
+          className="flex items-center justify-center space-x-1"
+          variant={"outline"}
+          onClick={() => navigate(`/study/${roadmapId}`)}
+        >
+          <ArrowLeftIcon className="" size={16} />
+          <p>Back</p>
+        </Button>
+      </div>
       <div className="mx-auto p-4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="relative mx-auto flex w-full items-center justify-center">

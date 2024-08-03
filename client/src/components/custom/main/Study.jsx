@@ -38,7 +38,7 @@ const Study = () => {
     },
     safari: {
       label: "Safari",
-      color: "hsl(var(--background-foreground))",
+      color: "hsl(var(--chart-2))",
     },
   };
 
@@ -99,6 +99,8 @@ const Study = () => {
               >
                 <RadialBarChart
                   data={chartData}
+                  innerRadius={80}
+                  outerRadius={110}
                   startAngle={90}
                   endAngle={(360 * chartData[0].completion) / 100 + 90}
                 >

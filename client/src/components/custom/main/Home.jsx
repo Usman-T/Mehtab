@@ -47,6 +47,8 @@ const Home = () => {
 
   const hasActiveCourses = meData?.me?.progress?.length > 0;
 
+  console.log(meData.me.progress)
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
@@ -89,9 +91,8 @@ const Home = () => {
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <PercentIcon className="h-5 w-5 text-primary" />
                             <span className="text-sm font-medium">
-                              {p.roadmap.sections.length}
+                              { p.completedSections.length / p.roadmap.sections.length * 100 }% Completed
                             </span>
                           </div>
                           <Link

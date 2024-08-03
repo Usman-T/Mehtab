@@ -15,6 +15,7 @@ import {
   Sheet,
   SheetContent,
   SheetFooter,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -61,7 +62,7 @@ const MobileSidebar = () => {
       <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger asChild>
           <MenuIcon
-            className="hover:cursor-pointer"
+            className="hover:cursor-pointer z-50"
             onClick={() => setSheetOpen(true)}
           />
         </SheetTrigger>
@@ -69,6 +70,7 @@ const MobileSidebar = () => {
           side="left"
           className="flex-between flex h-screen flex-col p-4"
         >
+          <SheetTitle></SheetTitle>
           <div className="flex items-center space-x-2 border-b px-2 py-4">
             <LightbulbIcon className="block h-6 w-6 text-secondary-foreground" />
             <span className="inline text-xl font-semibold text-secondary-foreground">
@@ -96,16 +98,6 @@ const MobileSidebar = () => {
                   <LogOutIcon className="h-4 w-4" />
                   <p>Logout</p>
                 </Button>
-                <div className="ml-4 flex items-center rounded-md border">
-                  <Input
-                    type="text"
-                    placeholder="Search for a course"
-                    className="border-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                  />
-                  <Button type="submit" className="rounded-l-none">
-                    <SearchIcon className="h-5 w-5" />
-                  </Button>
-                </div>
               </>
             ) : (
               <Button
