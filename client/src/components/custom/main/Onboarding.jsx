@@ -127,7 +127,7 @@ const Landing = () => {
             className="mx-auto w-full"
           >
             <CarouselContent className="ml-1">
-              {result.data.allRoadmaps?.map((r, index) => (
+              {result?.data?.allRoadmaps?.map((r, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1">
                     <Card key={index} className="w-full">
@@ -150,7 +150,7 @@ const Landing = () => {
                         <h3 className="text-lg font-bold">{r.title}</h3>
                         <div className="flex w-full items-center justify-between">
                           <p className="text-gray-500 dark:text-gray-400">
-                            {r.description.substring(0, 80)}...
+                            {r.description.substring(0, 50)}...
                           </p>
                           <Button
                             variant={"outline"}
@@ -176,19 +176,17 @@ const Landing = () => {
             <div className="space-y-4">
               <h2 className="text-3xl font-bold">Our Philosophy</h2>
               <p className="text-lg">
-                We believe in creating innovative solutions that empower
-                businesses and individuals alike. Our philosophy is rooted in
-                continuous learning, collaboration, and pushing the boundaries
-                of what's possible in technology.
+                We believe that a structured learning path and a disciplined
+                approach are sufficient to make anyone proficient in any skill.
+                That's why Vertex offers roadmaps that anyone can follow to
+                master any skill.
               </p>
             </div>
-            <div className="relative aspect-video w-full overflow-clip rounded-md border-b">
+            <div className="relative aspect-video w-full overflow-clip rounded-md">
               <LazyLoadImage
-                src={result.data.allRoadmaps[0].image}
-                className="w-full scale-100 grayscale-0 duration-500 ease-in-out"
+                src={"https://cdn-icons-png.flaticon.com/512/2116/2116935.png"}
+                className="aspect-video w-full blur-[20px]  scale-100 object-contain grayscale-0 duration-500 ease-in-out"
                 style={{
-                  aspectRatio: "1920/1080",
-                  objectFit: "cover",
                   filter: "blur(20px)",
                   transition: "filter 0.5s ease",
                 }}

@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import Markdown from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import { toast } from "react-hot-toast";
 import { COMPLETE_SECTION, ME } from "@/queries";
 import { Card } from "@/components/ui/card";
@@ -30,12 +30,12 @@ const Section = () => {
     if (loading || !data) return;
 
     const currentRoadmap = data.me.progress.find(
-      (p) => p.roadmap.id === roadmapId,
+      (p) => p.roadmap.id === roadmapId
     );
 
     if (currentRoadmap) {
       const currentSection = currentRoadmap.roadmap.sections.find(
-        (section) => section.id === sectionId,
+        (section) => section.id === sectionId
       );
 
       if (currentSection) {
@@ -73,7 +73,7 @@ const Section = () => {
 
   const navigateToSection = (direction) => {
     const currentRoadmap = data.me.progress.find(
-      (p) => p.roadmap.id === roadmapId,
+      (p) => p.roadmap.id === roadmapId
     );
     const sections = currentRoadmap.roadmap.sections;
     const currentSectionIndex = sections.findIndex((s) => s.id === sectionId);
@@ -97,7 +97,7 @@ const Section = () => {
       if (error.message === "Section already completed") {
         return toast.error(error.message);
       } else {
-        return toast.error("An error occured");
+        return toast.error("An error occurred");
       }
     }
   };
@@ -109,6 +109,14 @@ const Section = () => {
       </div>
     );
   }
+
+  const renderers = {
+    a: ({ href, children }) => (
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    ),
+  };
 
   return (
     <div className="relative flex min-h-screen w-screen flex-col md:w-full">
@@ -153,9 +161,9 @@ const Section = () => {
       </div>
       <div className="container mx-auto flex flex-col-reverse gap-8 px-4 py-12 lg:flex-row">
         <Card className="w-full overflow-hidden p-8 lg:w-3/4">
-          <Markdown className="prose w-full break-words">
+          <ReactMarkdown components={renderers} className="prose w-full break-words">
             {section?.content}
-          </Markdown>
+          </ReactMarkdown>
         </Card>
 
         <div className="h-1/4 md:w-1/2">

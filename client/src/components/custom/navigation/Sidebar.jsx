@@ -36,7 +36,7 @@ const Sidebar = ({ className }) => {
     toast.success("Logged out successfully");
 
     setTimeout(() => {
-      navigate("/");
+      navigate("/onboarding");
     }, 1000);
   };
 

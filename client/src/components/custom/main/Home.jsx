@@ -47,7 +47,9 @@ const Home = () => {
 
   const hasActiveCourses = meData?.me?.progress?.length > 0;
 
-  console.log(meData.me.progress)
+  console.log(meData.me);
+  const getPluralizedText = (count, singular, plural) =>
+    count === 1 ? singular : plural;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -92,7 +94,12 @@ const Home = () => {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium">
-                              { p.completedSections.length / p.roadmap.sections.length * 100 }% Completed
+                              {Math.round(
+                                (p.completedSections.length /
+                                  p.roadmap.sections.length) *
+                                  100,
+                              )}
+                              % Completed
                             </span>
                           </div>
                           <Link
@@ -158,41 +165,83 @@ const Home = () => {
           <Card className="flex flex-col gap-4 bg-card p-6 md:col-span-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <TrophyIcon className="h-6 w-6 text-primary" />
                 <h3 className="text-lg font-semibold">Achievements</h3>
               </div>
-              <Link href="#" className="text-primary hover:underline">
-                View All
-              </Link>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col items-center gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <BadgeIcon className="h-6 w-6 text-primary" />
                 </div>
-                <div className="text-sm font-medium">Beginner React</div>
-                <div className="text-xs text-muted-foreground">Completed</div>
+                <div className="text-center text-sm font-medium">
+                  {meData?.me?.progress?.length}{" "}
+                  {getPluralizedText(
+                    meData?.me?.progress?.length,
+                    "Course",
+                    "Courses",
+                  )}{" "}
+                  Enrolled
+                </div>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <RocketIcon className="h-6 w-6 text-primary" />
                 </div>
-                <div className="text-sm font-medium">JavaScript Mastery</div>
-                <div className="text-xs text-muted-foreground">In Progress</div>
+                <div className="text-center text-sm font-medium">
+                  {meData?.me?.progress.reduce(
+                    (acc, p) =>
+                      acc +
+                      (p.completedSections.length === p.roadmap.sections.length
+                        ? 1
+                        : 0),
+                    0,
+                  )}{" "}
+                  {getPluralizedText(
+                    meData?.me?.progress.reduce(
+                      (acc, p) =>
+                        acc +
+                        (p.completedSections.length ===
+                        p.roadmap.sections.length
+                          ? 1
+                          : 0),
+                      0,
+                    ),
+                    "Course",
+                    "Courses",
+                  )}{" "}
+                  Completed
+                </div>
+                <div className="text-xs text-muted-foreground"></div>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <MedalIcon className="h-6 w-6 text-primary" />
                 </div>
-                <div className="text-sm font-medium">CSS Ninja</div>
-                <div className="text-xs text-muted-foreground">Completed</div>
+                <div className="text-center text-sm font-medium">
+                  {meData?.me?.progress?.reduce(
+                    (acc, prog) => acc + prog.completedSections.length,
+                    0,
+                  )}{" "}
+                  {getPluralizedText(
+                    meData?.me?.progress?.reduce(
+                      (acc, prog) => acc + prog.completedSections.length,
+                      0,
+                    ),
+                    "Section",
+                    "Sections",
+                  )}{" "}
+                  Completed
+                </div>
+                <div className="text-xs text-muted-foreground"></div>
               </div>
+
               <div className="flex flex-col items-center gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <SparkleIcon className="h-6 w-6 text-primary" />
                 </div>
-                <div className="text-sm font-medium">Intermediate Python</div>
-                <div className="text-xs text-muted-foreground">In Progress</div>
+                <div className="text-center text-sm font-medium">
+                  {meData.me.points} Points
+                </div>
               </div>
             </div>
           </Card>

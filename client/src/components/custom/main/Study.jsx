@@ -9,7 +9,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { BookIcon, ArrowRightIcon, TrendingUp } from "lucide-react";
+import { BookIcon, ArrowRightIcon, TrendingUp, CheckIcon } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Button } from "@/components/ui/button";
 import {
@@ -136,7 +136,7 @@ const Study = () => {
                                 y={viewBox.cy}
                                 className="fill-foreground text-3xl font-bold"
                               >
-                                {chartData[0].completion.toLocaleString()}%
+                                {Math.round(chartData[0].completion)}%
                               </tspan>
                               <tspan
                                 x={viewBox.cx}
@@ -250,8 +250,14 @@ const Study = () => {
                   key={section.id}
                   className="grid grid-cols-[auto_1fr_auto] items-center gap-4"
                 >
-                  <div className="rounded-full bg-primary p-2 text-primary-foreground">
-                    <BookIcon className="h-5 w-5" />
+                  <div className="rounded-full bg-primary p-2 text-primary-foreground   ">
+                    {roadmap?.completedSections
+                      ?.map((section) => section.id)
+                      .includes(section.id) ? (
+                      <CheckIcon className="h-5 w-5" />
+                    ) : (
+                      <BookIcon className="h-5 w-5" />
+                    )}
                   </div>
                   <div>
                     <div className="font-medium">{section.title}</div>

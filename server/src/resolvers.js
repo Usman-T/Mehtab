@@ -172,7 +172,7 @@ const resolvers = {
       }
 
       enrolledRoadmap.completedSections.push(sectionId);
-      user.points = user.points + 1
+      user.points = user.points + 10
 
       return user.save();
     },
