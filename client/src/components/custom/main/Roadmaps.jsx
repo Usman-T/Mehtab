@@ -22,24 +22,8 @@ const Roadmaps = () => {
 
   return (
     <div className="p-4">
-      <div className="mb-4 flex flex-wrap gap-2">
-        {[
-          "All",
-          "Next.js",
-          "React.js",
-          "MySQL",
-          "MongoDB",
-          "Prisma",
-          "Tailwind",
-          "Node.js",
-          "Supabase",
-        ].map((tag) => (
-          <Button key={tag} variant="outline" className="text-sm">
-            {tag}
-          </Button>
-        ))}
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {result.data.allRoadmaps.map((roadmap, index) => (
           <Card
             key={index}
