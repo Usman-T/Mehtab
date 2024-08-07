@@ -23,7 +23,7 @@ const server = new ApolloServer({
 });
 
 exports.handler = server.createHandler({
-  content: async (req) => {
+  context: async (req) => {
     const auth = req?.headers?.authorization;
 
     if (auth?.startsWith("Bearer ")) {
@@ -42,9 +42,10 @@ exports.handler = server.createHandler({
 
     return {};
   },
-  cors: {
-    origin: '*', // Allow all origins or specify allowed origins
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Authorization',
+  expressGetMiddlewareOptions: {
+    cors: {
+      origin: '*',
+      credentials: true,
+    },
   },
 });
