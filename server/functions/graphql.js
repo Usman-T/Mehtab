@@ -3,6 +3,7 @@ const resolvers = require("../src/resolvers");
 const typeDefs = require("../src/typeDefs");
 const User = require("../src/models/user");
 const jwt = require("jsonwebtoken");
+const mongoose = require('mongoose')
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
