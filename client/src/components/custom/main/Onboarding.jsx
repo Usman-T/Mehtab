@@ -57,7 +57,7 @@ const Landing = () => {
         <div className="flex items-center space-x-2">
           <LightbulbIcon className="h-6 w-6 text-secondary-foreground lg:block" />
           <span className="hidden text-xl font-semibold text-secondary-foreground lg:inline">
-            Vertex
+            Rivis
           </span>
         </div>
         <div>
@@ -178,7 +178,7 @@ const Landing = () => {
               <p className="text-lg">
                 We believe that a structured learning path and a disciplined
                 approach are sufficient to make anyone proficient in any skill.
-                That's why Vertex offers roadmaps that anyone can follow to
+                That's why Rivis offers roadmaps that anyone can follow to
                 master any skill.
               </p>
             </div>

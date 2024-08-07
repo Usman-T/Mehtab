@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 
 const Roadmap = () => {
   const [enrollUser] = useMutation(ENROLL_USER, {
-    refetchQueries: [{ query:  ME  }],
+    refetchQueries: [{ query: ME }],
   });
 
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const Roadmap = () => {
   }
 
   const handleEnrollment = async () => {
-    if (!localStorage.getItem("vertex-user-token")) {
+    if (!localStorage.getItem("rivis-user-token")) {
       return toast.error("Must be logged in to enroll in a course");
     }
 

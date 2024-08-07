@@ -29,7 +29,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("vertex-user-token")) {
+    if (!localStorage.getItem("rivis-user-token")) {
       return navigate("/onboarding");
     }
   }, []);

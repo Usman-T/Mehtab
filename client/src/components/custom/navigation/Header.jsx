@@ -7,20 +7,21 @@ import MobileSidebar from "./MobileSidebar";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const loggedIn = localStorage.getItem("vertex-user-token") ? true : false;
+  const loggedIn = localStorage.getItem("rivis-user-token") ? true : false;
   const navigate = useNavigate();
   return (
     <div className="flex h-16 w-screen items-center justify-between border-b bg-white px-4">
-      <div
-        className="flex items-center space-x-2 hover:cursor-pointer"
-      >
-        <LightbulbIcon onClick={() => navigate('/')} className="hidden h-6 w-6 text-secondary-foreground lg:block" />
+      <div className="flex items-center space-x-2 hover:cursor-pointer">
+        <LightbulbIcon
+          onClick={() => navigate("/")}
+          className="hidden h-6 w-6 text-secondary-foreground lg:block"
+        />
         <MobileSidebar className="block h-6 w-6 hover:cursor-pointer lg:hidden" />
         <span className="hidden text-xl font-semibold text-secondary-foreground lg:inline">
-          Vertex
+          Rivis
         </span>
       </div>
-      <div className="hidden w-full max-w-sm items-center space-x-2 rounded-md border ">
+      <div className="hidden w-full max-w-sm items-center space-x-2 rounded-md border">
         <Input
           type="text"
           placeholder="Search for a course"

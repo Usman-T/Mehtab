@@ -29,7 +29,7 @@ const Register = ({ setToken }) => {
       localStorage.clear();
       const token = result.data.login.value;
       setToken(token);
-      localStorage.setItem("vertex-user-token", token);
+      localStorage.setItem("rivis-user-token", token);
     }
   }, [result.data]);
 
@@ -69,14 +69,17 @@ const Register = ({ setToken }) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen md:flex-row">
-      <div className="absolute top-4 left-4 flex items-center space-x-2 hover:cursor-pointer  md:top-8 md:left-8" onClick={() => navigate('/')}>
-        <LightbulbIcon className="w-6 h-6 text-black md:text-white" />
+    <div className="flex min-h-screen flex-col md:flex-row">
+      <div
+        className="absolute left-4 top-4 flex items-center space-x-2 hover:cursor-pointer md:left-8 md:top-8"
+        onClick={() => navigate("/")}
+      >
+        <LightbulbIcon className="h-6 w-6 text-black md:text-white" />
         <span className="text-xl font-semibold text-black md:text-white">
-          Vertex
+          Rivis
         </span>
       </div>
-      <div className="hidden sm:flex flex-col justify-between md:w-1/2 h-screen p-8 bg-black text-white">
+      <div className="hidden h-screen flex-col justify-between bg-black p-8 text-white sm:flex md:w-1/2">
         <div className="mt-auto">
           <p className="text-lg font-medium">
             “This is the best platform to learn and develop skills and it also
@@ -85,12 +88,12 @@ const Register = ({ setToken }) => {
           <p className="mt-4">Sofia Davis</p>
         </div>
       </div>
-      <div className="flex flex-col justify-center w-full h-screen bg-white md:w-1/2">
+      <div className="flex h-screen w-full flex-col justify-center bg-white md:w-1/2">
         <div className="flex justify-end">
           <Link to="/login">
             <Button
               variant={"ghost"}
-              className="absolute top-4 right-4 text-sm font-medium text-gray-600  md:top-8 md:right-8"
+              className="absolute right-4 top-4 text-sm font-medium text-gray-600 md:right-8 md:top-8"
             >
               Login
             </Button>
@@ -98,7 +101,7 @@ const Register = ({ setToken }) => {
         </div>
         <form
           onSubmit={handleRegister}
-          className="flex flex-col items-center p-4 space-y-6"
+          className="flex flex-col items-center space-y-6 p-4"
         >
           <div className="space-y-2 text-center">
             <h2 className="text-2xl font-bold">Register an account</h2>
@@ -135,7 +138,7 @@ const Register = ({ setToken }) => {
           >
             Sign Up
           </Button>
-          <p className="text-xs text-center text-gray-500">
+          <p className="text-center text-xs text-gray-500">
             By clicking continue, you agree to our{" "}
             <a href="#" className="underline">
               Terms of Service

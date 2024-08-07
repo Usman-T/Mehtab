@@ -12,7 +12,7 @@ import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("vertex-user-token");
+  const token = localStorage.getItem("rivis-user-token");
   return {
     headers: {
       ...headers,

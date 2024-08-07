@@ -22,7 +22,7 @@ const Login = ({ setToken }) => {
       localStorage.clear();
       const token = result.data.login.value;
       setToken(token);
-      localStorage.setItem("vertex-user-token", token);
+      localStorage.setItem("rivis-user-token", token);
     }
   }, [result.data]);
 
@@ -54,9 +54,12 @@ const Login = ({ setToken }) => {
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <div className="absolute left-8 top-8 flex items-center space-x-2 hover:cursor-pointer" onClick={() => navigate('/')}>
+      <div
+        className="absolute left-8 top-8 flex items-center space-x-2 hover:cursor-pointer"
+        onClick={() => navigate("/")}
+      >
         <LightbulbIcon className="h-6 w-6 text-black" />
-        <span className="text-xl font-semibold text-black">Vertex</span>
+        <span className="text-xl font-semibold text-black">Rivis</span>
       </div>
 
       <div className="mx-auto flex h-screen w-full flex-col justify-center bg-white">

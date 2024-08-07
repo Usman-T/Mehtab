@@ -56,7 +56,7 @@ const Sidebar = ({ className }) => {
           />
         ))}
 
-        {localStorage.getItem("vertex-user-token") && (
+        {localStorage.getItem("rivis-user-token") && (
           <>
             <Separator className="my-4" />
             <Button
@@ -70,7 +70,7 @@ const Sidebar = ({ className }) => {
           </>
         )}
 
-        {localStorage.getItem("vertex-user-token") &&
+        {localStorage.getItem("rivis-user-token") &&
           data &&
           data?.me?.isAdmin === true && (
             <>

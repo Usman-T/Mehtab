@@ -61,7 +61,7 @@ const MobileSidebar = () => {
       <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger asChild>
           <MenuIcon
-            className="hover:cursor-pointer z-50"
+            className="z-50 hover:cursor-pointer"
             onClick={() => setSheetOpen(true)}
           />
         </SheetTrigger>
@@ -73,7 +73,7 @@ const MobileSidebar = () => {
           <div className="flex items-center space-x-2 border-b px-2 py-4">
             <LightbulbIcon className="block h-6 w-6 text-secondary-foreground" />
             <span className="inline text-xl font-semibold text-secondary-foreground">
-              Vertex
+              Rivis
             </span>
           </div>
           <div className="flex w-full flex-col space-y-2">
@@ -87,7 +87,7 @@ const MobileSidebar = () => {
             ))}
 
             <Separator className="my-4" />
-            {localStorage.getItem("vertex-user-token") ? (
+            {localStorage.getItem("rivis-user-token") ? (
               <>
                 <Button
                   onClick={() => handleLogout()}
