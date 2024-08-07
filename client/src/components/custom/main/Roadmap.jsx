@@ -109,7 +109,7 @@ const Roadmap = () => {
         <Card className="rounded-lg p-6 shadow-sm">
           <h3 className="mb-4 text-xl font-bold">Ready to start?</h3>
           <p className="mb-4">
-            Track your progress, watch with subtitles, change quality & speed,
+            Track your progress, have an intuitve interface, realtime support,
             and more.
           </p>
           <EnrollmentDialog

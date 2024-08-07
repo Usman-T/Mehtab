@@ -1,16 +1,9 @@
-const { ApolloServer } = require("@apollo/server");
-const { startStandaloneServer } = require("@apollo/server/standalone");
-const typeDefs = require("./typeDefs");
-const mongoose = require("mongoose");
-require("dotenv").config();
-const resolvers = require("./resolvers");
-const User = require("./models/user");
+const { ApolloServer, gql } = require("apollo-server-lambda");
+const resolvers = require("../src/resolvers");
+const typeDefs = require("../src/typeDefs");
+const User = require("../src/models/user");
 const jwt = require("jsonwebtoken");
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+const mongoose = require("mongoose");
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -23,9 +16,14 @@ mongoose
     console.log("error connection to MongoDB:", error.message);
   });
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async ({ req }) => {
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  playground: true,
+});
+
+exports.handler = server.createHandler({
+  content: async (req) => {
     const auth = req?.headers?.authorization;
 
     if (auth?.startsWith("Bearer ")) {
@@ -44,6 +42,4 @@ startStandaloneServer(server, {
 
     return {};
   },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
 });

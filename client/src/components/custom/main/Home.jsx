@@ -88,7 +88,7 @@ const Home = () => {
                             {p.roadmap.title}
                           </h4>
                           <p className="text-sm text-muted-foreground">
-                            {p.roadmap.description.substring(0, 140)}...
+                            {p.roadmap.description.substring(0, 120)}...
                           </p>
                         </div>
                         <div className="flex items-center justify-between">
@@ -149,7 +149,7 @@ const Home = () => {
                   <div>
                     <div className="font-medium">{r.title}</div>
                     <div className="text-sm text-muted-foreground">
-                      {r.description.substring(0, 50)}...
+                      {r.description.substring(0, 30)}...
                     </div>
                   </div>
                   <Link to={`/roadmaps/${r.id}`}>

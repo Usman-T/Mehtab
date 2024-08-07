@@ -8,7 +8,6 @@ import {
   MenuIcon,
   LightbulbIcon,
   LogOutIcon,
-  SearchIcon,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -20,8 +19,8 @@ import {
 } from "@/components/ui/sheet";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import { useApolloClient } from "@apollo/client";
+import toast from "react-hot-toast";
 
 const MobileSidebar = () => {
   const client = useApolloClient();

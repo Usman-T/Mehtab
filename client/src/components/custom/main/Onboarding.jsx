@@ -102,7 +102,7 @@ const Landing = () => {
           </Button>
         </div>
       </div>
-      <section className="w-full py-12 md:py-24 lg:py-32" ref={coursesRef}>
+      <section className="w-full h-screen py-12 md:py-24 lg:py-32" ref={coursesRef}>
         <div className="container space-y-12 px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
@@ -185,7 +185,7 @@ const Landing = () => {
             <div className="relative aspect-video w-full overflow-clip rounded-md">
               <LazyLoadImage
                 src={"https://cdn-icons-png.flaticon.com/512/2116/2116935.png"}
-                className="aspect-video w-full blur-[20px]  scale-100 object-contain grayscale-0 duration-500 ease-in-out"
+                className="aspect-video w-full scale-100 object-contain blur-[20px] grayscale-0 duration-500 ease-in-out"
                 style={{
                   filter: "blur(20px)",
                   transition: "filter 0.5s ease",
