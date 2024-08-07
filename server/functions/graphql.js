@@ -3,7 +3,7 @@ const resolvers = require("../src/resolvers");
 const typeDefs = require("../src/typeDefs");
 const User = require("../src/models/user");
 const jwt = require("jsonwebtoken");
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -41,5 +41,10 @@ exports.handler = server.createHandler({
     }
 
     return {};
+  },
+  cors: {
+    origin: '*', // Allow all origins or specify allowed origins
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
   },
 });
