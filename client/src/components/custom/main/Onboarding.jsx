@@ -90,7 +90,7 @@ const Landing = () => {
           Unlock your full potential with our structured learning approach.
         </h2>
         <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
-          <Link to="/roadmaps">
+          <Link to="/register">
             <Button className="w-full md:w-auto">Get Started</Button>
           </Link>
           <Button
