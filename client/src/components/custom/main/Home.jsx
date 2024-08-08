@@ -34,7 +34,7 @@ const Home = () => {
     }
   }, []);
 
-  const { data: meData, loading: meLoading } = useQuery(ME);
+  const { data: meData, loading: meLoading, error } = useQuery(ME);
   const { data: roadmapData, loading: roadmapLoading } = useQuery(ALL_ROADMAPS);
 
   if (meLoading || roadmapLoading) {
@@ -47,7 +47,6 @@ const Home = () => {
 
   const hasActiveCourses = meData?.me?.progress?.length > 0;
 
-  console.log(meData.me);
   const getPluralizedText = (count, singular, plural) =>
     count === 1 ? singular : plural;
 

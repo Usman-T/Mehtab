@@ -5,10 +5,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 import MobileSidebar from "./MobileSidebar";
 import { useNavigate } from "react-router-dom";
+import { ME } from "@/queries";
+import { ClipLoader } from "react-spinners";
+import { useQuery } from "@apollo/client";
 
 const Header = () => {
   const loggedIn = localStorage.getItem("rivis-user-token") ? true : false;
   const navigate = useNavigate();
+
+  const { data, loading } = useQuery(ME);
+
+  if (loading || !data ) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <ClipLoader size={64} />
+      </div>
+    );
+  }
   return (
     <div className="flex h-16 w-screen items-center justify-between border-b bg-white px-4">
       <div className="flex items-center space-x-2 hover:cursor-pointer">
@@ -34,8 +47,7 @@ const Header = () => {
       <div>
         {loggedIn ? (
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>{data?.me?.username[0].toUpperCase()}</AvatarFallback>
           </Avatar>
         ) : (
           <Button
