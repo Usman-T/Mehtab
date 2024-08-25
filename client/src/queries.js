@@ -93,24 +93,16 @@ export const CREATE_UPCOMING_ROADMAP = gql`
     $title: String!
     $description: String!
     $image: String!
-    $sections: [SectionInput!]!
   ) {
-    createRoadmap(
+    createUpcomingRoadmap(
       title: $title
       description: $description
       image: $image
-      sections: $sections
     ) {
       id
       title
       description
       image
-      sections {
-        title
-        content
-        description
-        images
-      }
     }
   }
 `;
