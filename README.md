@@ -1,6 +1,6 @@
-# Rivis
+# Mehtab
 
-Rivis is a comprehensive web application designed to help users learn new skills through interactive roadmaps. Users can register, enroll in roadmaps, and complete them in their respective section pages. The project features both a frontend built with React and a backend powered by GraphQL, which is deployed as a Lambda function on Netlify.
+Mehtab is a comprehensive web application designed to help users learn new skills through interactive roadmaps. Users can register, enroll in roadmaps, and complete them in their respective section pages. The project features both a frontend built with React and a backend powered by GraphQL, which is deployed as a Lambda function on Netlify.
 
 ## Features
 
@@ -18,7 +18,7 @@ Rivis is a comprehensive web application designed to help users learn new skills
 
 ## Backend
 
-The backend of Rivis is implemented using GraphQL and is deployed as a Lambda function on Netlify. It includes the following queries and mutations:
+The backend of Mehtab is implemented using GraphQL and is deployed as a Lambda function on Netlify. It includes the following queries and mutations:
 
 ### Queries
 

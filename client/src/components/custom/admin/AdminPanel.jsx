@@ -21,8 +21,8 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ALL_ROADMAPS, ALL_USERS } from "@/queries";
-import { ClipLoader } from "react-spinners";
+import { ALL_ROADMAPS, ALL_USERS, UPCOMING_ROADMAPS } from "@/queries";
+import Loading from "../extras/Loading";
 
 const StatCard = ({ title, value, percentageChange, icon: Icon }) => (
   <Card className="flex flex-col space-y-2 py-2">
@@ -53,7 +53,7 @@ const RecentUsersTable = ({ users }) => (
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user, index) => (
+          {users?.slice(0, 5).map((user, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">{user.username}</TableCell>
               <TableCell>{user.progress.length} courses</TableCell>
@@ -84,7 +84,7 @@ const CoursesTable = ({ courses }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {courses.map((course, index) => (
+            {courses.slice(0, 5).map((course, index) => (
               <TableRow
                 key={index}
                 className="hover:cursor-pointer"
@@ -141,21 +141,24 @@ const AdminPanel = () => {
     data: roadmapData,
   } = useQuery(ALL_ROADMAPS);
 
-  if (userLoading || roadmapLoading)
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <ClipLoader size={64} className="" />
-      </div>
-    );
+  // const {
+  //   loading: upcomingLoading,
+  //   error: upcomingError,
+  //   data: upcomingData,
+  // } = useQuery(UPCOMING_ROADMAPS);
+
+  if (userLoading || roadmapLoading) return <Loading />;
   if (userError || roadmapError)
     return <p>Error: {userError?.message || roadmapError?.message}</p>;
 
-  const users = userData.allUsers.slice(0, 5);
-  const roadmaps = roadmapData.allRoadmaps.slice(0, 5);
+  const users = userData.allUsers;
+  const roadmaps = roadmapData.allRoadmaps;
+  // const upcoming = upcomingData.allUpcomingRoadmaps;
   const totalPoints = userData.allUsers.reduce(
     (acc, user) => acc + user.points,
     0,
   );
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <div className="flex flex-col sm:gap-4 sm:py-4">
@@ -174,7 +177,7 @@ const AdminPanel = () => {
               icon={BookIcon}
             />
             <StatCard
-              title="Enrolled Courses"
+              title="Upcoming courses"
               value="4"
               percentageChange="current enrollments"
               icon={ClipboardIcon}
@@ -195,6 +198,6 @@ const AdminPanel = () => {
       </div>
     </div>
   );
-};
+};  
 
 export default AdminPanel;

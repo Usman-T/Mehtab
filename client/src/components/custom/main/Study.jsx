@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
 import {
   Carousel,
   CarouselContent,
@@ -30,6 +29,7 @@ import {
 import { ChartContainer } from "@/components/ui/chart";
 import toast from "react-hot-toast";
 import { ME } from "@/queries";
+import Loading from "../extras/Loading";
 
 const Study = () => {
   const chartConfig = {
@@ -72,11 +72,7 @@ const Study = () => {
   }, [loading, data, id, roadmap]);
 
   if (loading || !roadmap || !chartData) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <ClipLoader size={64} />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -250,7 +246,7 @@ const Study = () => {
                   key={section.id}
                   className="grid grid-cols-[auto_1fr_auto] items-center gap-4"
                 >
-                  <div className="rounded-full bg-primary p-2 text-primary-foreground   ">
+                  <div className="rounded-full bg-primary p-2 text-primary-foreground">
                     {roadmap?.completedSections
                       ?.map((section) => section.id)
                       .includes(section.id) ? (

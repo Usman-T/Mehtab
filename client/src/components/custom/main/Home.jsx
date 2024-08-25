@@ -19,30 +19,25 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import { useQuery } from "@apollo/client";
-import { ClipLoader } from "react-spinners";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ALL_ROADMAPS, ME } from "@/queries";
-import toast from "react-hot-toast";
 import { useEffect } from "react";
+import Loading from "../extras/Loading";
 
 const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("rivis-user-token")) {
+    if (!localStorage.getItem("mehtab-user-token")) {
       return navigate("/onboarding");
     }
   }, []);
 
-  const { data: meData, loading: meLoading, error } = useQuery(ME);
+  const { data: meData, loading: meLoading } = useQuery(ME);
   const { data: roadmapData, loading: roadmapLoading } = useQuery(ALL_ROADMAPS);
 
   if (meLoading || roadmapLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <ClipLoader size={64} />
-      </div>
-    );
+    return <Loading />;
   }
 
   const hasActiveCourses = meData?.me?.progress?.length > 0;
@@ -53,11 +48,12 @@ const Home = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
+        {!localStorage.getItem("understood") && <p>sad</p>}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="col-span-1 flex flex-col gap-4 bg-card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold">Active Courses</h3>
+                <h3 className="text-lg font-semibold">Active Roadmaps</h3>
               </div>
             </div>
             {hasActiveCourses ? (
@@ -117,12 +113,12 @@ const Home = () => {
               </Carousel>
             ) : (
               <div className="text-center text-muted-foreground">
-                <p>You haven't enrolled in any courses yet.</p>
+                <p>You haven't enrolled in any roadmaps yet.</p>
                 <Link
                   to="/roadmaps"
                   className="mt-4 inline-block rounded bg-primary px-4 py-2 text-white"
                 >
-                  Explore Courses
+                  Explore Roadmaps
                 </Link>
               </div>
             )}
@@ -130,7 +126,7 @@ const Home = () => {
           <Card className="flex flex-col gap-4 bg-card p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold">Recommended Courses</h3>
+                <h3 className="text-lg font-semibold">Recommended Roadmaps</h3>
               </div>
               <Link to="/roadmaps" className="text-primary hover:underline">
                 View All
@@ -176,8 +172,8 @@ const Home = () => {
                   {meData?.me?.progress?.length}{" "}
                   {getPluralizedText(
                     meData?.me?.progress?.length,
-                    "Course",
-                    "Courses",
+                    "Roadmap",
+                    "Roadmaps",
                   )}{" "}
                   Enrolled
                 </div>
@@ -205,8 +201,8 @@ const Home = () => {
                           : 0),
                       0,
                     ),
-                    "Course",
-                    "Courses",
+                    "Roadmap",
+                    "Roadmaps",
                   )}{" "}
                   Completed
                 </div>

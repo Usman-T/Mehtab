@@ -88,6 +88,33 @@ export const CREATE_ROADMAP = gql`
   }
 `;
 
+export const CREATE_UPCOMING_ROADMAP = gql`
+  mutation CreateRoadmap(
+    $title: String!
+    $description: String!
+    $image: String!
+    $sections: [SectionInput!]!
+  ) {
+    createRoadmap(
+      title: $title
+      description: $description
+      image: $image
+      sections: $sections
+    ) {
+      id
+      title
+      description
+      image
+      sections {
+        title
+        content
+        description
+        images
+      }
+    }
+  }
+`;
+
 export const ME = gql`
   query {
     me {
@@ -118,16 +145,26 @@ export const ME = gql`
 `;
 
 export const COMPLETE_SECTION = gql`
-mutation ($roadmapId: ID!, $sectionId: ID!) {
-  completeSection(roadmapId: $roadmapId, sectionId: $sectionId) {
-    progress {
-      roadmap {
-        title
-      }
-      completedSections {
-        title
+  mutation ($roadmapId: ID!, $sectionId: ID!) {
+    completeSection(roadmapId: $roadmapId, sectionId: $sectionId) {
+      progress {
+        roadmap {
+          title
+        }
+        completedSections {
+          title
+        }
       }
     }
   }
-}
+`;
+
+export const UPCOMING_ROADMAPS = gql`
+  query {
+    allUpcomingRoadmaps {
+      title
+      image
+      description
+    }
+  }
 `;

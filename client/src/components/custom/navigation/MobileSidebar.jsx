@@ -73,7 +73,7 @@ const MobileSidebar = () => {
           <div className="flex items-center space-x-2 border-b px-2 py-4">
             <LightbulbIcon className="block h-6 w-6 text-secondary-foreground" />
             <span className="inline text-xl font-semibold text-secondary-foreground">
-              Rivis
+              Mehtab
             </span>
           </div>
           <div className="flex w-full flex-col space-y-2">
@@ -87,7 +87,7 @@ const MobileSidebar = () => {
             ))}
 
             <Separator className="my-4" />
-            {localStorage.getItem("rivis-user-token") ? (
+            {localStorage.getItem("mehtab-user-token") ? (
               <>
                 <Button
                   onClick={() => handleLogout()}

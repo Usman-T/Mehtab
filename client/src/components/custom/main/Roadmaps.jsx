@@ -1,11 +1,10 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@apollo/client";
 import { BookOpenIcon } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useNavigate } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
 import { ALL_ROADMAPS } from "@/queries";
+import Loading from "../extras/Loading";
 
 const Roadmaps = () => {
   const result = useQuery(ALL_ROADMAPS);
@@ -13,16 +12,11 @@ const Roadmaps = () => {
   const navigate = useNavigate();
 
   if (result.loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <ClipLoader size={64} className="" />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
     <div className="p-4">
-      
       <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {result.data.allRoadmaps.map((roadmap, index) => (
           <Card

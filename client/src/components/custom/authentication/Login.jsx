@@ -22,7 +22,8 @@ const Login = ({ setToken }) => {
       localStorage.clear();
       const token = result.data.login.value;
       setToken(token);
-      localStorage.setItem("rivis-user-token", token);
+      localStorage.setItem("mehtab-user-token", token);
+      localStorage.setItem("undestood", false);
     }
   }, [result.data]);
 
@@ -59,7 +60,7 @@ const Login = ({ setToken }) => {
         onClick={() => navigate("/")}
       >
         <LightbulbIcon className="h-6 w-6 text-black" />
-        <span className="text-xl font-semibold text-black">Rivis</span>
+        <span className="text-xl font-semibold text-black">Mehtab</span>
       </div>
 
       <div className="mx-auto flex h-screen w-full flex-col justify-center bg-white">

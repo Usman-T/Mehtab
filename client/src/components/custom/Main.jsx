@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Header from "./navigation/Header";
 import Sidebar from "./navigation/Sidebar";
 import { ScrollArea } from "../ui/scroll-area";
-import ScrollToTop from "./extras/ScrollToTop";
 
 const Main = ({ component }) => {
   return (

@@ -12,7 +12,7 @@ import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("rivis-user-token");
+  const token = localStorage.getItem("mehtab-user-token");
   return {
     headers: {
       ...headers,
@@ -34,7 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <Router>
-        <App />
+        <App  />
       </Router>
     </ApolloProvider>
   </React.StrictMode>,

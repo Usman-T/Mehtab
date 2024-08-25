@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
 import ReactMarkdown from "react-markdown";
 import { toast } from "react-hot-toast";
 import { COMPLETE_SECTION, ME } from "@/queries";
@@ -14,6 +13,7 @@ import {
   CircleArrowRightIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Loading from "../extras/Loading";
 
 const Section = () => {
   const { roadmapId, sectionId } = useParams();
@@ -104,9 +104,7 @@ const Section = () => {
 
   if (loading || !data) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <ClipLoader size={64} />
-      </div>
+      <Loading/>
     );
   }
 

@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ALL_ROADMAPS, ENROLL_USER, ME } from "@/queries";
-import { ClipLoader } from "react-spinners";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { Card } from "@/components/ui/card";
@@ -16,11 +15,15 @@ import {
 } from "@/components/ui/dialog";
 import { CircleCheck } from "lucide-react";
 import toast from "react-hot-toast";
+import Loading from "../extras/Loading";
 
 const Roadmap = () => {
-  const [enrollUser] = useMutation(ENROLL_USER, {
-    refetchQueries: [{ query: ME }],
-  });
+  const [enrollUser, { loading: enrollmentLoading }] = useMutation(
+    ENROLL_USER,
+    {
+      refetchQueries: [{ query: ME }],
+    },
+  );
 
   const navigate = useNavigate();
 
@@ -43,15 +46,11 @@ const Roadmap = () => {
   }, [loading, data, id, roadmap]);
 
   if (loading || !roadmap) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <ClipLoader size={64} />
-      </div>
-    );
+    return <Loading />;
   }
 
   const handleEnrollment = async () => {
-    if (!localStorage.getItem("rivis-user-token")) {
+    if (!localStorage.getItem("mehtab-user-token")) {
       return toast.error("Must be logged in to enroll in a course");
     }
 
@@ -116,6 +115,7 @@ const Roadmap = () => {
             handleEnrollment={handleEnrollment}
             yearly={yearly}
             setYearly={setYearly}
+            loading={enrollmentLoading}
           />
         </Card>
       </div>
@@ -125,7 +125,7 @@ const Roadmap = () => {
 
 export default Roadmap;
 
-const EnrollmentDialog = ({ handleEnrollment, yearly, setYearly }) => (
+const EnrollmentDialog = ({ handleEnrollment, yearly, setYearly, loading }) => (
   <Dialog>
     <DialogTrigger asChild>
       <Button className="w-full">Start Learning</Button>
@@ -153,7 +153,6 @@ const EnrollmentDialog = ({ handleEnrollment, yearly, setYearly }) => (
         </Button>
       </div>
       <div className="mb-4 text-4xl font-bold">${yearly ? "0" : "0"}/mo</div>
-
       <ul className="mb-4 list-none">
         <li className="mb-2 flex items-center">
           <span className="mr-2 text-primary">
@@ -180,8 +179,12 @@ const EnrollmentDialog = ({ handleEnrollment, yearly, setYearly }) => (
           Intuitive interface
         </li>
       </ul>
-      <Button onClick={() => handleEnrollment()} className="w-full">
-        Enroll
+      <Button
+        onClick={() => handleEnrollment()}
+        className="w-full"
+        disabled={loading}
+      >
+        {loading ? "Enrolling..." : "Enroll"}
       </Button>
     </DialogContent>
   </Dialog>

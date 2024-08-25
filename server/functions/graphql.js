@@ -3,7 +3,7 @@ const resolvers = require("../src/resolvers");
 const typeDefs = require("../src/typeDefs");
 const User = require("../src/models/user");
 const jwt = require("jsonwebtoken");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -19,14 +19,10 @@ mongoose
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  playground: true,
-});
+  context: async ({ event }) => {
+    const auth = event.headers.authorization || '';
 
-exports.handler = server.createHandler({
-  context: async (req) => {
-    const auth = req?.headers?.authorization;
-
-    if (auth?.startsWith("Bearer ")) {
+    if (auth.startsWith("Bearer ")) {
       const token = auth.substring(7);
       try {
         const { id } = jwt.verify(token, process.env.JWT_SECRET);
@@ -42,10 +38,12 @@ exports.handler = server.createHandler({
 
     return {};
   },
-  expressGetMiddlewareOptions: {
-    cors: {
-      origin: '*',
-      credentials: true,
-    },
+  playground: true,
+});
+
+exports.handler = server.createHandler({
+  cors: {
+    origin: "*",
+    credentials: true,
   },
 });

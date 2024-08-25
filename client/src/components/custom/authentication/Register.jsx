@@ -6,6 +6,8 @@ import { LightbulbIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import Lottie from "lottie-react";
+import animationData from "../../../../public/PencilAnimation";
 import { CREATE_USER, LOGIN } from "@/queries";
 
 const Register = ({ setToken }) => {
@@ -29,7 +31,8 @@ const Register = ({ setToken }) => {
       localStorage.clear();
       const token = result.data.login.value;
       setToken(token);
-      localStorage.setItem("rivis-user-token", token);
+      localStorage.setItem("mehtab-user-token", token);
+      localStorage.setItem("understood", false);
     }
   }, [result.data]);
 
@@ -74,18 +77,15 @@ const Register = ({ setToken }) => {
         className="absolute left-4 top-4 flex items-center space-x-2 hover:cursor-pointer md:left-8 md:top-8"
         onClick={() => navigate("/")}
       >
-        <LightbulbIcon className="h-6 w-6 text-black md:text-white" />
-        <span className="text-xl font-semibold text-black md:text-white">
-          Rivis
-        </span>
+        <LightbulbIcon className="h-6 w-6 md:text-primary" />
+        <span className="text-xl font-semibold text-black">Mehtab</span>
       </div>
-      <div className="hidden h-screen flex-col justify-between bg-black p-8 text-white sm:flex md:w-1/2">
-        <div className="mt-auto">
-          <p className="text-lg font-medium">
-            “This is the best platform to learn and develop skills and it also
-            has a great community. It feels illegal to know!”
+      <div className="mx-auto my-auto hidden h-[50%] w-full flex-col items-center justify-between p-8 text-primary sm:flex md:w-1/2">
+        <Lottie className="h-64 w-64" animationData={animationData}></Lottie>
+        <div>
+          <p className="text-center text-lg font-semibold text-primary">
+            Fill in the details to register on our platform
           </p>
-          <p className="mt-4">Sofia Davis</p>
         </div>
       </div>
       <div className="flex h-screen w-full flex-col justify-center bg-white md:w-1/2">
@@ -104,7 +104,9 @@ const Register = ({ setToken }) => {
           className="flex flex-col items-center space-y-6 p-4"
         >
           <div className="space-y-2 text-center">
-            <h2 className="text-2xl font-bold">Register an account</h2>
+            <h2 className="flex items-center justify-center space-x-4 text-2xl font-bold">
+              <p>Register an account</p>{" "}
+            </h2>
             <p className="text-gray-600">
               Create an account on the platform for free
             </p>
@@ -133,7 +135,7 @@ const Register = ({ setToken }) => {
           </div>
           <Button
             type="submit"
-            className="w-1/2 max-w-sm bg-black text-white"
+            className="w-1/2 max-w-sm bg-black font-semibold text-white"
             disabled={loading}
           >
             Sign Up
