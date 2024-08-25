@@ -1,4 +1,0 @@
-[build]
-  command = "yarn"
-  publish = "static"
-  functions = "functions"
