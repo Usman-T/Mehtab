@@ -1,0 +1,16 @@
+{
+  "name": "mehtab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cl": "cd client && npm run dev",
+    "ql": "cd server && npm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react-scroll": "^1.9.0"
+  }
+}
