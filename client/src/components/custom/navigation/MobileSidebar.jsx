@@ -6,7 +6,7 @@ import {
   HomeIcon,
   EllipsisVertical,
   MenuIcon,
-  LightbulbIcon,
+  MoonIcon,
   LogOutIcon,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -71,7 +71,7 @@ const MobileSidebar = () => {
         >
           <SheetTitle></SheetTitle>
           <div className="flex items-center space-x-2 border-b px-2 py-4">
-            <LightbulbIcon className="block h-6 w-6 text-secondary-foreground" />
+            <MoonIcon className="block h-6 w-6 text-secondary-foreground" />
             <span className="inline text-xl font-semibold text-secondary-foreground">
               Mehtab
             </span>

@@ -43,11 +43,11 @@ const CreateUpcomingRoadmap = () => {
       },
     });
 
-    toast.success("Created roadmap successfully");
+    toast.success("Created upcoming roadmap successfully");
     setRoadmapTitle("");
     setRoadmapImage("");
     setRoadmapDescription("");
-    navigate("/roadmaps");
+    navigate("/admin");
   };
 
   return (

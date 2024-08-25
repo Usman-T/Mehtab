@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@apollo/client";
-import { LightbulbIcon } from "lucide-react";
+import { MoonIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -59,7 +59,7 @@ const Login = ({ setToken }) => {
         className="absolute left-8 top-8 flex items-center space-x-2 hover:cursor-pointer"
         onClick={() => navigate("/")}
       >
-        <LightbulbIcon className="h-6 w-6 text-black" />
+        <MoonIcon className="h-6 w-6 text-black" />
         <span className="text-xl font-semibold text-black">Mehtab</span>
       </div>
 

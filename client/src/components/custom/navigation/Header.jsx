@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LightbulbIcon, LogOutIcon, MenuIcon, SearchIcon } from "lucide-react";
+import { MoonIcon, LogOutIcon, MenuIcon, SearchIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 import MobileSidebar from "./MobileSidebar";
@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <div className="flex h-16 w-screen items-center justify-between border-b bg-white px-4">
       <div className="flex items-center space-x-2 hover:cursor-pointer">
-        <LightbulbIcon
+        <MoonIcon
           onClick={() => navigate("/")}
           className="hidden h-6 w-6 text-secondary-foreground lg:block"
         />

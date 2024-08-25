@@ -1,4 +1,4 @@
-import { useRef } from "react";
+ import { useRef } from "react";
 import {
   ArrowRightIcon,
   CalendarIcon,
@@ -6,7 +6,7 @@ import {
   DraftingCompassIcon,
   GithubIcon,
   InstagramIcon,
-  LightbulbIcon,
+  MoonIcon,
   LogOutIcon,
   PlusIcon,
   UsersIcon,
@@ -38,7 +38,7 @@ const Landing = () => {
         <div className="relative flex h-screen flex-col items-center justify-center">
           <div className="animate-spin">
             <div className="flex flex-col md:flex-row">
-              <LightbulbIcon className="h-16 w-16 text-gray-900" />
+              <MoonIcon className="h-16 w-16 text-gray-900" />
             </div>
           </div>
 
@@ -62,7 +62,7 @@ const Landing = () => {
       <div className="relative h-screen overflow-x-hidden">
         <div className="top-0 flex h-16 w-screen items-center justify-between bg-white px-4">
           <div className="mx-[5%] flex items-center space-x-2">
-            <LightbulbIcon className="h-6 w-6 text-secondary-foreground lg:block" />
+            <MoonIcon className="h-6 w-6 text-secondary-foreground lg:block" />
             <span className="hidden text-xl font-semibold text-secondary-foreground lg:inline">
               Mehtab
             </span>
@@ -253,7 +253,7 @@ const Landing = () => {
                 </h3>
                 <p className="mt-2 text-gray-500">
                   Stay on track with weekly and monthly <br />
-                  assignments to reinforce learning."
+                  assignments to reinforce learning.
                 </p>
               </div>
             </div>

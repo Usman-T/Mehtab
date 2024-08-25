@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@apollo/client";
-import { LightbulbIcon } from "lucide-react";
+import { MoonIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -77,11 +77,11 @@ const Register = ({ setToken }) => {
         className="absolute left-4 top-4 flex items-center space-x-2 hover:cursor-pointer md:left-8 md:top-8"
         onClick={() => navigate("/")}
       >
-        <LightbulbIcon className="h-6 w-6 md:text-primary" />
+        <MoonIcon className="h-6 w-6 md:text-primary" />
         <span className="text-xl font-semibold text-black">Mehtab</span>
       </div>
       <div className="mx-auto my-auto hidden h-[50%] w-full flex-col items-center justify-between p-8 text-primary sm:flex md:w-1/2">
-        <Lottie className="h-64 w-64" animationData={animationData}></Lottie>
+        <Lottie className="h-64 lg:h-96 lg:w-96  w-64" animationData={animationData}></Lottie>
         <div>
           <p className="text-center text-lg font-semibold text-primary">
             Fill in the details to register on our platform

@@ -21,8 +21,9 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ALL_ROADMAPS, ALL_USERS, UPCOMING_ROADMAPS } from "@/queries";
+import { ALL_ROADMAPS, ALL_UPCOMING_ROADMAPS, ALL_USERS } from "@/queries";
 import Loading from "../extras/Loading";
+import Drafts from "./Drafts";
 
 const StatCard = ({ title, value, percentageChange, icon: Icon }) => (
   <Card className="flex flex-col space-y-2 py-2">
@@ -139,25 +140,28 @@ const AdminPanel = () => {
     loading: roadmapLoading,
     error: roadmapError,
     data: roadmapData,
-  } = useQuery(ALL_ROADMAPS);
+  } = useQuery(ALL_ROADMAPS, {
+    variables: { includeDrafts: true },
+  });
+  const {
+    loading: upcomingLoading,
+    data: upcomingData,
+    error: upcomingError,
+  } = useQuery(ALL_UPCOMING_ROADMAPS);
 
-  // const {
-  //   loading: upcomingLoading,
-  //   error: upcomingError,
-  //   data: upcomingData,
-  // } = useQuery(UPCOMING_ROADMAPS);
-
-  if (userLoading || roadmapLoading) return <Loading />;
-  if (userError || roadmapError)
+  if (userLoading || roadmapLoading || upcomingLoading) return <Loading />;
+  if (userError || roadmapError || upcomingError)
     return <p>Error: {userError?.message || roadmapError?.message}</p>;
 
   const users = userData.allUsers;
-  const roadmaps = roadmapData.allRoadmaps;
-  // const upcoming = upcomingData.allUpcomingRoadmaps;
-  const totalPoints = userData.allUsers.reduce(
-    (acc, user) => acc + user.points,
-    0,
+
+  const drafts = roadmapData.allRoadmaps.filter((roadmap) => roadmap.draft);
+  const activeRoadmaps = roadmapData.allRoadmaps.filter(
+    (roadmap) => !roadmap.draft,
   );
+
+  console.log({allRoadmaps: roadmapData.allRoadmaps});
+  const totalPoints = users.reduce((acc, user) => acc + user.points, 0);
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -172,13 +176,13 @@ const AdminPanel = () => {
             />
             <StatCard
               title="Active Roadmaps"
-              value={roadmaps.length}
-              percentageChange="availble roadmaps"
+              value={activeRoadmaps.length}
+              percentageChange="available roadmaps"
               icon={BookIcon}
             />
             <StatCard
               title="Upcoming courses"
-              value="4"
+              value={upcomingData.allUpcomingRoadmaps.length}
               percentageChange="current enrollments"
               icon={ClipboardIcon}
             />
@@ -191,13 +195,14 @@ const AdminPanel = () => {
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <RecentUsersTable users={users} />
-            <CoursesTable courses={roadmaps} />
+            <CoursesTable courses={activeRoadmaps} />
           </div>
-          <CreateCourseForm />
+          <Drafts drafts={drafts} />
+          <CreateCourseForm   />
         </main>
       </div>
     </div>
   );
-};  
+};
 
 export default AdminPanel;

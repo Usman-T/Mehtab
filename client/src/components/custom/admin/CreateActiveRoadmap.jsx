@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,15 +6,12 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import toast from "react-hot-toast";
-import { useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/client";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ALL_ROADMAPS, CREATE_ROADMAP } from "@/queries";
+import Loading from "../extras/Loading";
 
 const CreateActiveRoadmap = () => {
-  const [createRoadmap] = useMutation(CREATE_ROADMAP, {
-    refetchQueries: [ALL_ROADMAPS],
-  });
-
   const [roadmapTitle, setRoadmapTitle] = useState("");
   const [roadmapDescription, setRoadmapDescription] = useState("");
   const [roadmapImage, setRoadmapImage] = useState("");
@@ -27,11 +24,44 @@ const CreateActiveRoadmap = () => {
     },
   ]);
 
+  const [searchParams] = useSearchParams();
+  const draftId = searchParams.get("draft");
   const navigate = useNavigate();
 
+  const { data: roadmapData, loading: roadmapLoading } = useQuery(
+    ALL_ROADMAPS,
+    { variables: { includeDrafts: true } },
+  );
+  const [createRoadmap] = useMutation(CREATE_ROADMAP, {
+    refetchQueries: [ALL_ROADMAPS],
+  });
+
+  useEffect(() => {
+    if (roadmapData && !roadmapLoading) {
+      const draftRoadmap = roadmapData.allRoadmaps.find(
+        (r) => r.id === draftId,
+      );
+      if (draftRoadmap) {
+        setRoadmapTitle(draftRoadmap.title);
+        setRoadmapDescription(draftRoadmap.description);
+        setRoadmapImage(draftRoadmap.image);
+        setSections(
+          draftRoadmap.sections.map((section) => ({
+            ...section,
+            images: [...section.images],
+          })),
+        );
+      }
+    }
+  }, [roadmapData, roadmapLoading, draftId]);
+
+  if (roadmapLoading) {
+    return <Loading />;
+  }
+
   const addSection = () => {
-    setSections([
-      ...sections,
+    setSections((prevSections) => [
+      ...prevSections,
       {
         title: "",
         content: "",
@@ -42,36 +72,54 @@ const CreateActiveRoadmap = () => {
   };
 
   const updateSection = (index, field, value) => {
-    const updatedSections = [...sections];
-    updatedSections[index][field] = value;
-    setSections(updatedSections);
+    setSections((prevSections) => {
+      const updatedSections = [...prevSections];
+      const updatedSection = { ...updatedSections[index] }; // Clone the specific section
+      updatedSection[field] = value;
+      updatedSections[index] = updatedSection; // Replace the section in the array
+      return updatedSections;
+    });
   };
 
   const removeSection = (index) => {
-    const updatedSections = [...sections];
-    updatedSections.splice(index, 1);
-    setSections(updatedSections);
+    setSections((prevSections) => prevSections.filter((_, i) => i !== index));
   };
 
   const addImage = (sectionIndex) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].images.push("");
-    setSections(updatedSections);
+    setSections((prevSections) => {
+      const updatedSections = [...prevSections];
+      const updatedSection = { ...updatedSections[sectionIndex] }; // Clone the specific section
+      updatedSection.images = [...updatedSection.images, ""];
+      updatedSections[sectionIndex] = updatedSection; // Replace the section in the array
+      return updatedSections;
+    });
   };
 
   const updateImage = (sectionIndex, imageIndex, value) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].images[imageIndex] = value;
-    setSections(updatedSections);
+    setSections((prevSections) => {
+      const updatedSections = [...prevSections];
+      const updatedSection = { ...updatedSections[sectionIndex] }; // Clone the specific section
+      const updatedImages = [...updatedSection.images]; // Clone the images array
+      updatedImages[imageIndex] = value;
+      updatedSection.images = updatedImages; 
+      updatedSections[sectionIndex] = updatedSection; 
+      return updatedSections;
+    });
   };
 
   const removeImage = (sectionIndex, imageIndex) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].images.splice(imageIndex, 1);
-    setSections(updatedSections);
+    setSections((prevSections) => {
+      const updatedSections = [...prevSections];
+      const updatedSection = { ...updatedSections[sectionIndex] }; 
+      updatedSection.images = updatedSection.images.filter(
+        (_, i) => i !== imageIndex,
+      );
+      updatedSections[sectionIndex] = updatedSection;
+      return updatedSections;
+    });
   };
 
-  const saveRoadmap = (isDraft = false) => {
+  const saveRoadmap = (isDraft) => {
     const completedSections = sections.filter(
       (section) => section.title && section.content && section.description,
     );
@@ -80,32 +128,40 @@ const CreateActiveRoadmap = () => {
       !roadmapTitle ||
       !roadmapDescription ||
       !roadmapImage ||
-      (!isDraft && completedSections.length !== sections.length)
+      completedSections.length !== sections.length
     ) {
       return toast.error("Incomplete roadmap data");
     }
+
 
     const variables = {
       title: roadmapTitle,
       description: roadmapDescription,
       image: roadmapImage,
       sections,
-      draft: isDraft, // Add status field
+      draft: isDraft,
     };
 
-    createRoadmap({ variables });
+    console.log(variables);
 
-    toast.success(
-      isDraft ? "Draft saved successfully" : "Roadmap created successfully",
-    );
-
-    setRoadmapTitle("");
-    setRoadmapImage("");
-    setRoadmapDescription("");
-    setSections([{ title: "", content: "", description: "", images: [""] }]);
-
-    navigate("/roadmaps");
+    createRoadmap({ variables })
+      .then(() => {
+        toast.success(
+          isDraft ? "Draft saved successfully" : "Roadmap created successfully",
+        );
+        setRoadmapTitle("");
+        setRoadmapImage("");
+        setRoadmapDescription("");
+        setSections([
+          { title: "", content: "", description: "", images: [""] },
+        ]);
+        navigate("/roadmaps");
+      })
+      .catch(() => {
+        toast.error("Failed to save roadmap");
+      });
   };
+
   return (
     <Card className="py-8">
       <div className="grid gap-8">

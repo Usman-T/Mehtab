@@ -22,7 +22,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const httpLink = createHttpLink({
-  uri: "https://vertex-back.netlify.app/.netlify/functions/graphql",
+  uri: "https://mehtabed-back.netlify.app/.netlify/functions/graphql",
 });
 
 const client = new ApolloClient({

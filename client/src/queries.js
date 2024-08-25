@@ -17,12 +17,13 @@ export const CREATE_USER = gql`
 `;
 
 export const ALL_ROADMAPS = gql`
-  query {
-    allRoadmaps {
+  query AllRoadmaps($includeDrafts: Boolean) {
+    allRoadmaps(includeDrafts: $includeDrafts) {
       title
       description
       image
       id
+      draft
       sections {
         title
         content
@@ -61,18 +62,31 @@ export const ALL_USERS = gql`
   }
 `;
 
+export const ALL_UPCOMING_ROADMAPS = gql`
+  query {
+    allUpcomingRoadmaps {
+      title
+      description
+      image
+      id
+    }
+  }
+`;
+
 export const CREATE_ROADMAP = gql`
   mutation CreateRoadmap(
     $title: String!
     $description: String!
     $image: String!
     $sections: [SectionInput!]!
+    $draft: Boolean
   ) {
     createRoadmap(
       title: $title
       description: $description
       image: $image
       sections: $sections
+      draft: $draft
     ) {
       id
       title
@@ -151,12 +165,10 @@ export const COMPLETE_SECTION = gql`
   }
 `;
 
-export const UPCOMING_ROADMAPS = gql`
-  query {
-    allUpcomingRoadmaps {
+export const PUBLISH_ROADMAP = gql`
+  mutation ($roadmapId: ID!) {
+    updateRoadmap(roadmapId: $roadmapId) {
       title
-      image
-      description
     }
   }
 `;
