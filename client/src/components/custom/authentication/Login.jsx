@@ -21,11 +21,14 @@ const Login = ({ setToken }) => {
     if (result.data) {
       localStorage.clear();
       const token = result.data.login.value;
-      setToken(token);
       localStorage.setItem("mehtab-user-token", token);
       localStorage.setItem("undestood", false);
     }
-  }, [result.data]);
+
+    if (localStorage.getItem("mehtab-user-token")) {
+      navigate("/");
+    }
+  }, [result.data, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

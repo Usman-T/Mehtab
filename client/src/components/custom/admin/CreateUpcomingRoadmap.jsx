@@ -27,13 +27,6 @@ const CreateUpcomingRoadmap = () => {
       return toast.error("Incomplete roadmap data");
     }
 
-    console.log({
-      variables: {
-        title: roadmapTitle,
-        description: roadmapDescription,
-        image: roadmapImage,
-      },
-    });
 
     createUpcomingRoadmap({
       variables: {

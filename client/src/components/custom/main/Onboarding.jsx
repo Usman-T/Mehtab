@@ -180,12 +180,13 @@ const Landing = () => {
                               <p className="text-gray-500 dark:text-gray-400">
                                 {r.description.substring(0, 50)}...
                               </p>
-                              <Button
-                                variant={"outline"}
-                                onClick={() => navigate(`/roadmaps/${r.id}`)}
-                              >
-                                View More
-                              </Button>
+                              <Link to={`/roadmaps/${r.id}`}>
+                                <Button
+                                  variant={"outline"}
+                                >
+                                  View More
+                                </Button>
+                              </Link>
                             </div>
                           </CardContent>
                         </Card>

@@ -83,12 +83,10 @@ const Section = () => {
   };
 
   const handleCompleteSection = async () => {
-    console.log({ roadmapId, sectionId });
     try {
       const completed = await completeSection({
         variables: { roadmapId: roadmapId, sectionId: sectionId },
       });
-      console.log(completed);
 
       toast.success("Section completed.");
       await handleNextSection();

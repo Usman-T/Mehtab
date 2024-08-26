@@ -48,7 +48,7 @@ const Home = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
-        {!localStorage.getItem("understood") && <p>sad</p>}
+        {localStorage.getItem("understood") === false ?  <p>sad</p> : null}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="col-span-1 flex flex-col gap-4 bg-card p-6">
             <div className="flex items-center justify-between">

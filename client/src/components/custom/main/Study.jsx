@@ -47,7 +47,6 @@ const Study = () => {
   const [roadmap, setRoadmap] = useState(null);
   const [chartData, setChartData] = useState(null);
 
-  console.log({ roadmap });
 
   useEffect(() => {
     if (!loading && data && !roadmap) {

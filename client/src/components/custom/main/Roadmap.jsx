@@ -21,6 +21,7 @@ import {
 import { CircleCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import Loading from "../extras/Loading";
+import ReactMarkdown from "react-markdown";
 
 const Roadmap = () => {
   const [enrollUser, { loading: enrollmentLoading }] = useMutation(
@@ -42,7 +43,6 @@ const Roadmap = () => {
 
   useEffect(() => {
     if (!loading && !upcomingLoading) {
-      console.log("Data fetched:", data, upcomingData);
 
       const currentRoadmap = data.allRoadmaps.find((r) => r.id === id);
 
@@ -59,8 +59,6 @@ const Roadmap = () => {
           toast.error("No roadmap found");
         }
       }
-    } else {
-      console.log("Data still loading:", loading, upcomingLoading);
     }
   }, [loading, data, id, roadmap]);
 
@@ -127,7 +125,7 @@ const Roadmap = () => {
             </span>
           </div>
           <h2 className="mb-4 text-2xl font-bold">{roadmap.title}</h2>
-          <p className="text-sm text-slate-500">{roadmap.description}</p>
+          <ReactMarkdown className="prose w-full break-words text-sm">{roadmap.description}</ReactMarkdown>
         </div>
       </div>
       <div className="space-y-4 p-4 md:w-1/2">

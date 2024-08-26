@@ -13,7 +13,6 @@ const Roadmaps = () => {
     ALL_UPCOMING_ROADMAPS,
   );
 
-  console.log(dataUpcoming);
 
   const navigate = useNavigate();
 
@@ -40,7 +39,7 @@ const Roadmaps = () => {
           <p>No roadmaps found.</p>
         )}
       </div>
-      <h2 className="text-xl font-semibold">Upcoming Roadmaps</h2>
+      <h2 className="text-xl mt-8 font-semibold">Upcoming Roadmaps</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {upcomingRoadmaps.length > 0 ? (
           upcomingRoadmaps.map((roadmap) => (
@@ -91,6 +90,11 @@ const RoadmapCard = ({ roadmap, navigate }) => {
               <div className="mt-2 flex items-start text-slate-500">
                 <div className="inline-flex items-center justify-center space-x-1 rounded-md border border-transparent bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-800 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                   <BookOpenIcon className="h-4 w-4" />
+                  <p>
+                    {roadmap.sections
+                      ? `${roadmap.sections.length} Sections`
+                      : `${Math.floor(Math.random() * (15 - 9 + 1)) + 9} Sections`}
+                  </p>
                 </div>
               </div>
             </div>

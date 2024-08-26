@@ -10,6 +10,8 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ALL_ROADMAPS, CREATE_ROADMAP } from "@/queries";
 import Loading from "../extras/Loading";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CreateActiveRoadmap = () => {
   const [roadmapTitle, setRoadmapTitle] = useState("");
@@ -101,8 +103,8 @@ const CreateActiveRoadmap = () => {
       const updatedSection = { ...updatedSections[sectionIndex] }; // Clone the specific section
       const updatedImages = [...updatedSection.images]; // Clone the images array
       updatedImages[imageIndex] = value;
-      updatedSection.images = updatedImages; 
-      updatedSections[sectionIndex] = updatedSection; 
+      updatedSection.images = updatedImages;
+      updatedSections[sectionIndex] = updatedSection;
       return updatedSections;
     });
   };
@@ -110,7 +112,7 @@ const CreateActiveRoadmap = () => {
   const removeImage = (sectionIndex, imageIndex) => {
     setSections((prevSections) => {
       const updatedSections = [...prevSections];
-      const updatedSection = { ...updatedSections[sectionIndex] }; 
+      const updatedSection = { ...updatedSections[sectionIndex] };
       updatedSection.images = updatedSection.images.filter(
         (_, i) => i !== imageIndex,
       );
@@ -133,16 +135,13 @@ const CreateActiveRoadmap = () => {
       return toast.error("Incomplete roadmap data");
     }
 
-
     const variables = {
       title: roadmapTitle,
       description: roadmapDescription,
       image: roadmapImage,
-      sections,
+      sections: sections.map(({__typename, ...keepAttrs}) => keepAttrs), 
       draft: isDraft,
     };
-
-    console.log(variables);
 
     createRoadmap({ variables })
       .then(() => {
@@ -157,7 +156,10 @@ const CreateActiveRoadmap = () => {
         ]);
         navigate("/roadmaps");
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
+        console.log(variables);
+        console.log(sections)
         toast.error("Failed to save roadmap");
       });
   };
@@ -197,6 +199,21 @@ const CreateActiveRoadmap = () => {
                 value={roadmapImage}
                 onChange={(e) => setRoadmapImage(e.target.value)}
               />
+              {roadmapImage && (
+                <LazyLoadImage
+                  src={roadmapImage}
+                  alt="Roadmap cover"
+                  className="my-auto h-32 w-32 scale-100 rounded-full grayscale-0 duration-500 ease-in-out"
+                  style={{
+                    aspectRatio: "1920/1080",
+                    objectFit: "cover",
+                    filter: "blur(20px)",
+                    transition: "filter 0.5s ease",
+                  }}
+                  loading="lazy"
+                  onLoad={(e) => (e.target.style.filter = "blur(0px)")}
+                />
+              )}
             </div>
           </div>
           <div className="grid gap-6">
@@ -226,7 +243,7 @@ const CreateActiveRoadmap = () => {
                           onClick={() => removeSection(sectionIndex)}
                           className="text-red-500 hover:bg-red-500 hover:text-red-50"
                         >
-                          <TrashIcon className="h-5 w-5" />
+                          <TrashIcon className="w -5 h-5" />
                         </Button>
                       </div>
                     </div>
@@ -283,29 +300,48 @@ const CreateActiveRoadmap = () => {
                         {section.images.map((image, imageIndex) => (
                           <div
                             key={imageIndex}
-                            className="flex items-center justify-between space-x-4"
+                            className="flex flex-col space-y-2"
                           >
-                            <Input
-                              type="text"
-                              placeholder="Image URL"
-                              value={image}
-                              onChange={(e) =>
-                                updateImage(
-                                  sectionIndex,
-                                  imageIndex,
-                                  e.target.value,
-                                )
-                              }
-                            />
-                            <Button
-                              variant="ghost"
-                              onClick={() =>
-                                removeImage(sectionIndex, imageIndex)
-                              }
-                              className="text-red-500 hover:bg-red-500 hover:text-red-50"
-                            >
-                              <TrashIcon className="h-5 w-5" />
-                            </Button>
+                            <div className="flex items-center justify-between space-x-4">
+                              <Input
+                                type="text"
+                                placeholder="Image URL"
+                                value={image}
+                                onChange={(e) =>
+                                  updateImage(
+                                    sectionIndex,
+                                    imageIndex,
+                                    e.target.value,
+                                  )
+                                }
+                              />
+                              <Button
+                                variant="ghost"
+                                onClick={() =>
+                                  removeImage(sectionIndex, imageIndex)
+                                }
+                                className="text-red-500 hover:bg-red-500 hover:text-red-50"
+                              >
+                                <TrashIcon className="h-5 w-5" />
+                              </Button>
+                            </div>
+                            {image && (
+                              <LazyLoadImage
+                                src={image}
+                                alt={`Section image ${imageIndex}`}
+                                className="my-auto h-32 w-32 scale-100 rounded-full grayscale-0 duration-500 ease-in-out"
+                                style={{
+                                  aspectRatio: "1920/1080",
+                                  objectFit: "cover",
+                                  filter: "blur(20px)",
+                                  transition: "filter 0.5s ease",
+                                }}
+                                loading="lazy"
+                                onLoad={(e) =>
+                                  (e.target.style.filter = "blur(0px)")
+                                }
+                              />
+                            )}
                           </div>
                         ))}
                       </div>

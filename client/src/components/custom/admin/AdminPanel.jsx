@@ -160,7 +160,6 @@ const AdminPanel = () => {
     (roadmap) => !roadmap.draft,
   );
 
-  console.log({allRoadmaps: roadmapData.allRoadmaps});
   const totalPoints = users.reduce((acc, user) => acc + user.points, 0);
 
   return (
