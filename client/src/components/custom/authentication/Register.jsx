@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import { CREATE_USER, LOGIN } from "@/queries";
+import animationData from '../../../../public/PencilAnimation.json'
 
 const Register = ({ setToken }) => {
   const [username, setUsername] = useState("");
