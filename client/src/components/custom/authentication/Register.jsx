@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
-import animationData from "../../../../public/PencilAnimation";
 import { CREATE_USER, LOGIN } from "@/queries";
 
 const Register = ({ setToken }) => {
