@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Main from "./components/custom/Main";
 import Register from "./components/custom/authentication/Register";
@@ -13,6 +13,7 @@ import Roadmap from "./components/custom/main/Roadmap";
 import Study from "./components/custom/main/Study";
 import Section from "./components/custom/main/Section";
 import Onboarding from "./components/custom/main/Onboarding";
+import Learn from "./components/custom/extras/Learn";
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -36,6 +37,8 @@ const App = () => {
           element={<Main component={<Leaderboards />} />}
         />
         <Route path="/register" element={<Register setToken={setToken} />} />
+        <Route path="/learn" element={<Learn />} />
+
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route element={<Onboarding />} path="/onboarding" />
         <Route path="/admin" element={<Main component={<AdminPanel />} />} />

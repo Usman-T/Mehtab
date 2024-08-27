@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import animationData from "../../../../public/LoadingAnimation.json";
 

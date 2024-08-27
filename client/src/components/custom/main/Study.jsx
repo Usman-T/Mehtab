@@ -8,7 +8,14 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { BookIcon, ArrowRightIcon, TrendingUp, CheckIcon } from "lucide-react";
+import {
+  BookIcon,
+  ArrowRightIcon,
+  TrendingUp,
+  CheckIcon,
+  Terminal,
+  ExternalLinkIcon,
+} from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,7 +45,7 @@ const Study = () => {
     },
     safari: {
       label: "Safari",
-      color: "hsl(var(--chart-2))",
+      color: "hsl(var(--chart-1))",
     },
   };
 
@@ -46,7 +53,6 @@ const Study = () => {
   const { loading, data } = useQuery(ME);
   const [roadmap, setRoadmap] = useState(null);
   const [chartData, setChartData] = useState(null);
-
 
   useEffect(() => {
     if (!loading && data && !roadmap) {
@@ -75,7 +81,7 @@ const Study = () => {
   }
 
   return (
-    <div className="flex flex-col bg-background">
+    <div className="flex flex-col h-screen bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="flex flex-col">

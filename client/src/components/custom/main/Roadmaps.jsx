@@ -13,7 +13,6 @@ const Roadmaps = () => {
     ALL_UPCOMING_ROADMAPS,
   );
 
-
   const navigate = useNavigate();
 
   if (loadingRoadmaps || loadingUpcoming) {
@@ -39,7 +38,7 @@ const Roadmaps = () => {
           <p>No roadmaps found.</p>
         )}
       </div>
-      <h2 className="text-xl mt-8 font-semibold">Upcoming Roadmaps</h2>
+      <h2 className="mt-8 text-xl font-semibold">Upcoming Roadmaps</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {upcomingRoadmaps.length > 0 ? (
           upcomingRoadmaps.map((roadmap) => (
@@ -71,10 +70,8 @@ const RoadmapCard = ({ roadmap, navigate }) => {
             <LazyLoadImage
               src={roadmap.image}
               alt={roadmap.title}
-              className="scale-100 grayscale-0 duration-500 ease-in-out"
+              className="h-full w-full object-cover duration-500 ease-in-out"
               style={{
-                aspectRatio: "1920/1080",
-                objectFit: "cover",
                 filter: "blur(20px)",
                 transition: "filter 0.5s ease",
               }}
@@ -82,6 +79,7 @@ const RoadmapCard = ({ roadmap, navigate }) => {
               onLoad={(e) => (e.target.style.filter = "blur(0px)")}
             />
           </div>
+
           <div className="flex flex-col px-3 pt-2">
             <h1 className="line-clamp-1 text-sm font-medium transition group-hover:text-sky-700 md:text-base">
               {roadmap.title}

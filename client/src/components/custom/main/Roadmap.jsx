@@ -22,6 +22,7 @@ import { CircleCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import Loading from "../extras/Loading";
 import ReactMarkdown from "react-markdown";
+import { ClipLoader } from "react-spinners";
 
 const Roadmap = () => {
   const [enrollUser, { loading: enrollmentLoading }] = useMutation(
@@ -42,13 +43,16 @@ const Roadmap = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    if (!loading && !upcomingLoading) {
+    console.log(loading, upcomingLoading, data, upcomingData);
 
+    if (!loading) {
       const currentRoadmap = data.allRoadmaps.find((r) => r.id === id);
 
       if (currentRoadmap) {
         setRoadmap(currentRoadmap);
-      } else {
+      }
+
+      if (!upcomingLoading && !currentRoadmap) {
         const currentUpcomingRoadmap = upcomingData.allUpcomingRoadmaps.find(
           (r) => r.id === id,
         );
@@ -60,7 +64,7 @@ const Roadmap = () => {
         }
       }
     }
-  }, [loading, data, id, roadmap]);
+  }, [upcomingData, data]);
 
   if (loading || upcomingLoading || !roadmap) {
     return <Loading />;
@@ -125,7 +129,9 @@ const Roadmap = () => {
             </span>
           </div>
           <h2 className="mb-4 text-2xl font-bold">{roadmap.title}</h2>
-          <ReactMarkdown className="prose w-full break-words text-sm">{roadmap.description}</ReactMarkdown>
+          <ReactMarkdown className="prose w-full break-words text-sm">
+            {roadmap.description}
+          </ReactMarkdown>
         </div>
       </div>
       <div className="space-y-4 p-4 md:w-1/2">
@@ -205,10 +211,11 @@ const EnrollmentDialog = ({ handleEnrollment, yearly, setYearly, loading }) => (
       </ul>
       <Button
         onClick={() => handleEnrollment()}
-        className="w-full"
+        className="w-full space-x-2"
         disabled={loading}
       >
-        {loading ? "Enrolling..." : "Enroll"}
+        <p>{loading ? "Enrolling..." : "Enroll"} </p>
+        {loading && <ClipLoader color="white" size={16} />}
       </Button>
     </DialogContent>
   </Dialog>

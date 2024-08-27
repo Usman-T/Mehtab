@@ -2,11 +2,12 @@ import {
   MedalIcon,
   RocketIcon,
   SparkleIcon,
-  PercentIcon,
-  TrophyIcon,
   BadgeIcon,
   ArrowRightIcon,
   BookIcon,
+  LinkIcon,
+  ExternalLinkIcon,
+  ClockIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,6 +19,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useQuery } from "@apollo/client";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ALL_ROADMAPS, ME } from "@/queries";
@@ -39,6 +41,19 @@ const Home = () => {
   if (meLoading || roadmapLoading) {
     return <Loading />;
   }
+  const showAlert = () => {
+    if (localStorage.getItem("understood") === "false") {
+      return "carousel";
+    }
+
+    const randomNumber = Math.floor(Math.random() * 5) + 1;
+    switch (randomNumber) {
+      case 2:
+        return "learningTime";
+      default:
+        return null;
+    }
+  };
 
   const hasActiveCourses = meData?.me?.progress?.length > 0;
 
@@ -48,7 +63,23 @@ const Home = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
-        {localStorage.getItem("understood") === false ?  <p>sad</p> : null}
+        <div className="mb-6">
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold">Welcome to Mehtab</h3>
+            <div className="md:flex-rowflex w-full flex-col items-center md:justify-between">
+              <Link to="/learn">
+                <p>
+                  Learn the{" "}
+                  <span className="items-center underline hover:cursor-pointer">
+                    optimal way
+                  </span>{" "}
+                  to progress in these courses.
+                </p>
+              </Link>
+            </div>
+          </Card>
+        </div>
+
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="col-span-1 flex flex-col gap-4 bg-card p-6">
             <div className="flex items-center justify-between">
@@ -112,13 +143,15 @@ const Home = () => {
                 <CarouselNext />
               </Carousel>
             ) : (
-              <div className="text-center text-muted-foreground">
-                <p>You haven't enrolled in any roadmaps yet.</p>
-                <Link
-                  to="/roadmaps"
-                  className="mt-4 inline-block rounded bg-primary px-4 py-2 text-white"
-                >
-                  Explore Roadmaps
+              <div className="flex h-full flex-col justify-between text-center text-muted-foreground">
+                <p className="my-auto">
+                  You haven't enrolled in any roadmaps yet.
+                </p>
+                <Link to="/roadmaps">
+                  <Button className="mx-auto mt-auto flex w-1/2 items-center justify-center space-x-2 rounded bg-primary px-4 py-2 text-white">
+                    <p className="font-semibold">Explore </p>
+                    <ExternalLinkIcon className="h-5 w-5" />
+                  </Button>
                 </Link>
               </div>
             )}

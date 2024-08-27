@@ -40,7 +40,9 @@ const Header = () => {
       <div>
         {loggedIn ? (
           <Avatar>
-            <AvatarFallback>{data?.me?.username[0].toUpperCase()}</AvatarFallback>
+            <AvatarFallback>
+              {data?.me?.username[0].toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         ) : (
           <Button

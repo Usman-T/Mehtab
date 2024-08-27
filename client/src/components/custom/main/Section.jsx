@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { toast } from "react-hot-toast";
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Loading from "../extras/Loading";
+import { ClipLoader } from "react-spinners";
 
 const Section = () => {
   const { roadmapId, sectionId } = useParams();
@@ -22,20 +23,23 @@ const Section = () => {
   const [section, setSection] = useState(null);
   const [headings, setHeadings] = useState([]);
   const navigate = useNavigate();
-  const [completeSection] = useMutation(COMPLETE_SECTION, {
-    refetchQueries: [{ query: ME }],
-  });
+  const [completeSection, { loading: enrollLoading }] = useMutation(
+    COMPLETE_SECTION,
+    {
+      refetchQueries: [{ query: ME }],
+    },
+  );
 
   useEffect(() => {
     if (loading || !data) return;
 
     const currentRoadmap = data.me.progress.find(
-      (p) => p.roadmap.id === roadmapId
+      (p) => p.roadmap.id === roadmapId,
     );
 
     if (currentRoadmap) {
       const currentSection = currentRoadmap.roadmap.sections.find(
-        (section) => section.id === sectionId
+        (section) => section.id === sectionId,
       );
 
       if (currentSection) {
@@ -73,7 +77,7 @@ const Section = () => {
 
   const navigateToSection = (direction) => {
     const currentRoadmap = data.me.progress.find(
-      (p) => p.roadmap.id === roadmapId
+      (p) => p.roadmap.id === roadmapId,
     );
     const sections = currentRoadmap.roadmap.sections;
     const currentSectionIndex = sections.findIndex((s) => s.id === sectionId);
@@ -101,9 +105,7 @@ const Section = () => {
   };
 
   if (loading || !data) {
-    return (
-      <Loading/>
-    );
+    return <Loading />;
   }
 
   const renderers = {
@@ -157,7 +159,10 @@ const Section = () => {
       </div>
       <div className="container mx-auto flex flex-col-reverse gap-8 px-4 py-12 lg:flex-row">
         <Card className="w-full overflow-hidden p-8 lg:w-3/4">
-          <ReactMarkdown components={renderers} className="prose w-full break-words">
+          <ReactMarkdown
+            components={renderers}
+            className="prose w-full break-words"
+          >
             {section?.content}
           </ReactMarkdown>
         </Card>
@@ -185,8 +190,13 @@ const Section = () => {
         <Button variant={"primary"} onClick={handlePrevSection}>
           <CircleArrowLeftIcon size={32} />
         </Button>
-        <Button onClick={() => handleCompleteSection()}>
-          Complete Section
+        <Button
+          className="space-x-2 font-semibold"
+          disabled={enrollLoading}
+          onClick={() => handleCompleteSection()}
+        >
+          <p>Complete Section</p>
+          {enrollLoading && <ClipLoader color="white" size={16} />}
         </Button>
         <Button variant={"primary"} onClick={handleNextSection}>
           <CircleArrowRightIcon size={32} />

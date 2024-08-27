@@ -137,7 +137,7 @@ const Register = ({ setToken }) => {
           </div>
           <Button
             type="submit"
-            className="w-1/2 max-w-sm bg-black font-semibold text-white"
+            className="w-1/2 max-w-sm  font-semibold text-white"
             disabled={loading}
           >
             Sign Up
