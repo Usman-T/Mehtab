@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import { CREATE_USER, LOGIN } from "@/queries";
-import animationData from '../../../../public/PencilAnimation.json'
+import animationData from "../../../../public/PencilAnimation.json";
 
 const Register = ({ setToken }) => {
   const [username, setUsername] = useState("");
@@ -33,14 +33,14 @@ const Register = ({ setToken }) => {
       localStorage.setItem("mehtab-user-token", token);
       localStorage.setItem("understood", false);
     }
-    if (localStorage.getItem('mehtab-user-token')) {
-      navigate('/')
+    if (localStorage.getItem("mehtab-user-token")) {
+      navigate("/");
     }
   }, [result.data, navigate]);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+  
     setLoading(true);
     try {
       if (!username || !password) {
@@ -50,29 +50,36 @@ const Register = ({ setToken }) => {
       } else if (password.length < 8) {
         return toast.error("Password is too short");
       }
-
-      await createUser({
+  
+      const userCreated = await createUser({
         variables: { username, password },
-        onError: (error) => console.log(error),
       });
-
+  
+      if (!userCreated) {
+        return toast.error("User could not be created.");
+      }
+  
       await login({
         variables: { username, password },
-        onError: (error) => console.log(error),
       });
-
+  
       toast.success("Registration successful");
       setTimeout(() => {
         navigate("/");
       }, 2000);
     } catch (error) {
       console.log(error);
-      return toast.error("An error occured");
+      if (error.message === "Username not added to system") {
+        toast.error("User not registered to our system");
+      } else if (error.message.includes("Login failed")) {
+        toast.error("Login failed");
+      } else {
+        toast.error("An error occurred");
+      }
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <div
@@ -83,7 +90,10 @@ const Register = ({ setToken }) => {
         <span className="text-xl font-semibold text-black">Mehtab</span>
       </div>
       <div className="mx-auto my-auto hidden h-[50%] w-full flex-col items-center justify-between p-8 text-primary sm:flex md:w-1/2">
-        <Lottie className="h-64 lg:h-96 lg:w-96  w-64" animationData={animationData}></Lottie>
+        <Lottie
+          className="h-64 w-64 lg:h-96 lg:w-96"
+          animationData={animationData}
+        ></Lottie>
         <div>
           <p className="text-center text-lg font-semibold text-primary">
             Fill in the details to register on our platform
@@ -137,7 +147,7 @@ const Register = ({ setToken }) => {
           </div>
           <Button
             type="submit"
-            className="w-1/2 max-w-sm  font-semibold text-white"
+            className="w-1/2 max-w-sm font-semibold text-white"
             disabled={loading}
           >
             Sign Up

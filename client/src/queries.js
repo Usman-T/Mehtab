@@ -27,6 +27,7 @@ export const ALL_ROADMAPS = gql`
       sections {
         title
         content
+        description
         images
       }
     }

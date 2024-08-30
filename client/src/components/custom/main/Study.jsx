@@ -81,7 +81,7 @@ const Study = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="flex flex-col">

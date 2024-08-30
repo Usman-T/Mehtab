@@ -63,8 +63,8 @@ const Home = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
-        <div className="mb-6">
-          <Card className="p-6">
+        <div className=" mb-6">
+          <Card className="border border-orange-500  p-6">
             <h3 className="text-lg font-semibold">Welcome to Mehtab</h3>
             <div className="md:flex-rowflex w-full flex-col items-center md:justify-between">
               <Link to="/learn">
@@ -142,7 +142,7 @@ const Home = () => {
                 <CarouselNext />
               </Carousel>
             ) : (
-              <div className="flex h-full flex-col justify-between text-center text-muted-foreground">
+              <div className="flex h-full flex-col justify-between space-y-8 text-center text-muted-foreground">
                 <p className="my-auto">
                   You haven't enrolled in any roadmaps yet.
                 </p>

@@ -128,56 +128,58 @@ const Section = () => {
           <p>Back</p>
         </Button>
       </div>
-      <div className="mx-auto p-4">
+      <main className="flex-grow p-4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="relative mx-auto flex w-full items-center justify-center">
+          <div className="relative flex items-center justify-center">
             <LazyLoadImage
               src={section?.images[0]}
               alt={section?.title}
-              className="aspect-video w-full rounded-lg transition duration-500 ease-in-out"
-              style={{ filter: "blur(20px)", transition: "filter 0.5s ease" }}
+              className="w-full rounded-lg transition-opacity duration-500"
               loading="lazy"
-              onLoad={(e) => (e.target.style.filter = "blur(0px)")}
             />
           </div>
-          <div className="flex flex-col space-y-4 px-4 py-2">
-            <h1 className="text-4xl font-bold">{section?.title}</h1>
-            <h2 className="font-medium text-slate-700">
+          <div className="flex flex-col space-y-4">
+            <h2 className="text-xl font-medium text-gray-700">
               {section?.description}
             </h2>
           </div>
         </div>
-      </div>
-      <div className="flex w-full justify-between px-2">
-        <Button variant={"primary"} onClick={handlePrevSection}>
-          <CircleArrowLeftIcon size={32} />
-        </Button>
-        <Button disabled>Complete Section</Button>
-        <Button variant={"primary"} onClick={handleNextSection}>
-          <CircleArrowRightIcon size={32} />
-        </Button>
-      </div>
-      <div className="container mx-auto flex flex-col-reverse gap-8 px-4 py-12 lg:flex-row">
-        <Card className="w-full overflow-hidden p-8 lg:w-3/4">
-          <ReactMarkdown
-            components={renderers}
-            className="prose w-full break-words"
-          >
-            {section?.content}
-          </ReactMarkdown>
-        </Card>
 
-        <div className="h-1/4 md:w-1/2">
+        <div className="my-4 flex justify-between">
+          <Button variant={"primary"} onClick={handlePrevSection}>
+            <CircleArrowLeftIcon size={32} />
+          </Button>
+          <Button
+            variant={"primary"}
+            disabled={true}
+            className="flex items-center space-x-2"
+          >
+            <span>Complete Section</span>
+          </Button>
+          <Button variant={"primary"} onClick={handleNextSection}>
+            <CircleArrowRightIcon size={32} />
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-8 lg:flex-row">
           <Card className="w-full overflow-hidden p-8">
+            <ReactMarkdown components={renderers} className="prose">
+              {section?.content}
+            </ReactMarkdown>
+          </Card>
+
+          <Card className="w-full p-8 lg:w-1/4">
             <h2 className="mb-4 text-xl font-bold">Table of Contents</h2>
-            <ul className="">
+            <ul>
               {headings.map((heading, index) => (
                 <li
                   key={index}
-                  className={`flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground ml-${heading.level === 3 ? "4 font-normal" : "0"}`}
+                  className={`cursor-pointer px-3 py-2 text-sm font-medium transition-colors ${
+                    heading.level === 3 ? "ml-4 font-normal" : ""
+                  } hover:bg-gray-200`}
                 >
                   <ChevronDownIcon
-                    className={`h-4 w-4 ${heading.level === 3 ? "opacity-0" : ""} `}
+                    className={`h-4 w-4 ${heading.level === 3 ? "opacity-0" : ""}`}
                   />
                   {heading.text}
                 </li>
@@ -185,7 +187,7 @@ const Section = () => {
             </ul>
           </Card>
         </div>
-      </div>
+      </main>
       <div className="mb-12 flex w-full justify-between px-2">
         <Button variant={"primary"} onClick={handlePrevSection}>
           <CircleArrowLeftIcon size={32} />

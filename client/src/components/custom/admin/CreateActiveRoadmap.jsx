@@ -44,6 +44,7 @@ const CreateActiveRoadmap = () => {
         (r) => r.id === draftId,
       );
       if (draftRoadmap) {
+        console.log(draftRoadmap);
         setRoadmapTitle(draftRoadmap.title);
         setRoadmapDescription(draftRoadmap.description);
         setRoadmapImage(draftRoadmap.image);
@@ -139,7 +140,7 @@ const CreateActiveRoadmap = () => {
       title: roadmapTitle,
       description: roadmapDescription,
       image: roadmapImage,
-      sections: sections.map(({__typename, ...keepAttrs}) => keepAttrs), 
+      sections: sections.map(({ __typename, ...keepAttrs }) => keepAttrs),
       draft: isDraft,
     };
 
@@ -157,9 +158,9 @@ const CreateActiveRoadmap = () => {
         navigate("/roadmaps");
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         console.log(variables);
-        console.log(sections)
+        console.log(sections);
         toast.error("Failed to save roadmap");
       });
   };
