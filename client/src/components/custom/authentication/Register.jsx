@@ -70,7 +70,9 @@ const Register = ({ setToken }) => {
     } catch (error) {
       console.log(error);
       if (error.message === "Username not added to system") {
-        toast.error("User not registered to our system");
+        toast.error("Couldn't find enrolled user");
+      } else if (error.message === "Username already exists") {
+        toast.error("User already exists, try logging in instead");
       } else if (error.message.includes("Login failed")) {
         toast.error("Login failed");
       } else {
