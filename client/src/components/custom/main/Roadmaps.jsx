@@ -24,7 +24,7 @@ const Roadmaps = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-semibold">Popular Roadmaps</h2>
+      <h2 className="text-xl font-semibold">Active Roadmaps</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {allRoadmaps.length > 0 ? (
           allRoadmaps.map((roadmap) => (
