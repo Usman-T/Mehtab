@@ -16,7 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CardContent, Card } from "@/components/ui/card";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useQuery } from "@apollo/client";
-import { ALL_ROADMAPS } from "@/queries";
+import { ALL_ROADMAPS, ALL_UPCOMING_ROADMAPS } from "@/queries";
 import {
   Carousel,
   CarouselContent,
@@ -31,8 +31,9 @@ const Landing = () => {
   const navigate = useNavigate();
 
   const result = useQuery(ALL_ROADMAPS);
+  const upcomingResult = useQuery(ALL_UPCOMING_ROADMAPS)
 
-  if (result.loading || !result.data) {
+  if (result.loading || !result.data || upcomingResult.loading) {
     return (
       <div className="absolute top-0 w-full">
         <div className="relative flex h-screen flex-col items-center justify-center">
@@ -69,20 +70,12 @@ const Landing = () => {
           </div>
           <div className="mx-[5%] flex space-x-2">
             <Button
-              onClick={() => navigate("/register")}
-              variant={"outline"}
-              className="flex space-x-2"
-            >
-              <PlusIcon className="h-4 w-4" />
-              <p>Register</p>
-            </Button>
-            <Button
               variant={"ghost"}
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/register")}
               className="flex space-x-2"
             >
               <LogOutIcon className="h-4 w-4" />
-              <p>Login</p>
+              <p>Register</p>
             </Button>
           </div>
         </div>
@@ -150,7 +143,7 @@ const Landing = () => {
                 className="mx-auto w-full"
               >
                 <CarouselContent className="ml-1">
-                  {result?.data?.allRoadmaps?.map((r, index) => (
+                  {upcomingResult?.data?.allUpcomingRoadmaps?.map((r, index) => (
                     <CarouselItem
                       key={index}
                       className="md:basis-1/2 lg:basis-1/3"
