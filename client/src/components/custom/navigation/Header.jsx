@@ -7,7 +7,6 @@ import MobileSidebar from "./MobileSidebar";
 import { useNavigate } from "react-router-dom";
 import { ME } from "@/queries";
 import { useQuery } from "@apollo/client";
-import Loading from "../extras/Loading";
 
 const Header = () => {
   const loggedIn = localStorage.getItem("mehtab-user-token") ? true : false;

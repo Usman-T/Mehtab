@@ -20,9 +20,10 @@ const CreateActiveRoadmap = () => {
   const [sections, setSections] = useState([
     {
       title: "Introduction",
-      content: "",
       description: "",
       images: [""],
+      learningObjectives: "",
+      modules: "",
     },
   ]);
 
@@ -67,7 +68,6 @@ const CreateActiveRoadmap = () => {
       ...prevSections,
       {
         title: "",
-        content: "",
         description: "",
         images: [""],
       },
@@ -123,26 +123,36 @@ const CreateActiveRoadmap = () => {
   };
 
   const saveRoadmap = (isDraft) => {
-    const completedSections = sections.filter(
-      (section) => section.title && section.content && section.description,
-    );
+   
+  const variables = {
+    title: roadmapTitle,
+    description: roadmapDescription,
+    image: roadmapImage,
+    sections: sections.map(({ __typename, ...section }) => {
+      const modulesArray = section.modules
+        .split("---")
+        .map((module) => {
+          const moduleParts = module.trim().split("\n");
 
-    if (
-      !roadmapTitle ||
-      !roadmapDescription ||
-      !roadmapImage ||
-      completedSections.length !== sections.length
-    ) {
-      return toast.error("Incomplete roadmap data");
-    }
+          const title = moduleParts[0].replace("###", "").trim(); 
 
-    const variables = {
-      title: roadmapTitle,
-      description: roadmapDescription,
-      image: roadmapImage,
-      sections: sections.map(({ __typename, ...keepAttrs }) => keepAttrs),
-      draft: isDraft,
-    };
+          const content = moduleParts.slice(1).join("\n").trim(); 
+
+          return {
+            title,
+            content,
+          };
+        });
+
+      return {
+        ...section,
+        modules: modulesArray,
+      };
+    }),
+    draft: isDraft,
+  };
+
+    console.log(variables);
 
     createRoadmap({ variables })
       .then(() => {
@@ -159,18 +169,15 @@ const CreateActiveRoadmap = () => {
       })
       .catch((err) => {
         console.log(err);
-        console.log(variables);
-        console.log(sections);
         toast.error("Failed to save roadmap");
       });
   };
-
   return (
     <Card className="py-8">
       <div className="grid gap-8">
         <CardContent>
           <div className="grid gap-6">
-            <h2 className="text-2xl font-bold">Active Roadmap</h2>
+            <h2 className="text-2xl font-bold">Active Roadmateap</h2>
             <div className="grid gap-2">
               <Label htmlFor="title">Roadmap Title</Label>
               <Input
@@ -252,23 +259,6 @@ const CreateActiveRoadmap = () => {
                   <CardContent>
                     <div className="grid gap-4">
                       <div className="grid gap-2">
-                        <Label htmlFor={`section-${sectionIndex}-content`}>
-                          Section Content
-                        </Label>
-                        <Textarea
-                          placeholder="Context in markdown"
-                          id={`section-${sectionIndex}-content`}
-                          value={section.content}
-                          onChange={(e) =>
-                            updateSection(
-                              sectionIndex,
-                              "content",
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
                         <Label htmlFor={`section-${sectionIndex}-description`}>
                           Section Description
                         </Label>
@@ -280,6 +270,40 @@ const CreateActiveRoadmap = () => {
                             updateSection(
                               sectionIndex,
                               "description",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor={`section-${sectionIndex}-description`}>
+                          Section Objectives
+                        </Label>
+                        <Textarea
+                          placeholder="Enter section description"
+                          id={`section-${sectionIndex}-description`}
+                          value={section.learningObjectives}
+                          onChange={(e) =>
+                            updateSection(
+                              sectionIndex,
+                              "learningObjectives",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor={`section-${sectionIndex}-description`}>
+                          Section Modules
+                        </Label>
+                        <Textarea
+                          placeholder="Enter section description"
+                          id={`section-${sectionIndex}-description`}
+                          value={section.modules}
+                          onChange={(e) =>
+                            updateSection(
+                              sectionIndex,
+                              "modules",
                               e.target.value,
                             )
                           }

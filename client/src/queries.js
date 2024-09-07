@@ -19,16 +19,19 @@ export const CREATE_USER = gql`
 export const ALL_ROADMAPS = gql`
   query AllRoadmaps($includeDrafts: Boolean) {
     allRoadmaps(includeDrafts: $includeDrafts) {
+      id
       title
       description
       image
-      id
-      draft
       sections {
+      id
         title
-        content
         description
         images
+        modules {
+          title
+          content
+        }
       }
     }
   }
@@ -93,12 +96,6 @@ export const CREATE_ROADMAP = gql`
       title
       description
       image
-      sections {
-        title
-        content
-        description
-        images
-      }
     }
   }
 `;
@@ -134,15 +131,19 @@ export const ME = gql`
         }
         roadmap {
           id
+          title
           description
           image
-          title
           sections {
+          learningObjectives
+            id
             title
             description
-            content
             images
-            id
+            modules {
+              title
+              content
+            }
           }
         }
       }

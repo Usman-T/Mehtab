@@ -23,7 +23,7 @@ const Roadmaps = () => {
   const upcomingRoadmaps = dataUpcoming?.allUpcomingRoadmaps || [];
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-secondary">
       <h2 className="text-xl font-semibold">Active Roadmaps</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {allRoadmaps.length > 0 ? (

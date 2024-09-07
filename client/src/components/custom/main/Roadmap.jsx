@@ -158,7 +158,7 @@ export default Roadmap;
 const EnrollmentDialog = ({ handleEnrollment, yearly, setYearly, loading }) => (
   <Dialog>
     <DialogTrigger asChild>
-      <Button className="w-full">Start Learning</Button>
+      <Button className="w-full font-semibold">Start Learning</Button>
     </DialogTrigger>
     <DialogContent className="flex flex-col items-center justify-center sm:max-w-md">
       <h2 className="mb-4 text-2xl font-bold">
@@ -214,7 +214,7 @@ const EnrollmentDialog = ({ handleEnrollment, yearly, setYearly, loading }) => (
         className="w-full space-x-2"
         disabled={loading}
       >
-        <p>{loading ? "Enrolling..." : "Enroll"} </p>
+        <p className="font-semibold">{loading ? "Enrolling..." : "Enroll"} </p>
         {loading && <ClipLoader color="white" size={16} />}
       </Button>
     </DialogContent>

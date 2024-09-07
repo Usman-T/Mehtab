@@ -53,7 +53,7 @@ const Study = () => {
   const { loading, data } = useQuery(ME);
   const [roadmap, setRoadmap] = useState(null);
   const [chartData, setChartData] = useState(null);
-
+  
   useEffect(() => {
     if (!loading && data && !roadmap) {
       const currentRoadmap = data.me.progress.find((p) => p.roadmap.id === id);
@@ -70,6 +70,7 @@ const Study = () => {
             fill: "var(--color-safari)",
           },
         ]);
+        console.log(currentRoadmap)
       } else {
         toast.error("Roadmap not found");
       }

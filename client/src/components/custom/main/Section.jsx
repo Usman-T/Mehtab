@@ -1,27 +1,65 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { toast } from "react-hot-toast";
 import { COMPLETE_SECTION, ME } from "@/queries";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   ArrowLeftIcon,
-  ChevronDownIcon,
   CircleArrowLeftIcon,
   CircleArrowRightIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Loading from "../extras/Loading";
 import { ClipLoader } from "react-spinners";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 const Section = () => {
+  const assessmentsTalk = `### **Assessment and Assignments for This Section**
+
+  To ensure a comprehensive understanding of this section, you are required to complete all relevant assignments and assessments. Here's what you need to know:
+  
+  #### **Assignments**
+  
+  - After completing each section, visit the **[Assignments Page](#)** to find the specific assignments related to this roadmap.
+  - The assignments are designed to reinforce your understanding of key concepts covered in this section.
+  - Each assignment includes practical exercises and challenges that will help you apply what you've learned.
+  
+  #### **Passing Criteria**
+  
+  To successfully pass this section, you must:
+  
+  1. **Understand the Concepts Thoroughly**:
+     - Review the **Learning Objectives** and ensure you grasp the fundamental ideas.
+     - Engage with all the resources provided, including articles, videos, and interactive content.
+  
+  2. **Complete All In-Content Exercises**:
+     - Exercises are embedded within each section to help you practice the concepts in real-time.
+     - Make sure you complete them all to strengthen your understanding.
+  
+  3. **Finish All Related Assignments**:
+     - Visit the **Assignments Page** and attempt the assignments after completing each section.
+     - **Pro Tip**: If you find any assignment difficult, review the section again and revisit all the linked resources!
+  
+  #### **Tips for Success**
+  
+  - **Don’t Rush**: Take your time to digest the content before attempting the assignments.
+  - **Review Regularly**: If you find gaps in your understanding, go back and revisit the section.
+  - **Utilize All Resources**: Make sure you use all provided resources, including external articles, videos, and exercises.
+  
+  Happy Learning and Good Luck! `;
+
   const { roadmapId, sectionId } = useParams();
   const { data, loading } = useQuery(ME);
 
   const [section, setSection] = useState(null);
-  const [headings, setHeadings] = useState([]);
   const navigate = useNavigate();
   const [completeSection, { loading: enrollLoading }] = useMutation(
     COMPLETE_SECTION,
@@ -29,6 +67,8 @@ const Section = () => {
       refetchQueries: [{ query: ME }],
     },
   );
+
+  const moduleRefs = useRef([]);
 
   useEffect(() => {
     if (loading || !data) return;
@@ -44,7 +84,6 @@ const Section = () => {
 
       if (currentSection) {
         setSection(currentSection);
-        extractHeadings(currentSection.content);
       } else {
         toast.error("Section not found");
       }
@@ -52,20 +91,6 @@ const Section = () => {
       toast.error("Roadmap not found");
     }
   }, [loading, data, roadmapId, sectionId]);
-
-  const extractHeadings = (content) => {
-    const lines = content.split("\n");
-    const extractedHeadings = lines
-      .filter((line) => line.startsWith("## ") || line.startsWith("### "))
-      .map((line) => {
-        const level = line.startsWith("## ") ? 2 : 3;
-        return {
-          level,
-          text: line.replace(/^###?\s/, ""),
-        };
-      });
-    setHeadings(extractedHeadings);
-  };
 
   const handleNextSection = () => {
     navigateToSection(1);
@@ -92,7 +117,7 @@ const Section = () => {
         variables: { roadmapId: roadmapId, sectionId: sectionId },
       });
 
-      toast.success("Section completed.");
+      toast.success("Section completed. +10 points");
       await handleNextSection();
     } catch (error) {
       console.log(error);
@@ -104,20 +129,29 @@ const Section = () => {
     }
   };
 
+  const scrollToModule = (index) => {
+    if (moduleRefs.current[index]) {
+      moduleRefs.current[index].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  };
+
   if (loading || !data) {
     return <Loading />;
   }
 
   const renderers = {
     a: ({ href, children }) => (
-      <a href={href} target="_blank" rel="noopener noreferrer">
+      <a href={href} target="_blank" rel="noopener noreferrer" className="hover:text-blue-500">
         {children}
       </a>
     ),
   };
 
   return (
-    <div className="relative flex min-h-screen w-screen flex-col md:w-full">
+    <div className="flex h-full w-screen flex-col bg-gray-100 bg-white p-4 md:w-full">
       <div className="mx-8 my-4">
         <Button
           className="flex items-center justify-center space-x-1"
@@ -129,6 +163,7 @@ const Section = () => {
         </Button>
       </div>
       <main className="flex-grow p-4">
+        {/* Top Section with Image and Description */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="relative flex items-center justify-center">
             <LazyLoadImage
@@ -139,56 +174,86 @@ const Section = () => {
             />
           </div>
           <div className="flex flex-col space-y-4">
+            <h1 className="text-3xl font-bold">{section?.title}</h1>
             <h2 className="text-xl font-medium text-gray-700">
               {section?.description}
             </h2>
           </div>
         </div>
-
-        <div className="my-4 flex justify-between">
-          <Button variant={"primary"} onClick={handlePrevSection}>
-            <CircleArrowLeftIcon size={32} />
-          </Button>
-          <Button
-            variant={"primary"}
-            disabled={true}
-            className="flex items-center space-x-2"
+        <div className="mt-16 flex flex-col">
+          <h1 className="mb-4 text-2xl font-bold">Modules</h1>
+          <Carousel
+            opts={{ loop: true }}
+            plugins={[
+              AutoScroll({
+                playOnInit: true,
+                stopOnMouseEnter: true,
+                stopOnInteraction: false,
+                speed: 0.5,
+              }),
+            ]}
+            className="mx-auto w-full"
           >
-            <span>Complete Section</span>
-          </Button>
-          <Button variant={"primary"} onClick={handleNextSection}>
-            <CircleArrowRightIcon size={32} />
-          </Button>
+            <CarouselContent className="w- ml-1">
+              {section?.modules?.map((m, index) => (
+                <CarouselItem
+                  key={index}
+                  className="select-none md:basis-1/2 lg:basis-1/3"
+                >
+                  <div className="p-1">
+                    <Card key={index} className="w-full">
+                      <CardContent className="space-y-2 p-4">
+                        <h3 className="text-lg font-bold">{m.title}</h3>
+                        <div className="flex w-full items-center justify-between">
+                          <p className="text-gray-500 dark:text-gray-400">
+                            {m.content.substring(0, 50)}...
+                          </p>
+                          <Button
+                            variant={"outline"}
+                            onClick={() => scrollToModule(index)}
+                          >
+                            View
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
 
-        <div className="flex flex-col gap-8 lg:flex-row">
-          <Card className="w-full overflow-hidden p-8">
+        {section?.modules.map((module, index) => (
+          <>
+            <h3 className="mb-4 mt-8 text-2xl font-semibold">{module.title}</h3>
+
+            <Card
+              key={index}
+              ref={(el) => (moduleRefs.current[index] = el)}
+              className="mt-4 p-8"
+            >
+              <ReactMarkdown components={renderers} className="prose">
+                {module.content}
+              </ReactMarkdown>
+            </Card>
+          </>
+        ))}{" "}
+        <>
+          <h3 className="mb-4 mt-4 text-2xl font-semibold">
+            Assignemnts and Assesments
+          </h3>
+
+          <Card className="mt-4 p-8">
             <ReactMarkdown components={renderers} className="prose">
-              {section?.content}
+              {assessmentsTalk}
             </ReactMarkdown>
           </Card>
-
-          <Card className="w-full p-8 lg:w-1/4">
-            <h2 className="mb-4 text-xl font-bold">Table of Contents</h2>
-            <ul>
-              {headings.map((heading, index) => (
-                <li
-                  key={index}
-                  className={`cursor-pointer px-3 py-2 text-sm font-medium transition-colors ${
-                    heading.level === 3 ? "ml-4 font-normal" : ""
-                  } hover:bg-gray-200`}
-                >
-                  <ChevronDownIcon
-                    className={`h-4 w-4 ${heading.level === 3 ? "opacity-0" : ""}`}
-                  />
-                  {heading.text}
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </div>
+        </>
       </main>
-      <div className="mb-12 flex w-full justify-between px-2">
+
+      {/* Footer with Complete Section and Navigation */}
+      <div className="mb-12 mt-4 flex w-full justify-between px-2">
         <Button variant={"primary"} onClick={handlePrevSection}>
           <CircleArrowLeftIcon size={32} />
         </Button>

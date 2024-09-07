@@ -110,7 +110,7 @@ const Login = ({ setToken }) => {
           </div>
           <Button
             type="submit"
-            className="w-1/2 max-w-sm bg-black text-white"
+            className="w-1/2 max-w-sm font-semibold bg-black text-white"
             disabled={loading}
           >
             Sign In
