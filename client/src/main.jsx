@@ -10,6 +10,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter as Router } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("mehtab-user-token");
@@ -36,6 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Router>
         <App  />
       </Router>
+      <SpeedInsights />
     </ApolloProvider>
   </React.StrictMode>,
 );
