@@ -15,7 +15,7 @@ const Header = () => {
   const { data, loading } = useQuery(ME);
 
   return (
-    <div className="sticky top-0 z-10 flex h-16 w-screen items-center justify-between border-b bg-white px-4">
+    <div className="absolute top-0 z-10 flex h-16 w-screen items-center justify-between border-b bg-white px-4">
       <div className="flex items-center space-x-2 hover:cursor-pointer">
         <MoonIcon
           onClick={() => navigate("/")}

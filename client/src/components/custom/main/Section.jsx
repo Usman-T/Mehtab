@@ -157,8 +157,8 @@ const Section = () => {
   };
 
   return (
-    <div className="flex h-full w-screen flex-col bg-gray-100 bg-white p-4 md:w-full">
-      <div className="mx-8 my-4">
+    <div className="flex h-full w-screen flex-col bg-white p-4 md:w-full md:py-8">
+      <div className="mx-4 my-2 md:mx-8 md:my-4">
         <Button
           className="flex items-center justify-center space-x-1"
           variant={"outline"}
@@ -169,24 +169,24 @@ const Section = () => {
         </Button>
       </div>
       <main className="flex-grow p-4">
-        <div className="grid grid-cols-1 gap-4 ">
-          <div className="relative flex items-center justify-center">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="relative flex items-center justify-center lg:justify-start">
             <LazyLoadImage
               src={section?.images[0]}
               alt={section?.title}
-              className="w-full rounded-lg transition-opacity duration-500"
+              className="w-full max-w-xs lg:max-w-md grayscale-0 duration-500 ease-in-out"
               loading="lazy"
             />
           </div>
           <div className="flex flex-col space-y-4">
-            <h1 className="text-3xl font-bold">{section?.title}</h1>
-            <h2 className="text-xl font-medium text-gray-700">
+            <h1 className="text-2xl font-bold md:text-3xl">{section?.title}</h1>
+            <h2 className="text-lg font-medium text-gray-700 md:text-xl">
               {section?.description}
             </h2>
           </div>
         </div>
-        <div className="mt-16 flex flex-col">
-          <h1 className="mb-4 text-2xl font-bold">Modules</h1>
+        <div className="mt-8 flex flex-col">
+          <h1 className="mb-4 text-xl font-bold md:text-2xl">Modules</h1>
           <Carousel
             opts={{ loop: true }}
             plugins={[
@@ -197,16 +197,13 @@ const Section = () => {
                 speed: 0.5,
               }),
             ]}
-            className="mx-auto w-full"
+            className="mx-auto w-full max-w-2xl"
           >
-            <CarouselContent className="w- ml-1">
+            <CarouselContent className="ml-1">
               {section?.modules?.map((m, index) => (
-                <CarouselItem
-                  key={index}
-                  className="select-none "
-                >
-                  <div className="p-1">
-                    <Card key={index} className="w-full">
+                <CarouselItem key={index} className="select-none">
+                  <div className="p-2">
+                    <Card key={index} className="">
                       <CardContent className="space-y-2 p-4">
                         <h3 className="text-lg font-bold">{m.title}</h3>
                         <div className="flex w-full items-center justify-between">
@@ -229,46 +226,67 @@ const Section = () => {
           </Carousel>
         </div>
         {section?.modules.map((module, index) => (
-          <div ref={(el) => (moduleRefs.current[index] = el)}>
-            <h3 className="mb-4 mt-8 text-2xl font-semibold">{module.title}</h3>
+          <div
+            key={index}
+            ref={(el) => (moduleRefs.current[index] = el)}
+            className="w-full"
+          >
+            <h3 className="mb-4 mt-8 text-xl font-semibold md:text-2xl">
+              {module.title}
+            </h3>
 
-            <Card key={index} className="mt-4 p-8">
+            <Card key={index} className="mt-4 p-4 md:p-8">
               <ReactMarkdown components={renderers} className="prose">
                 {module.content}
               </ReactMarkdown>
             </Card>
           </div>
-        ))}{" "}
+        ))}
         <>
-          <h3 className="mb-4 mt-4 text-2xl font-semibold">
-            Assignemnts and Assesments
+          <h3 className="mb-4 mt-4 text-xl font-semibold md:text-2xl">
+            Assignments and Assessments
           </h3>
 
-          <Card className="mt-4 p-8">
+          <Card className="mt-4 p-4 md:p-8">
             <ReactMarkdown components={renderers} className="prose">
               {assessmentsTalk}
             </ReactMarkdown>
           </Card>
         </>
       </main>
-
-      <div className="mb-12 mt-4 flex w-full justify-between px-2">
-        <Button variant={"primary"} onClick={handlePrevSection}>
-          <CircleArrowLeftIcon size={32} />
+      <footer className="mb-4 flex items-center justify-between p-2 md:p-4">
+        <Button
+          className="space-x-2"
+          variant={"outline"}
+          disabled={enrollLoading}
+          onClick={handlePrevSection}
+        >
+          <CircleArrowLeftIcon className="" />
+          Previous Section
         </Button>
         <Button
-          className="space-x-2 font-semibold"
+          className="space-x-2"
+          variant={"outline"}
           disabled={enrollLoading}
-          onClick={() => handleCompleteSection()}
+          onClick={handleNextSection}
         >
-          <p>Complete Section</p>
-          {enrollLoading && <ClipLoader color="white" size={16} />}
+          Next Section
+          <CircleArrowRightIcon className="" />
         </Button>
-        <Button variant={"primary"} onClick={handleNextSection}>
-          <CircleArrowRightIcon size={32} />
+        <Button
+          variant={"default"}
+          disabled={enrollLoading}
+          className="space-x-1"
+          onClick={handleCompleteSection}
+        >
+          Complete Section
+          <ClipLoader
+            loading={enrollLoading}
+            size={20}
+            aria-label="Loading Spinner"
+          />
         </Button>
-      </div>
-      <div className="border rounded-full absolute bottom-8 right-8"><ArrowUpWideNarrowIcon/></div>
+      </footer>
     </div>
   );
 };

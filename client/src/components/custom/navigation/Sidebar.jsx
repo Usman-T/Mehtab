@@ -45,8 +45,10 @@ const Sidebar = ({ className }) => {
   const [active, setActive] = useState(activeTab ? activeTab.name : "");
 
   return (
-    <div className={`${className} flex-between flex h-screen flex-col p-4`}>
-      <div className="flex w-full flex-col space-y-2">
+    <div
+      className={`${className} pt-20 top-0 justify-between flex h-screen w-72 flex-col overflow-y-auto border-r bg-white p-4`}
+    >
+      <div className="flex  flex-col space-y-2">
         {sidebarItems.map((item) => (
           <SidebarItem
             item={item}
@@ -85,7 +87,7 @@ const Sidebar = ({ className }) => {
             </>
           )}
       </div>
-      <footer className="mb-12 mt-auto flex w-full items-center justify-between border-t py-4">
+      <footer className="flex items-center justify-between border-t py-4">
         <div className="px-4 py-2 text-xs text-muted-foreground lg:flex-1">
           © 2024 Usman Tanveer.
         </div>
