@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   ArrowLeftIcon,
+  ArrowUpWideNarrowIcon,
   CircleArrowLeftIcon,
   CircleArrowRightIcon,
 } from "lucide-react";
@@ -133,7 +134,7 @@ const Section = () => {
     if (moduleRefs.current[index]) {
       moduleRefs.current[index].scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: "start",
       });
     }
   };
@@ -144,7 +145,12 @@ const Section = () => {
 
   const renderers = {
     a: ({ href, children }) => (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="hover:text-blue-500">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:text-blue-500"
+      >
         {children}
       </a>
     ),
@@ -163,8 +169,7 @@ const Section = () => {
         </Button>
       </div>
       <main className="flex-grow p-4">
-        {/* Top Section with Image and Description */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 ">
           <div className="relative flex items-center justify-center">
             <LazyLoadImage
               src={section?.images[0]}
@@ -198,7 +203,7 @@ const Section = () => {
               {section?.modules?.map((m, index) => (
                 <CarouselItem
                   key={index}
-                  className="select-none md:basis-1/2 lg:basis-1/3"
+                  className="select-none "
                 >
                   <div className="p-1">
                     <Card key={index} className="w-full">
@@ -223,21 +228,16 @@ const Section = () => {
             </CarouselContent>
           </Carousel>
         </div>
-
         {section?.modules.map((module, index) => (
-          <>
+          <div ref={(el) => (moduleRefs.current[index] = el)}>
             <h3 className="mb-4 mt-8 text-2xl font-semibold">{module.title}</h3>
 
-            <Card
-              key={index}
-              ref={(el) => (moduleRefs.current[index] = el)}
-              className="mt-4 p-8"
-            >
+            <Card key={index} className="mt-4 p-8">
               <ReactMarkdown components={renderers} className="prose">
                 {module.content}
               </ReactMarkdown>
             </Card>
-          </>
+          </div>
         ))}{" "}
         <>
           <h3 className="mb-4 mt-4 text-2xl font-semibold">
@@ -252,7 +252,6 @@ const Section = () => {
         </>
       </main>
 
-      {/* Footer with Complete Section and Navigation */}
       <div className="mb-12 mt-4 flex w-full justify-between px-2">
         <Button variant={"primary"} onClick={handlePrevSection}>
           <CircleArrowLeftIcon size={32} />
@@ -269,6 +268,7 @@ const Section = () => {
           <CircleArrowRightIcon size={32} />
         </Button>
       </div>
+      <div className="border rounded-full absolute bottom-8 right-8"><ArrowUpWideNarrowIcon/></div>
     </div>
   );
 };
