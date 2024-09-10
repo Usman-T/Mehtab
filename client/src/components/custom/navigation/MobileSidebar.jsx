@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 import { useApolloClient } from "@apollo/client";
 import toast from "react-hot-toast";
+import {Separator} from "@/components/ui/separator"
 
 const MobileSidebar = () => {
   const client = useApolloClient();
@@ -93,7 +94,7 @@ const MobileSidebar = () => {
               />
             ))}
 
-            <Seperator className='my-4' />
+            <Separator className='my-4' />
 
             {localStorage.getItem("mehtab-user-token") ? (
               <>
