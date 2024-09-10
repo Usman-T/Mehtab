@@ -11,7 +11,7 @@ const ScrollArea = React.forwardRef(({ className, children, ...props }, ref) => 
     if (viewportRef.current) {
       viewportRef.current.scrollTo({
         top: 0,
-        behavior: 'smooth', // Optional: for smooth scrolling
+        behavior: 'smooth', 
       });
     }
   }, [pathname]);

@@ -7,16 +7,16 @@ import { useLocation } from "react-router-dom";
 const Main = ({ component }) => {
   const location = useLocation();
 
-  const isStudyPage = location.pathname.startsWith("/study");
+  const isStudyPage = location.pathname.startsWith("/study") || location.pathname === '/' || location.pathname === '/community' || location.pathname === '/roadmaps';
 
   return (
     <div
       className={`h-screen bg-secondary ${isStudyPage ? "bg-white" : "bg-secondary"}`}
->
-<Header />
+    >
+      <Header />
 
       <div className="flex h-full">
-        <Sidebar className="w-72 hidden  flex-col overflow-auto border-r bg-white lg:flex " />
+        <Sidebar className="hidden w-72 flex-col overflow-auto border-r bg-white lg:flex" />
 
         <div className="flex-1 overflow-y-auto">
           <ScrollArea className="h-full pt-16">

@@ -136,6 +136,7 @@ const Section = () => {
         behavior: "smooth",
         block: "start",
       });
+      
     }
   };
 
@@ -170,11 +171,11 @@ const Section = () => {
       </div>
       <main className="flex-grow p-4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="relative flex items-center justify-center lg:justify-start">
+          <div className="relative flex bg items-center justify-center lg:justify-start">
             <LazyLoadImage
               src={section?.images[0]}
               alt={section?.title}
-              className="w-full max-w-xs lg:max-w-md grayscale-0 duration-500 ease-in-out"
+              className=" rounded-lg w-full grayscale-0 duration-500 ease-in-out lg:max-w-md"
               loading="lazy"
             />
           </div>
@@ -184,6 +185,37 @@ const Section = () => {
               {section?.description}
             </h2>
           </div>
+        </div>
+        <div className="mb-4 mt-4 flex items-center justify-between p-2 md:p-4">
+          <Button
+            className="space-x-2"
+            variant={"outline"}
+            disabled={enrollLoading}
+            onClick={handlePrevSection}
+          >
+            <CircleArrowLeftIcon className="" />
+          </Button>
+          <Button
+            variant={"default"}
+            disabled={enrollLoading}
+            className="space-x-1 font-semibold"
+            onClick={handleCompleteSection}
+          >
+            Complete Section
+            <ClipLoader
+              loading={enrollLoading}
+              size={20}
+              aria-label="Loading Spinner"
+            />
+          </Button>
+          <Button
+            className="space-x-2"
+            variant={"outline"}
+            disabled={enrollLoading}
+            onClick={handleNextSection}
+          >
+            <CircleArrowRightIcon className="" />
+          </Button>
         </div>
         <div className="mt-8 flex flex-col">
           <h1 className="mb-4 text-xl font-bold md:text-2xl">Modules</h1>
@@ -262,21 +294,11 @@ const Section = () => {
           onClick={handlePrevSection}
         >
           <CircleArrowLeftIcon className="" />
-          Previous Section
-        </Button>
-        <Button
-          className="space-x-2"
-          variant={"outline"}
-          disabled={enrollLoading}
-          onClick={handleNextSection}
-        >
-          Next Section
-          <CircleArrowRightIcon className="" />
         </Button>
         <Button
           variant={"default"}
           disabled={enrollLoading}
-          className="space-x-1"
+          className="space-x-1 font-semibold"
           onClick={handleCompleteSection}
         >
           Complete Section
@@ -285,6 +307,14 @@ const Section = () => {
             size={20}
             aria-label="Loading Spinner"
           />
+        </Button>
+        <Button
+          className="space-x-2"
+          variant={"outline"}
+          disabled={enrollLoading}
+          onClick={handleNextSection}
+        >
+          <CircleArrowRightIcon className="" />
         </Button>
       </footer>
     </div>

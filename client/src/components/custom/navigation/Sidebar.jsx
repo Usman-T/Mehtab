@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarItem from "./SidebarItem";
 import {
-  UserIcon,
-  CompassIcon,
-  HomeIcon,
   EllipsisVertical,
   LogOutIcon,
   CrownIcon,
+  HomeIcon,
+  CompassIcon,
+  UsersIcon,
+  BarChart2Icon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -24,9 +25,14 @@ const Sidebar = ({ className }) => {
     { name: "Home", path: "/", icon: <HomeIcon /> },
     { name: "Roadmaps", path: "/roadmaps", icon: <CompassIcon /> },
     {
+      name: "Community",
+      path: "/community",
+      icon: <UsersIcon />,
+    },
+    {
       name: "Leaderboards",
       path: "/leaderboards",
-      icon: <UserIcon />,
+      icon: <BarChart2Icon />,
     },
   ];
 
@@ -46,9 +52,9 @@ const Sidebar = ({ className }) => {
 
   return (
     <div
-      className={`${className} pt-20 top-0 justify-between flex h-screen w-72 flex-col overflow-y-auto border-r bg-white p-4`}
+      className={`${className} top-0 flex h-screen w-72 flex-col justify-between overflow-y-auto border-r bg-white p-4 pt-20`}
     >
-      <div className="flex  flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {sidebarItems.map((item) => (
           <SidebarItem
             item={item}
@@ -86,6 +92,21 @@ const Sidebar = ({ className }) => {
               </Button>
             </>
           )}
+
+        {!localStorage.getItem("mehtab-user-token") && (
+          <>
+            <Separator className="my-4" />
+
+            <Button
+              className={`flex items-center justify-start space-x-2 px-6`}
+              onClick={() => navigate("/login")}
+              variant={"ghost"}
+            >
+              <LogOutIcon className="h-4 w-4" />
+              <p>Login</p>
+            </Button>
+          </>
+        )}
       </div>
       <footer className="flex items-center justify-between border-t py-4">
         <div className="px-4 py-2 text-xs text-muted-foreground lg:flex-1">

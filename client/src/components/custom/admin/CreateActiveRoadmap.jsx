@@ -77,9 +77,9 @@ const CreateActiveRoadmap = () => {
   const updateSection = (index, field, value) => {
     setSections((prevSections) => {
       const updatedSections = [...prevSections];
-      const updatedSection = { ...updatedSections[index] }; // Clone the specific section
+      const updatedSection = { ...updatedSections[index] }; 
       updatedSection[field] = value;
-      updatedSections[index] = updatedSection; // Replace the section in the array
+      updatedSections[index] = updatedSection; 
       return updatedSections;
     });
   };
@@ -91,9 +91,9 @@ const CreateActiveRoadmap = () => {
   const addImage = (sectionIndex) => {
     setSections((prevSections) => {
       const updatedSections = [...prevSections];
-      const updatedSection = { ...updatedSections[sectionIndex] }; // Clone the specific section
+      const updatedSection = { ...updatedSections[sectionIndex] }; 
       updatedSection.images = [...updatedSection.images, ""];
-      updatedSections[sectionIndex] = updatedSection; // Replace the section in the array
+      updatedSections[sectionIndex] = updatedSection; 
       return updatedSections;
     });
   };
@@ -101,8 +101,8 @@ const CreateActiveRoadmap = () => {
   const updateImage = (sectionIndex, imageIndex, value) => {
     setSections((prevSections) => {
       const updatedSections = [...prevSections];
-      const updatedSection = { ...updatedSections[sectionIndex] }; // Clone the specific section
-      const updatedImages = [...updatedSection.images]; // Clone the images array
+      const updatedSection = { ...updatedSections[sectionIndex] }; 
+      const updatedImages = [...updatedSection.images];
       updatedImages[imageIndex] = value;
       updatedSection.images = updatedImages;
       updatedSections[sectionIndex] = updatedSection;

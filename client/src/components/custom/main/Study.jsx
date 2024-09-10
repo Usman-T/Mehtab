@@ -13,8 +13,6 @@ import {
   ArrowRightIcon,
   TrendingUp,
   CheckIcon,
-  Terminal,
-  ExternalLinkIcon,
 } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Button } from "@/components/ui/button";

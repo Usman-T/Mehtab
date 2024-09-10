@@ -8,10 +8,21 @@ import {
   LinkIcon,
   ExternalLinkIcon,
   ClockIcon,
+  MapPin,
+  FileXIcon,
+  SlashIcon,
+  XIcon,
+  ClipboardX,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -61,10 +72,10 @@ const Home = () => {
     count === 1 ? singular : plural;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex flex-col bg-background">
       <main className="flex-1 px-6 py-8 md:px-10 lg:px-16">
-        <div className=" mb-6">
-          <Card className="border border-orange-500  p-6">
+        <div className="mb-6">
+          <Card className="border border-orange-500 p-6">
             <h3 className="text-lg font-semibold">Welcome to Mehtab</h3>
             <div className="md:flex-rowflex w-full flex-col items-center md:justify-between">
               <Link to="/learn">
@@ -142,60 +153,40 @@ const Home = () => {
                 <CarouselNext />
               </Carousel>
             ) : (
-              <div className="flex h-full flex-col justify-between space-y-8 text-center text-muted-foreground">
-                <p className="my-auto">
-                  You haven't enrolled in any roadmaps yet.
-                </p>
-                <Link to="/roadmaps">
-                  <Button className="mx-auto mt-auto flex w-1/2 items-center justify-center space-x-2 rounded bg-primary px-4 py-2 text-white">
-                    <p className="font-semibold">Explore </p>
-                    <ExternalLinkIcon className="h-5 w-5" />
-                  </Button>
-                </Link>
+              <div className="mx-auto w-full max-w-md">
+                <CardHeader>
+                  <CardTitle className="text-center">
+                    No Active Roadmaps
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center text-center">
+                  <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+                    <ClipboardX className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                  <p className="mb-6 text-muted-foreground">
+                    You don't have any active roadmaps at the moment. Enroll in
+                    a new roadmap to start learning today.
+                  </p>
+                </CardContent>
+                <CardFooter className="flex justify-center">
+                  <Link to="/roadmaps">
+                    <Button className="flex space-x-2">
+                      <p className="font-semibold">Explore Roadmaps</p>
+                      <ExternalLinkIcon className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                </CardFooter>
               </div>
             )}
           </Card>
+
           <Card className="flex flex-col gap-4 bg-card p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold">Recommended Roadmaps</h3>
-              </div>
-              <Link to="/roadmaps" className="text-primary hover:underline">
-                View All
-              </Link>
-            </div>
-            <div className="grid gap-4">
-              {roadmapData?.allRoadmaps.slice(0, 3).map((r) => (
-                <div
-                  key={r.id}
-                  className="grid grid-cols-[auto_1fr_auto] items-center gap-4"
-                >
-                  <div className="rounded-full bg-primary p-2 text-primary-foreground">
-                    <BookIcon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium">{r.title}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {r.description.substring(0, 30)}...
-                    </div>
-                  </div>
-                  <Link to={`/roadmaps/${r.id}`}>
-                    <Button variant="outline" size="icon">
-                      <ArrowRightIcon className="h-4 w-4" />
-                      <span className="sr-only">View course</span>
-                    </Button>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </Card>
-          <Card className="flex flex-col gap-4 bg-card p-6 md:col-span-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-semibold">Achievements</h3>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="my-auto grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="flex flex-col items-center gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <BadgeIcon className="h-6 w-6 text-primary" />
@@ -238,19 +229,18 @@ const Home = () => {
                   )}{" "}
                   Completed
                 </div>
-                <div className="text-xs text-muted-foreground"></div>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <MedalIcon className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-center text-sm font-medium">
-                  {meData?.me?.progress?.reduce(
+                  {meData?.me?.progress.reduce(
                     (acc, prog) => acc + prog.completedSections.length,
                     0,
                   )}{" "}
                   {getPluralizedText(
-                    meData?.me?.progress?.reduce(
+                    meData?.me?.progress.reduce(
                       (acc, prog) => acc + prog.completedSections.length,
                       0,
                     ),
@@ -259,9 +249,7 @@ const Home = () => {
                   )}{" "}
                   Completed
                 </div>
-                <div className="text-xs text-muted-foreground"></div>
               </div>
-
               <div className="flex flex-col items-center gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <SparkleIcon className="h-6 w-6 text-primary" />
@@ -270,6 +258,41 @@ const Home = () => {
                   {meData.me.points} Points
                 </div>
               </div>
+            </div>
+          </Card>
+
+          <Card className="flex flex-col gap-4 bg-card p-6 md:col-span-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold">Recommended Roadmaps</h3>
+              </div>
+              <Link to="/roadmaps" className="text-primary hover:underline">
+                View All
+              </Link>
+            </div>
+            <div className="grid gap-4">
+              {roadmapData?.allRoadmaps.slice(0, 3).map((r) => (
+                <div
+                  key={r.id}
+                  className="grid grid-cols-[auto_1fr_auto] items-center gap-4"
+                >
+                  <div className="rounded-full bg-primary p-2 text-primary-foreground">
+                    <BookIcon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <div className="font-medium">{r.title}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {r.description.substring(0, 30)}...
+                    </div>
+                  </div>
+                  <Link to={`/roadmaps/${r.id}`}>
+                    <Button variant="outline" size="icon">
+                      <ArrowRightIcon className="h-4 w-4" />
+                      <span className="sr-only">View course</span>
+                    </Button>
+                  </Link>
+                </div>
+              ))}
             </div>
           </Card>
         </div>

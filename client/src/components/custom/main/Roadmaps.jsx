@@ -1,10 +1,18 @@
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useQuery } from "@apollo/client";
-import { BookOpenIcon } from "lucide-react";
+import { AlertCircle, BookOpenIcon, Code, Search } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ALL_ROADMAPS, ALL_UPCOMING_ROADMAPS } from "@/queries";
 import Loading from "../extras/Loading";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Roadmaps = () => {
   const { loading: loadingRoadmaps, data: dataRoadmaps } =
@@ -23,11 +31,38 @@ const Roadmaps = () => {
   const upcomingRoadmaps = dataUpcoming?.allUpcomingRoadmaps || [];
 
   return (
-    <div className="p-4 bg-secondary">
-      <h2 className="text-xl font-semibold">Active Roadmaps</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <>
+      <div className="p-4">
+        <h2 className="text-xl font-semibold">Active Roadmaps</h2>
         {allRoadmaps.length > 0 ? (
-          allRoadmaps.map((roadmap) => (
+          <div className="grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {allRoadmaps.map((roadmap) => (
+              <RoadmapCard
+                key={roadmap.id}
+                roadmap={roadmap}
+                navigate={navigate}
+              />
+            ))}
+          </div>
+        ) : (
+          <Alert className="mt-4 shadow-sm">
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="h-6 w-6" />
+              <h3 className="text-xl font-semibold"> No roadmaps found</h3>
+            </div>
+            <AlertDescription className="hover:cursor-pointer">
+              <Link to="/community">
+                No active roadmaps were found, vote for upcoming roadmaps{" "}
+                <span className="underline">here</span>
+              </Link>
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
+      <h2 className="p-4 text-xl font-semibold">Upcoming Roadmaps</h2>
+      <div className="grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+        {upcomingRoadmaps.length > 0 ? (
+          upcomingRoadmaps.map((roadmap) => (
             <RoadmapCard
               key={roadmap.id}
               roadmap={roadmap}
@@ -38,21 +73,7 @@ const Roadmaps = () => {
           <p>No roadmaps found.</p>
         )}
       </div>
-      <h2 className="mt-8 text-xl font-semibold">Upcoming Roadmaps</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {upcomingRoadmaps.length > 0 ? (
-          upcomingRoadmaps.map((roadmap) => (
-            <RoadmapCard
-              key={roadmap.id}
-              roadmap={roadmap}
-              navigate={navigate}
-            />
-          ))
-        ) : (
-          <p>No upcoming roadmaps found.</p>
-        )}
-      </div>
-    </div>
+    </>
   );
 };
 

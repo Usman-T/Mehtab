@@ -14,6 +14,7 @@ import Study from "./components/custom/main/Study";
 import Section from "./components/custom/main/Section";
 import Onboarding from "./components/custom/main/Onboarding";
 import Learn from "./components/custom/extras/Learn";
+import Community from "./components/custom/main/Community";
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -32,6 +33,8 @@ const App = () => {
           path="/study/:roadmapId/:sectionId"
           element={<Main component={<Section />} />}
         />
+        <Route path="/community" element={<Main component={<Community />} />} />
+
         <Route
           path="/leaderboards"
           element={<Main component={<Leaderboards />} />}

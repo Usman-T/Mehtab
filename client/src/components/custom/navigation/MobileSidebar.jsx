@@ -8,6 +8,8 @@ import {
   MenuIcon,
   MoonIcon,
   LogOutIcon,
+  UsersIcon,
+  BarChart2Icon,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -18,19 +20,24 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useState } from "react";
-import { Separator } from "@/components/ui/separator";
 import { useApolloClient } from "@apollo/client";
 import toast from "react-hot-toast";
 
 const MobileSidebar = () => {
   const client = useApolloClient();
+
   const sidebarItems = [
     { name: "Home", path: "/", icon: <HomeIcon /> },
     { name: "Roadmaps", path: "/roadmaps", icon: <CompassIcon /> },
     {
+      name: "Community",
+      path: "/community",
+      icon: <UsersIcon />,
+    },
+    {
       name: "Leaderboards",
       path: "/leaderboards",
-      icon: <UserIcon />,
+      icon: <BarChart2Icon />,
     },
   ];
 
@@ -86,7 +93,8 @@ const MobileSidebar = () => {
               />
             ))}
 
-            <Separator className="my-4" />
+            <Seperator className='my-4' />
+
             {localStorage.getItem("mehtab-user-token") ? (
               <>
                 <Button
@@ -99,14 +107,16 @@ const MobileSidebar = () => {
                 </Button>
               </>
             ) : (
-              <Button
-                onClick={() => navigate("/login")}
-                className="flex items-center justify-start space-x-2 px-6"
-                variant={"ghost"}
-              >
-                <LogOutIcon className="h-4 w-4" />
-                <p>Login</p>
-              </Button>
+              <>
+                <Button
+                  onClick={() => navigate("/login")}
+                  className="flex items-center justify-start space-x-2 px-6"
+                  variant={"ghost"}
+                >
+                  <LogOutIcon className="h-4 w-4" />
+                  <p>Login</p>
+                </Button>
+              </>
             )}
           </div>
           <SheetFooter className="mt-auto">

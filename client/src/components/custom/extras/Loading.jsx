@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import animationData from "../../../../public/LoadingAnimation.json";
 
@@ -21,8 +21,10 @@ const Loading = () => {
   }, []);
 
   return (
-    <div className="flex my-auto h-full  w-full flex-col items-center justify-center">
-      <Lottie animationData={animationData} />
+    <div className="my-auto flex h-full w-full flex-col items-center justify-center">
+      <Lottie
+        animationData={animationData}
+      />
       <p className="mt-4 text-lg font-semibold">{loadingText}</p>
     </div>
   );

@@ -24,7 +24,7 @@ export const ALL_ROADMAPS = gql`
       description
       image
       sections {
-      id
+        id
         title
         description
         images
@@ -135,7 +135,7 @@ export const ME = gql`
           description
           image
           sections {
-          learningObjectives
+            learningObjectives
             id
             title
             description
@@ -171,6 +171,30 @@ export const PUBLISH_ROADMAP = gql`
   mutation ($roadmapId: ID!) {
     updateRoadmap(roadmapId: $roadmapId) {
       title
+    }
+  }
+`;
+
+export const GET_POLLS = gql`
+  query GetAllPolls {
+    getAllPolls {
+      id
+      votes {
+        optionId
+        count
+      }
+    }
+  }
+`;
+
+export const CAST_VOTE = gql`
+  mutation CastVote($pollId: ID!, $optionId: ID!) {
+    castVote(pollId: $pollId, optionId: $optionId) {
+      id
+      votes {
+        optionId
+        count
+      }
     }
   }
 `;

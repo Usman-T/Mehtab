@@ -20,7 +20,6 @@ const Leaderboards = () => {
     return <Loading />;
   }
 
-  // Create a shallow copy of the allUsers array before sorting
   const sortedUsers = [...data.allUsers].sort((a, b) => b.points - a.points);
 
   return (
