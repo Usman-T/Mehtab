@@ -1,12 +1,14 @@
 import { Card } from "@/components/ui/card";
-import { ALL_UPCOMING_ROADMAPS, GET_POLLS } from "@/queries";
-import { useQuery } from "@apollo/client";
+import { ALL_UPCOMING_ROADMAPS, CAST_VOTE, GET_POLLS } from "@/queries";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useState, useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Loading from "../extras/Loading";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { Progress } from "@/components/ui/progress";
+import { ClipLoader } from "react-spinners";
 
 const Community = () => {
   const { data: pollsData, loading: pollsLoading } = useQuery(GET_POLLS);
@@ -14,6 +16,7 @@ const Community = () => {
     ALL_UPCOMING_ROADMAPS,
   );
   const navigate = useNavigate();
+  const [castVote, { loading: mutationLoading }] = useMutation(CAST_VOTE); // Correctly handle loading state
 
   const [selectedVote, setSelectedVote] = useState(null);
   const [userVote, setUserVote] = useState(null);
@@ -40,22 +43,35 @@ const Community = () => {
     setSelectedVote(voteId);
   };
 
-  const handleSubmitVote = () => {
+  const handleSubmitVote = async () => {
     if (!localStorage.getItem("mehtab-user-token")) {
       return toast.error("Must be logged in to vote");
     }
 
-    console.log("reached");
     if (selectedVote !== null) {
-      localStorage.setItem(
-        "vote",
-        JSON.stringify({ time: Date.now(), id: selectedVote }),
-      );
-      toast.success("Voted for next roadmap");
-      setUserVote(selectedVote);
-      setEligibleToVote(false);
+      try {
+        const { data } = await castVote({
+          variables: {
+            pollId: pollsData.getAllPolls[0].id,
+            optionId: selectedVote,
+          },
+        });
+
+        console.log(data);
+
+        localStorage.setItem(
+          "vote",
+          JSON.stringify({ time: Date.now(), id: selectedVote }),
+        );
+        toast.success("Voted for next roadmap");
+        setUserVote(selectedVote);
+        setEligibleToVote(false);
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to submit vote. Please try again.");
+      }
     } else {
-      console.log("No vote selected.");
+      toast.error("Please select a vote option.");
     }
   };
 
@@ -66,168 +82,93 @@ const Community = () => {
   const votes = pollsData.getAllPolls[0].votes;
   const roadmaps = roadmapsData.allUpcomingRoadmaps;
 
-  const selectedRoadmap = roadmaps.find((r) => r.id === userVote);
+  const totalVotes = votes.reduce(
+    (sum, vote) => sum + vote.count,
+    selectedVote ? 1 : 0,
+  );
 
   return (
-    <div className="flex h-full flex-col bg-white p-4 md:p-8">
-      {eligibleToVote ? (
-        <>
-          <h1 className="mb-4 text-xl font-bold md:text-3xl">
-            Vote for the Next Roadmap
-          </h1>
-          <div className="w-full">
-            <Card className="border-none p-4">
-              <p className="mb-6 text-gray-700">
-                Cast your vote for the next roadmap. The highest voted one will
-                be released next week.
-              </p>
-              <div className="flex flex-col space-y-8">
-                {votes.map((vote, id) => {
-                  const roadmap = roadmaps.find((r) => r.id === vote.optionId);
+    <section className="w-full py-12">
+      <div className="container grid gap-8 px-4 md:px-6">
+        <div className="space-y-3 text-center">
+          <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl">
+            Vote for Upcoming Roadmaps 
+          </h2>
+          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            Help shape the future of our platform by voting for the roadmaps  you're most interested in.
+          </p>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+          {votes.map((vote, id) => {
+            const roadmap = roadmaps.find((r) => r.id === vote.optionId);
 
-                  return (
-                    <div
-                      key={id}
-                      onClick={() => handleVoteClick(vote.optionId)}
-                      className={`flex w-full cursor-pointer flex-col overflow-hidden rounded-lg border transition-all duration-300 md:flex-row ${selectedVote === vote.optionId ? "border-green-500 shadow-md" : "border-red-200"} hover:shadow-lg`}
-                    >
-                      <div className="relative h-48 overflow-hidden md:h-64 md:w-1/3">
-                        <LazyLoadImage
-                          src={
-                            roadmap?.image ||
-                            "https://www.creativeitinstitute.com/images/course/course_1674371266.jpg"
-                          }
-                          className="h-full w-full transform object-cover transition-transform duration-500 hover:scale-105"
-                          loading="lazy"
-                          onLoad={(e) => (e.target.style.filter = "blur(0px)")}
-                          style={{
-                            filter: "blur(20px)",
-                            transition: "filter 0.5s ease",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`flex flex-col justify-between p-4 md:flex-1 md:p-6 ${selectedVote === vote.optionId ? "bg-gray-100" : ""}`}
-                      >
-                        <p className="mb-4 text-center text-lg font-semibold md:text-left md:text-xl">
-                          {roadmap ? roadmap.title : "Unknown Roadmap"}
-                        </p>
-                        <div className="flex flex-col items-center justify-center space-y-2 md:flex-row md:justify-start md:space-x-4 md:space-y-0">
-                          <Button
-                            className={`w-full px-6 py-2 text-sm font-semibold md:w-auto ${
-                              selectedVote === vote.optionId
-                                ? "bg-green-500 text-white"
-                                : ""
-                            }`}
-                          >
-                            Vote
-                          </Button>
-                          <Button
-                            className="w-full px-6 py-2 text-sm font-semibold md:w-auto"
-                            variant="outline"
-                            onClick={() =>
-                              navigate(`/roadmaps/${vote.optionId}`)
-                            }
-                          >
-                            Details
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          </div>
-          <div className="mt-8 flex justify-center">
-            <Button onClick={handleSubmitVote} className="font-semibold">
-              Submit Vote
-            </Button>
-          </div>
-        </>
-      ) : (
-        <>
-          <h1 className="mb-4 text-xl font-bold md:text-3xl">Your Vote</h1>
-          <div className="w-full">
-            <Card className="border-none p-4">
-              <p className="mb-6 text-gray-700">
-                You have already voted. Here are the details of your vote.
-              </p>
-              {selectedRoadmap ? (
-                <div className="flex w-full flex-col rounded-lg border border-green-500 shadow-md md:flex-row">
-                  <div className="relative h-48 overflow-hidden md:h-64 md:w-1/3">
-                    <LazyLoadImage
-                      src={
-                        selectedRoadmap.image ||
-                        "https://www.creativeitinstitute.com/images/course/course_1674371266.jpg"
-                      }
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                      onLoad={(e) => (e.target.style.filter = "blur(0px)")}
-                      style={{
-                        filter: "blur(20px)",
-                        transition: "filter 0.5s ease",
-                      }}
-                    />
-                  </div>
-                  <div className="flex flex-col justify-between p-4 md:flex-1 md:p-6">
-                    <p className="mb-4 text-center text-lg font-semibold md:text-left md:text-xl">
-                      {selectedRoadmap.title}
-                    </p>
-                    <div className="flex flex-col items-center justify-center space-y-2 md:flex-row md:justify-start md:space-x-4 md:space-y-0">
-                      <Button className="w-full bg-green-500 px-6 py-2 text-sm font-semibold text-white md:w-auto">
-                        Your Vote
-                      </Button>
-                    </div>
+            const updatedCount =
+              vote.optionId === selectedVote ? vote.count + 1 : vote.count;
+            const progressValue = Math.floor((updatedCount / totalVotes) * 100);
+
+            return (
+              <div
+                key={id}
+                onClick={() => handleVoteClick(vote.optionId)}
+                className={`group relative overflow-hidden rounded-lg border transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
+                  selectedVote === vote.optionId
+                    ? "border-green-500 bg-gray-100 shadow-lg"
+                    : "border-gray-200"
+                }`}
+              >
+                <div className="relative h-[200px] w-full overflow-hidden">
+                  <LazyLoadImage
+                    src={
+                      roadmap?.image ||
+                      "https://www.creativeitinstitute.com/images/course/course_1674371266.jpg"
+                    }
+                    loading="lazy"
+                    onLoad={(e) => (e.target.style.filter = "blur(0px)")}
+                    alt="Roadmap"
+                    className="h-full w-full object-cover transition-transform group-hover:scale-[1.05] duration-500 ease-in-out"
+                    style={{
+                      aspectRatio: "300/200",
+                      objectFit: "cover",
+                      filter: "blur(20px)",
+                      transition: "filter 0.5s ease",
+                    }}
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold transition-colors duration-300 group-hover:underline">
+                    {roadmap ? roadmap.title : "Unknown Roadmap"}
+                  </h3>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-muted-foreground">
+                      {progressValue}% voted
+                    </span>
+                    <Progress value={progressValue} className="h-2 w-1/2" />
                   </div>
                 </div>
-              ) : (
-                <p className="text-center text-gray-700">
-                  Unable to fetch your voted roadmap details.
-                </p>
-              )}
-              <h2 className="mb-4 mt-8 text-xl font-bold md:text-2xl">
-                Other Votes
-              </h2>
-              <div className="flex flex-col space-y-4">
-                {votes.map((vote) => {
-                  const roadmap = roadmaps.find((r) => r.id === vote.optionId);
-                  return (
-                    <div
-                      key={vote.optionId}
-                      className="flex w-full flex-col rounded-lg border border-gray-200 shadow-sm md:flex-row"
-                    >
-                      <div className="relative h-48 overflow-hidden md:h-64 md:w-1/3">
-                        <LazyLoadImage
-                          src={
-                            roadmap?.image ||
-                            "https://www.creativeitinstitute.com/images/course/course_1674371266.jpg"
-                          }
-                          className="h-full w-full object-cover"
-                          loading="lazy"
-                        />
-                      </div>
-                      <div className="flex flex-col justify-between p-4 md:flex-1 md:p-6">
-                        <p className="mb-4 text-center text-lg font-semibold md:text-left md:text-xl">
-                          {roadmap ? roadmap.title : "Unknown Roadmap"}
-                        </p>
-                        <p className="text-center text-gray-700">
-                          Votes: {vote.count}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
               </div>
-            </Card>
+            );
+          })}
+        </div>{" "}
+        {eligibleToVote ? (
+          <div className="mt-8 flex justify-end">
+            <Button
+              disabled={mutationLoading}
+              onClick={handleSubmitVote}
+              className="flex font-semibold"
+            >
+              <p className="font-semibold">
+                {mutationLoading ? "Submitting..." : "Submit"}
+              </p>
+              {mutationLoading && <ClipLoader color="white" size={16} />}
+            </Button>
           </div>
-        </>
-      )}
-
-      <h2 className="mb-4 mt-8 text-xl font-bold md:text-3xl">
-        Previously Voted Roadmaps
-      </h2>
-    </div>
+        ) : (
+          <div className="mt-8 text-center">
+            <h3 className="text-xl font-semibold">You have already voted.</h3>
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 
