@@ -10,6 +10,7 @@ import {
   LogOutIcon,
   UsersIcon,
   BarChart2Icon,
+  FileTextIcon,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -31,17 +32,22 @@ const MobileSidebar = () => {
     { name: "Home", path: "/", icon: <HomeIcon /> },
     { name: "Roadmaps", path: "/roadmaps", icon: <CompassIcon /> },
     {
+      name: "Assignments",
+      path: "/assignments",
+      icon: <FileTextIcon />,
+    },
+    {
       name: "Community",
       path: "/community",
       icon: <UsersIcon />,
     },
+    ,
     {
       name: "Leaderboards",
       path: "/leaderboards",
       icon: <BarChart2Icon />,
     },
   ];
-
   const navigate = useNavigate();
 
   const { pathname } = useLocation();

@@ -8,6 +8,7 @@ import {
   CompassIcon,
   UsersIcon,
   BarChart2Icon,
+  FileTextIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -25,10 +26,16 @@ const Sidebar = ({ className }) => {
     { name: "Home", path: "/", icon: <HomeIcon /> },
     { name: "Roadmaps", path: "/roadmaps", icon: <CompassIcon /> },
     {
+      name: "Assignments",
+      path: "/assignments",
+      icon: <FileTextIcon />,
+    },
+    {
       name: "Community",
       path: "/community",
       icon: <UsersIcon />,
     },
+    ,
     {
       name: "Leaderboards",
       path: "/leaderboards",
@@ -55,7 +62,16 @@ const Sidebar = ({ className }) => {
       className={`${className} top-0 flex h-screen w-72 flex-col justify-between overflow-y-auto border-r bg-white p-4 pt-20`}
     >
       <div className="flex flex-col space-y-2">
-        {sidebarItems.map((item) => (
+        {sidebarItems.slice(0, 3).map((item) => (
+          <SidebarItem
+            item={item}
+            key={item.name}
+            active={active}
+            setActive={setActive}
+          />
+        ))}
+
+        {sidebarItems.slice(3).map((item) => (
           <SidebarItem
             item={item}
             key={item.name}
