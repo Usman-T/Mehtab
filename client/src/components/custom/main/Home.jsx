@@ -186,8 +186,8 @@ const Home = () => {
                 <h3 className="text-lg font-semibold">Achievements</h3>
               </div>
             </div>
-            <div className="my-auto grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="flex flex-col items-center gap-2">
+            <div className="my-auto grid grid-cols-1 gap-4 md:space-y-  md:grid-cols-2">
+              <div className="flex flex-col items-center my-4 lg:my-12 gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <BadgeIcon className="h-6 w-6 text-primary" />
                 </div>
@@ -201,8 +201,8 @@ const Home = () => {
                   Enrolled
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+              <div className="flex flex-col items-center my-4 lg:my-12 gap-2">
+                <div className="flex h-12 w-12 items-center  justify-center rounded-full bg-muted">
                   <RocketIcon className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-center text-sm font-medium">
@@ -230,7 +230,7 @@ const Home = () => {
                   Completed
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 my-4 lg:my-12">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <MedalIcon className="h-6 w-6 text-primary" />
                 </div>
@@ -250,7 +250,7 @@ const Home = () => {
                   Completed
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center my-4 lg:my-12 gap-2">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <SparkleIcon className="h-6 w-6 text-primary" />
                 </div>

@@ -68,7 +68,6 @@ const Study = () => {
             fill: "var(--color-safari)",
           },
         ]);
-        console.log(currentRoadmap)
       } else {
         toast.error("Roadmap not found");
       }

@@ -43,7 +43,6 @@ const Roadmap = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    console.log(loading, upcomingLoading, data, upcomingData);
 
     if (!loading) {
       const currentRoadmap = data.allRoadmaps.find((r) => r.id === id);
@@ -95,7 +94,6 @@ const Roadmap = () => {
       ) {
         return toast.error("Login to enroll the course");
       }
-      console.log(error);
     }
   };
 
