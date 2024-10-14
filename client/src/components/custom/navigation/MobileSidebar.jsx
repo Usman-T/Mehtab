@@ -41,7 +41,6 @@ const MobileSidebar = () => {
       path: "/community",
       icon: <UsersIcon />,
     },
-    ,
     {
       name: "Leaderboards",
       path: "/leaderboards",
@@ -51,6 +50,7 @@ const MobileSidebar = () => {
   const navigate = useNavigate();
 
   const { pathname } = useLocation();
+  console.log(sidebarItems)
   const activeTab = sidebarItems.find((item) => item.path === pathname);
   const [active, setActive] = useState(activeTab ? activeTab.name : "");
   const [isSheetOpen, setSheetOpen] = useState(false);

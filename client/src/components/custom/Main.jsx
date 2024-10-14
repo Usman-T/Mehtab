@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 const Main = ({ component }) => {
   const location = useLocation();
 
-  const isStudyPage = location.pathname.startsWith("/study") || location.pathname === '/' || location.pathname === '/community' || location.pathname === '/roadmaps';
+  const isStudyPage = location.pathname.startsWith("/study") || location.pathname === '/' || location.pathname === '/community' || location.pathname === '/roadmaps' || location.pathname === '/assignments';
 
   return (
     <div

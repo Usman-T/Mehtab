@@ -15,6 +15,7 @@ import Section from "./components/custom/main/Section";
 import Onboarding from "./components/custom/main/Onboarding";
 import Learn from "./components/custom/extras/Learn";
 import Community from "./components/custom/main/Community";
+import Assignments from "./components/custom/main/Assignments";
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -39,6 +40,12 @@ const App = () => {
           path="/leaderboards"
           element={<Main component={<Leaderboards />} />}
         />
+
+        <Route
+          path="/assignments"
+          element={<Main component={<Assignments />} />}
+        />
+
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/learn" element={<Learn />} />
 

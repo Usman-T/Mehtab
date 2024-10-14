@@ -35,7 +35,6 @@ const Sidebar = ({ className }) => {
       path: "/community",
       icon: <UsersIcon />,
     },
-    ,
     {
       name: "Leaderboards",
       path: "/leaderboards",
@@ -54,8 +53,16 @@ const Sidebar = ({ className }) => {
   };
 
   const { pathname } = useLocation();
-  const activeTab = sidebarItems.find((item) => item.path === pathname);
-  const [active, setActive] = useState(activeTab ? activeTab.name : "");
+  
+  // Set active tab based on pathname on component mount or URL change
+  const [active, setActive] = useState("");
+
+  useEffect(() => {
+    const activeTab = sidebarItems.find((item) => item.path === pathname);
+    if (activeTab) {
+      setActive(activeTab.name);
+    }
+  }, [pathname]); // Re-run this effect whenever pathname changes
 
   return (
     <div
