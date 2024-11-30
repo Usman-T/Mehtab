@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { Progress } from "@/components/ui/progress";
 import { ClipLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
 
 const Community = () => {
   const { data: pollsData, loading: pollsLoading } = useQuery(GET_POLLS);
@@ -18,8 +19,7 @@ const Community = () => {
   const [selectedVote, setSelectedVote] = useState(null);
   const [userVote, setUserVote] = useState(null);
   const [eligibleToVote, setEligibleToVote] = useState(true);
-
-  
+  const navigate = useNavigate();
 
   useEffect(() => {
     const voteData = JSON.parse(localStorage.getItem("vote"));
@@ -76,8 +76,52 @@ const Community = () => {
     return <Loading />;
   }
 
-  const votes = pollsData?.getAllPolls[0].votes;
+  const votes = pollsData?.getAllPolls[0]?.votes;
   const roadmaps = roadmapsData?.allUpcomingRoadmaps;
+
+  if (!pollsData?.getAllPolls?.length) {
+    return (
+      <section className="w-full py-12">
+        <div className="container grid gap-8 px-4 md:px-6">
+          <div className="space-y-3 text-center">
+            <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl">
+              No Active Polls
+            </h2>
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              There are currently no polls available. Check out the upcoming
+              roadmaps below!
+            </p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            {roadmaps?.map((roadmap) => (
+              <div
+                key={roadmap.id}
+                onClick={() => navigate(`/roadmaps/${roadmap.id}`)}
+                className="group relative cursor-pointer overflow-hidden rounded-lg border border-gray-200 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+              >
+                <div className="relative h-[200px] w-full overflow-hidden">
+                  <LazyLoadImage
+                    src={
+                      roadmap?.image ||
+                      "https://www.creativeitinstitute.com/images/course/course_1674371266.jpg"
+                    }
+                    loading="lazy"
+                    alt="Roadmap"
+                    className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-[1.05]"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold transition-colors duration-300 group-hover:underline">
+                    {roadmap.title}
+                  </h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const totalVotes = votes?.reduce(
     (sum, vote) => sum + vote.count,
@@ -121,15 +165,8 @@ const Community = () => {
                       "https://www.creativeitinstitute.com/images/course/course_1674371266.jpg"
                     }
                     loading="lazy"
-                    onLoad={(e) => (e.target.style.filter = "blur(0px)")}
                     alt="Roadmap"
                     className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-[1.05]"
-                    style={{
-                      aspectRatio: "300/200",
-                      objectFit: "cover",
-                      filter: "blur(20px)",
-                      transition: "filter 0.5s ease",
-                    }}
                   />
                 </div>
                 <div className="p-4">
@@ -146,7 +183,7 @@ const Community = () => {
               </div>
             );
           })}
-        </div>{" "}
+        </div>
         {eligibleToVote ? (
           <div className="mt-8 flex justify-end">
             <Button
