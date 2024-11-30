@@ -22,7 +22,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const httpLink = createHttpLink({
-  uri: "https://mehtabed-back.netlify.app/.netlify/functions/graphql",
+  uri: "http://localhost:4000",
 });
 
 const client = new ApolloClient({
@@ -34,7 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <Router>
-        <App  />
+        <App />
       </Router>
     </ApolloProvider>
   </React.StrictMode>,

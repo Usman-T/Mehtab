@@ -1,10 +1,8 @@
-import { Card } from "@/components/ui/card";
 import { ALL_UPCOMING_ROADMAPS, CAST_VOTE, GET_POLLS } from "@/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useState, useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Loading from "../extras/Loading";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { Progress } from "@/components/ui/progress";
@@ -15,23 +13,24 @@ const Community = () => {
   const { data: roadmapsData, loading: roadmapsLoading } = useQuery(
     ALL_UPCOMING_ROADMAPS,
   );
-  const navigate = useNavigate();
-  const [castVote, { loading: mutationLoading }] = useMutation(CAST_VOTE); // Correctly handle loading state
+  const [castVote, { loading: mutationLoading }] = useMutation(CAST_VOTE);
 
   const [selectedVote, setSelectedVote] = useState(null);
   const [userVote, setUserVote] = useState(null);
   const [eligibleToVote, setEligibleToVote] = useState(true);
 
+  
+
   useEffect(() => {
     const voteData = JSON.parse(localStorage.getItem("vote"));
     if (voteData) {
-      const voteTime = new Date(voteData.time);
+      const voteTime = new Date(voteData?.time);
       const now = new Date();
       const timeDiff = now - voteTime;
       const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 
       if (daysDiff <= 7) {
-        setUserVote(voteData.id);
+        setUserVote(voteData?.id);
         setEligibleToVote(false);
       } else {
         setEligibleToVote(true);
@@ -52,12 +51,10 @@ const Community = () => {
       try {
         const { data } = await castVote({
           variables: {
-            pollId: pollsData.getAllPolls[0].id,
+            pollId: pollsData?.getAllPolls[0].id,
             optionId: selectedVote,
           },
         });
-
-        console.log(data);
 
         localStorage.setItem(
           "vote",
@@ -79,10 +76,10 @@ const Community = () => {
     return <Loading />;
   }
 
-  const votes = pollsData.getAllPolls[0].votes;
-  const roadmaps = roadmapsData.allUpcomingRoadmaps;
+  const votes = pollsData?.getAllPolls[0].votes;
+  const roadmaps = roadmapsData?.allUpcomingRoadmaps;
 
-  const totalVotes = votes.reduce(
+  const totalVotes = votes?.reduce(
     (sum, vote) => sum + vote.count,
     selectedVote ? 1 : 0,
   );
@@ -92,14 +89,15 @@ const Community = () => {
       <div className="container grid gap-8 px-4 md:px-6">
         <div className="space-y-3 text-center">
           <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl">
-            Vote for Upcoming Roadmaps 
+            Vote for Upcoming Roadmaps
           </h2>
           <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            Help shape the future of our platform by voting for the roadmaps  you're most interested in.
+            Help shape the future of our platform by voting for the roadmaps
+            you're most interested in.
           </p>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-          {votes.map((vote, id) => {
+          {votes?.map((vote, id) => {
             const roadmap = roadmaps.find((r) => r.id === vote.optionId);
 
             const updatedCount =
@@ -125,7 +123,7 @@ const Community = () => {
                     loading="lazy"
                     onLoad={(e) => (e.target.style.filter = "blur(0px)")}
                     alt="Roadmap"
-                    className="h-full w-full object-cover transition-transform group-hover:scale-[1.05] duration-500 ease-in-out"
+                    className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-[1.05]"
                     style={{
                       aspectRatio: "300/200",
                       objectFit: "cover",

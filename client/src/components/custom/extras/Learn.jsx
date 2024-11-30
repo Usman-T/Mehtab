@@ -9,13 +9,13 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import planeAnimationData from "../../../../public/PlaneAnimation.json";
-import roadmapAnimationData from "../../../../public/RoadmapAnimation.json";
-import followAnimationData from "../../../../public/FolowAnimation.json";
-import structureAnimationData from "../../../../public/StructureAnimation.json";
-import timeAnimationData from "../../../../public/TimeAnimation.json";
-import calenderAnimationData from "../../../../public/CalenderAnimation.json";
-import planeEndAnimation from "../../../../public/PlaneEndAnimation.json";
+import planeAnimationData from "../../../assets/PlaneAnimation.json";
+import roadmapAnimationData from "../../../assets/RoadmapAnimation.json";
+import followAnimationData from "../../../assets/FolowAnimation.json";
+import structureAnimationData from "../../../assets/StructureAnimation.json";
+import timeAnimationData from "../../../assets/TimeAnimation.json";
+import calenderAnimationData from "../../../assets/CalenderAnimation.json";
+import planeEndAnimation from "../../../assets/PlaneEndAnimation.json";
 
 import Lottie from "lottie-react";
 

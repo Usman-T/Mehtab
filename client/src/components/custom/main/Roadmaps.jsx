@@ -35,7 +35,7 @@ const Roadmaps = () => {
       <div className="p-4">
         <h2 className="text-xl font-semibold">Active Roadmaps</h2>
         {allRoadmaps.length > 0 ? (
-          <div className="grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-4 py-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {allRoadmaps.map((roadmap) => (
               <RoadmapCard
                 key={roadmap.id}

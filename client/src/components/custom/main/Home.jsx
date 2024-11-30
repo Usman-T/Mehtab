@@ -5,13 +5,7 @@ import {
   BadgeIcon,
   ArrowRightIcon,
   BookIcon,
-  LinkIcon,
   ExternalLinkIcon,
-  ClockIcon,
-  MapPin,
-  FileXIcon,
-  SlashIcon,
-  XIcon,
   ClipboardX,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,7 +24,6 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useQuery } from "@apollo/client";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ALL_ROADMAPS, ME } from "@/queries";
@@ -104,7 +97,7 @@ const Home = () => {
                 className="w-full"
               >
                 <CarouselContent>
-                  {meData.me.progress.map((p) => (
+                  {meData?.me?.progress.map((p) => (
                     <CarouselItem key={p.roadmap.id}>
                       <div className="flex flex-col gap-4">
                         <LazyLoadImage
@@ -255,7 +248,7 @@ const Home = () => {
                   <SparkleIcon className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-center text-sm font-medium">
-                  {meData.me.points} Points
+                  {meData?.me?.points} Points
                 </div>
               </div>
             </div>

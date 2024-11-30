@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Lottie from "lottie-react";
-import animationData from "../../../../public/LoadingAnimation.json";
+import animationData from "../../../assets/LoadingAnimation.json";
 
 const Loading = () => {
   const loadingTexts = [

@@ -237,7 +237,7 @@ const Section = () => {
                   <div className="p-2">
                     <Card key={index} className="">
                       <CardContent className="space-y-2 p-4">
-                        <h3 className="text-lg font-bold">{m.title}</h3>
+                        <h3 className="text-lg font-bold">{m.title.replace(/^#+\s*/, "")}</h3>
                         <div className="flex w-full items-center justify-between">
                           <p className="text-gray-500 dark:text-gray-400">
                             {m.content.substring(0, 50)}...
@@ -264,7 +264,7 @@ const Section = () => {
             className="w-full"
           >
             <h3 className="mb-4 mt-8 text-xl font-semibold md:text-2xl">
-              {module.title}
+              {module.title.replace(/^#+\s*/, "")}
             </h3>
 
             <Card key={index} className="mt-4 p-4 md:p-8">
