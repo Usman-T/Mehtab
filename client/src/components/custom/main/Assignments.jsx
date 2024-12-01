@@ -1,89 +1,203 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckIcon, PaperclipIcon, BarChartIcon } from "lucide-react";
 import React from "react";
+import { useQuery } from "@apollo/client";
+import Loading from "../extras/Loading";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ExternalLinkIcon, FileXIcon } from "lucide-react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { ALL_ASSIGNMENTS, ALL_ROADMAPS, ME } from "@/queries";
+import { Badge } from "@/components/ui/badge";
 
 const Assignments = () => {
-  return (
-    <div className="flex flex-col bg-background p-8 space-y-6">
-      
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Assignments</h2>
-      </div>
-      
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {/* Completed Assignments */}
-        <Card className="flex flex-col space-y-2 py-2 hover:shadow-lg transition-all">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="font-medium">Assignments Completed</CardTitle>
-            <CheckIcon className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4</div>
-            <p className="text-xs text-muted-foreground">assignments completed</p>
-          </CardContent>
-        </Card>
-        
-        {/* Available Assignments */}
-        <Card className="flex flex-col space-y-2 py-2 hover:shadow-lg transition-all">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="font-medium">Available Assignments</CardTitle>
-            <PaperclipIcon className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2</div>
-            <p className="text-xs text-muted-foreground">can be completed</p>
-          </CardContent>
-        </Card>
+  const navigate = useNavigate();
+  const { data: meData, loading: meLoading } = useQuery(ME);
+  const { data: assignmentsData, loading: assignmentsLoading } =
+    useQuery(ALL_ASSIGNMENTS);
 
-        {/* Pending Results */}
-        <Card className="flex flex-col space-y-2 py-2 hover:shadow-lg transition-all">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="font-medium">Pending Results</CardTitle>
-            <BarChartIcon className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">are being checked</p>
-          </CardContent>
-        </Card>
-      </div>
-      
-      {/* Progress Bar */}
-      <div className="w-full max-w-md">
-        <h3 className="text-lg font-semibold">Progress Overview</h3>
-        <p className="text-sm text-muted-foreground">60% of assignments completed</p>
-      </div>
-      
-      {/* Recent Activity */}
-      <div>
-        <h3 className="text-lg font-semibold">Recent Activity</h3>
-        <ul className="space-y-2">
-          <li className="flex justify-between">
-            <span>Assignment 1 - Submitted</span>
-            <span className="text-xs text-muted-foreground">2 days ago</span>
-          </li>
-          <li className="flex justify-between">
-            <span>Assignment 2 - Graded</span>
-            <span className="text-xs text-muted-foreground">3 days ago</span>
-          </li>
-        </ul>
-      </div>
-      
-      {/* Upcoming Deadlines */}
-      <div>
-        <h3 className="text-lg font-semibold">Upcoming Deadlines</h3>
-        <ul className="space-y-2">
-          <li className="flex justify-between text-red-500">
-            <span>Assignment 3 - Due in 2 days</span>
-            <span>Sept 25, 2024</span>
-          </li>
-          <li className="flex justify-between text-yellow-500">
-            <span>Assignment 4 - Due in 5 days</span>
-            <span>Sept 28, 2024</span>
-          </li>
-        </ul>
-      </div>
+  if (meLoading || assignmentsLoading) {
+    return <Loading />;
+  }
+
+  // Sample submissions data
+  const submittedAssignments = [
+    {
+      assignment: { title: "HTML Basics Assignment" },
+      user: { username: "JohnDoe" },
+      section: { title: "HTML Basics" },
+      assignmentUrl: "https://example.com/submission/1",
+      gradedBy: { username: "Admin" },
+      status: "Graded",
+      feedback: "Great work! Well-done.",
+      grade: "A",
+      id: "1",
+    },
+    {
+      assignment: { title: "CSS Flexbox Project" },
+      user: { username: "JaneSmith" },
+      section: { title: "CSS Layouts" },
+      assignmentUrl: "https://example.com/submission/2",
+      gradedBy: null,
+      status: "Pending",
+      feedback: null,
+      grade: null,
+      id: "2",
+    },
+  ];
+
+  const roadmapIds = new Set(meData?.me.progress.map((r) => r.id));
+  const userAssignments = assignmentsData?.allAssignments.filter((a) =>
+    roadmapIds.has(a.roadmap.id),
+  );
+
+  return (
+    <div className="flex flex-col space-y-6 bg-background p-8">
+      {meData?.me?.progress.length > 0 ? (
+        <>
+          <h2 className="text-xl font-bold md:text-2xl lg:text-3xl">
+            Welcome {meData?.me.username}
+          </h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold md:text-xl">Assignments</h3>
+              <p className="text-sm text-slate-700">
+                View the assignments with the specified courses here
+              </p>
+              <div className="mb-6 mt-4 grid grid-cols-1 space-x-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {meData?.me?.progress.map(({ roadmap }) => (
+                  <Card
+                    key={roadmap.id}
+                    onClick={() => navigate(`/assignments/${roadmap.id}`)}
+                    className="hover:cursor-pointer"
+                  >
+                    <CardContent className="p-0">
+                      <div>
+                        <div className="relative aspect-video w-full overflow-hidden rounded-t-md border-b">
+                          <LazyLoadImage
+                            src={roadmap.image}
+                            alt={roadmap.title}
+                            className="h-full w-full object-cover duration-500 ease-in-out"
+                            style={{
+                              filter: "blur(20px)",
+                              transition: "filter 0.5s ease",
+                            }}
+                            loading="lazy"
+                            onLoad={(e) =>
+                              (e.target.style.filter = "blur(0px)")
+                            }
+                          />
+                        </div>
+
+                        <div className="flex flex-col px-3 pt-2">
+                          <h1 className="text-sm font-semibold transition group-hover:text-sky-700 md:text-base">
+                            {roadmap.title}
+                          </h1>
+                        </div>
+                        <div className="px-3 pb-3"></div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold md:text-xl">Submissions</h3>
+              <p className="text-sm text-slate-700">
+                All your submissions that have been graded and are to be graded
+              </p>
+              <Card className="w-full overflow-x-auto">
+                <Table className="min-w-full">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[50px] text-xs md:text-sm">
+                        Sr.
+                      </TableHead>
+                      <TableHead className="text-xs md:text-sm">
+                        Title
+                      </TableHead>
+                      <TableHead className="text-xs md:text-sm">
+                        Status
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {submittedAssignments.map((a, index) => (
+                      <TableRow
+                        key={a.id}
+                        className={`hover:cursor-pointer ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+                        onClick={() => navigate(`/submission/${a?.id}`)}
+                      >
+                        <TableCell className="text-xs font-medium md:text-sm">
+                          {index + 1}.
+                        </TableCell>
+                        <TableCell className="flex items-center space-x-4 text-xs md:text-sm">
+                          <div>
+                            <div className="font-bold">
+                              {a?.assignment.title}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="secondary"
+                            className={`${a?.status === "Graded" ? "bg-green-200 text-green-800" : a?.status === "Pending" ? "bg-yellow-200 text-yellow-800" : "bg-red-200 text-red-800"} text-xs  md:text-sm font-semibold`}
+                          >
+                            {a?.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="space-y-3 text-center">
+            <Card>
+              <div className="mx-auto w-full max-w-md">
+                <CardHeader>
+                  <CardTitle className="text-center">No Assignments</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center text-center">
+                  <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+                    <FileXIcon className="h-12 w-12" />
+                  </div>
+                  <p className="mb-6 text-muted-foreground">
+                    You are not enrolled in any roadmap so you cannot submit any
+                    assignments
+                  </p>
+                </CardContent>
+                <CardFooter className="flex justify-center">
+                  <Link to="/roadmaps">
+                    <Button className="flex space-x-2">
+                      <p className="font-semibold">Explore Roadmaps</p>
+                      <ExternalLinkIcon className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </div>
+            </Card>
+          </div>
+        </>
+      )}
     </div>
   );
 };

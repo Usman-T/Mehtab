@@ -16,6 +16,8 @@ import Onboarding from "./components/custom/main/Onboarding";
 import Learn from "./components/custom/extras/Learn";
 import Community from "./components/custom/main/Community";
 import Assignments from "./components/custom/main/Assignments";
+import Assignment from "./components/custom/assignments/Assignment";
+import Submission from "./components/custom/assignments/Submission";
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -55,6 +57,14 @@ const App = () => {
         <Route
           path="/admin/create"
           element={<Main component={<AdminCourseCreate />} />}
+        />
+        <Route
+          path="/assignments/:id"
+          element={<Main component={<Assignment />} />}
+        />
+        <Route
+          path="/submission/:id"
+          element={<Main component={<Submission />} />}
         />
       </Routes>
       <Toaster />

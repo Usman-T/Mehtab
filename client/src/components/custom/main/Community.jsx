@@ -106,12 +106,17 @@ const Community = () => {
                       "https://www.creativeitinstitute.com/images/course/course_1674371266.jpg"
                     }
                     loading="lazy"
+                    style={{
+                      filter: "blur(20px)",
+                      transition: "filter 0.5s ease",
+                    }}
+                    onLoad={(e) => (e.target.style.filter = "blur(0px)")}
                     alt="Roadmap"
                     className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-[1.05]"
                   />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold transition-colors duration-300 group-hover:underline">
+                  <h3 className="text-lg font-semibold transition-colors duration-300">
                     {roadmap.title}
                   </h3>
                 </div>

@@ -198,3 +198,45 @@ export const CAST_VOTE = gql`
     }
   }
 `;
+
+export const ALL_ASSIGNMENTS = gql`
+  query {
+    allAssignments {
+      id
+      roadmap {
+        id
+      }
+    }
+  }
+`;
+
+export const ALL_SUBMISSION = gql`
+  query {
+    allSubmissions {
+      title
+    }
+  }
+`;
+
+export const ALL_USER_ASSIGNMENTS = gql`
+  query AllUserAssignments($userId: String!) {
+    allUserAssignments(userId: $userId) {
+      assignment {
+        title
+        description
+        criteria
+        complexity
+        roadmap {
+          title
+          id
+        }
+        createdAt
+        id
+      }
+      section {
+        title
+        id
+      }
+    }
+  }
+`;

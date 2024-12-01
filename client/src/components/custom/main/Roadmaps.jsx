@@ -83,7 +83,7 @@ const RoadmapCard = ({ roadmap, navigate }) => {
   return (
     <Card
       onClick={() => navigate(`/roadmaps/${roadmap.id}`)}
-      className="hover:cursor-pointer"
+      className="hover:cursor-pointer hover:shadow-lg transition duration-300 hover:scale-[1.02]"
     >
       <CardContent className="p-0">
         <div>
@@ -91,7 +91,7 @@ const RoadmapCard = ({ roadmap, navigate }) => {
             <LazyLoadImage
               src={roadmap.image}
               alt={roadmap.title}
-              className="h-full w-full object-cover duration-500 ease-in-out"
+              className="h-full w-full  object-cover transition-transform duration-500 ease-in-out "
               style={{
                 filter: "blur(20px)",
                 transition: "filter 0.5s ease",
@@ -106,7 +106,7 @@ const RoadmapCard = ({ roadmap, navigate }) => {
               {roadmap.title}
             </h1>
             <div className="my-3 flex items-center gap-x-2 text-xs">
-              <div className="mt-2 flex items-start text-slate-500">
+              <div className=" flex items-start text-slate-500">
                 <div className="inline-flex items-center justify-center space-x-1 rounded-md border border-transparent bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-800 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                   <BookOpenIcon className="h-4 w-4" />
                   <p>
